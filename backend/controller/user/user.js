@@ -1,6 +1,7 @@
 const User = require('../../model/user/userModel');
 const jwt=require('jsonwebtoken')
 const bcrypt = require('bcrypt');
+
 function issueJwt(paylod){
     const token=jwt.sign({paylod},`my-youtube`,{expiresIn:'1h'})
     return token
@@ -38,7 +39,8 @@ exports.login= async(req,res)=>{
             return res.status(401).json({ status:"401",message: 'Invalid Password Authentication failed' });
           }
           const token=issueJwt(user)
-          return res.status(200).json( { status:200, message:"Login successful",token,user } );
+          const userData = { firstName:user.firstName, lastName:user.lastName, email:user.email, phoneNumber:user.phoneNumber, role:user.role }
+          return res.status(200).json( { status:200, message:"Login successful",token,userData } );
     }catch(error){
         console.error(error);
         res.status(500).json({ message: 'Internal server error' });
