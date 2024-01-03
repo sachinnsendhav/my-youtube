@@ -25,3 +25,22 @@ exports.signup = async(req,res) => {
         return res.status(400).send( { status:400, message:error.message } );
     }
 }
+
+exports.login= async(req,res)=>{
+    try{
+        const { email, password,role } = req.body;
+        const user = await User.findOne({ email });
+        if (!user) {
+            return res.status(401).json({ status:"401",message: 'Authentication failed' });
+          }
+          const isPasswordValid = await bcrypt.compare(password, user.password);
+          if (!isPasswordValid) {
+            return res.status(401).json({ status:"401",message: 'Invalid Password Authentication failed' });
+          }
+          const token=issueJwt(user)
+          return res.status(200).json( { status:200, message:"Login successful",token,user } );
+    }catch(error){
+        console.error(error);
+        res.status(500).json({ message: 'Internal server error' });
+    }
+}
