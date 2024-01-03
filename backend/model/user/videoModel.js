@@ -13,10 +13,6 @@ videoUrl: {
     type: String,
     required:true
 },
-videoTags: {
-    type: String,
-    required:true
-},
 category: {
     type: String,
     required:true
