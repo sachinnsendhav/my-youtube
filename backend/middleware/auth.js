@@ -12,7 +12,6 @@ const authentication=(req,res,next)=>{
       console.log("req",decoded)
       next();
     })
-
 }
 
 module.exports=authentication
