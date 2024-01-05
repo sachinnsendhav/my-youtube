@@ -12,9 +12,11 @@ connectDb();
 
 const userrouter = require('./routes/user/user');
 const videorouter = require('./routes/video/videoRoutes');
+const categoryrouter = require('./routes/category/category');
 
 app.use('/api',userrouter);
 app.use('/api',videorouter);
+app.use('/api',categoryrouter);
 
 app.listen(PORT, ()=>{
     console.log(`Listining on port ${PORT}`);
