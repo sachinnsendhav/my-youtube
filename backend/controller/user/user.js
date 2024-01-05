@@ -46,3 +46,42 @@ exports.login= async(req,res)=>{
         res.status(500).json({ message: 'Internal server error' });
     }
 }
+//userid
+
+exports.updateUserDetail=async(req,res)=>{
+    try{
+        const { firstName, lastName, email, phoneNumber} = req.body;
+        let userExist = await User.findById(req.params.userId)
+        if (!userExist) {
+            return res.status(404).send( { status:404, message:"User not available" } );
+        }
+        userExist.firstName=firstName||userExist.firstName
+        userExist.lastName=lastName|| userExist.lastName
+        userExist.email=email||userExist.email
+        userExist.phoneNumber=phoneNumber|| userExist.phoneNumber
+        await userExist.save()
+        res.json(userExist)    
+    }catch(error){
+        console.error(error)
+        return res.status(400).send( { status:400, message:error.message } );
+    }
+}
+// exports.getAllUser=async(req,res)=>{
+//     try{
+//         let user= await User.find()
+//         res.status(200).json(user)
+//     }catch(error){
+//         console.error(err.message);
+//         res.status(500).send("Server error");
+//     }
+// }
+
+// exports.getAllUserById=async(req,res)=>{
+//     try{
+//         let user= await User.findById(req.params.userId)
+//         res.status(200).json(user)
+//     }catch(error){
+//         console.error(err.message);
+//         res.status(500).send("Server error");
+//     }
+// }
