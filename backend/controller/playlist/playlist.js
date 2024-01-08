@@ -87,3 +87,70 @@ try{
     res.status(500).send("Server error");
 }
 }
+
+exports.allotPlayList = async (req, res) => {
+    try {
+        const id = req.params.id;
+        if (id) {
+            console.log("idus", id);
+            const playlistIdFromBody = req.body.playlistId;
+
+            // Fetch user data based on the provided ID
+            const userData = await UserType.findById(id);
+
+            if (!userData) {
+                return res.status(404).send({ message: "User not found" });
+            }
+
+            const existingPlaylistIds = userData.playList.map(item => item._id.toString()); // Convert ObjectIds to strings for comparison
+
+            const intersection = playlistIdFromBody.filter(id => existingPlaylistIds.includes(id));
+
+            if (intersection.length === playlistIdFromBody.length) {
+                return res.status(400).send({ message: "Playlist already exists" });
+            }
+
+            const newPlaylistIds = playlistIdFromBody.filter(id => !existingPlaylistIds.includes(id));
+
+            // Fetch playlist data based on the IDs that are not already in the user's playlist
+            const playlistData = await Category.find({ _id: { $in: newPlaylistIds } });
+
+            // Update the user's playlist with the new playlist data
+            userData.playList.push(...playlistData);
+
+            // Save the updated user data
+            await userData.save();
+
+            // Fetch and return the updated user data
+            const updatedUserData = await UserType.findById(id);
+            res.status(200).send({ data: updatedUserData });
+        } else {
+            res.status(404).send({ message: "User id is required" });
+        }
+    } catch (error) {
+        res.status(400).send({ message: error.message });
+    }
+};
+
+exports.deleteUserTypePlayList = async (req,res) => {
+    try{
+        const { userTypeId, userTypePlayListId } = req.params;
+        if(!userTypeId || !userTypePlayListId){
+            res.status(400).send( { message : "User id is required" } )
+        }
+
+        const updatedUser = await UserType.findByIdAndUpdate(
+            {_id : new mongoose.Types.ObjectId(userTypeId)},
+            { $pull: { "playList": { _id : new mongoose.Types.ObjectId(userTypePlayListId) } } },
+            { new: true }
+        );
+
+        if(!updatedUser){
+            res.status(404).send({message:"User not found"})
+        }
+        res.status(200).send({data:updatedUser});
+    }
+    catch(error){
+        res.status(400).send( { message : error.message } )
+    }
+}

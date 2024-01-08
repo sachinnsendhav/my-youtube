@@ -7,4 +7,6 @@ playlistrouter.post('/playlist/addPlaylist', auth, playlistcontroller.addPlaylis
 playlistrouter.delete('/playlist/removePlaylist/:paylistId',auth,playlistcontroller.removePlaylist)
 playlistrouter.put('/playlist/updatePlaylist/:paylistId',auth,playlistcontroller.updatePlaylist)
 playlistrouter.get('/playlist/getPlaylist/:adminId',auth,playlistcontroller.getadminPlaylist)
+playlistrouter.post('/playlist/allotPlayList/:id', auth, playlistcontroller.allotPlayList);
+playlistrouter.put('/playlist/deleteUserTypePlaylist/:userTypeId/userTypePlayList/:userTypePlayListId', auth, playlistcontroller.deleteUserTypePlayList);
 module.exports = playlistrouter;
