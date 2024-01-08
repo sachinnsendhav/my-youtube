@@ -16,6 +16,7 @@ exports.addPlaylist = async(req,res) => {
         const category = new Category( {name,description,role,userId} );
         await category.save();
         const responseData = {
+            id : category._id,
             name: category.name,
             description: category.description,
         };
