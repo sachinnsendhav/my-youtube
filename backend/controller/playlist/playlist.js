@@ -1,6 +1,6 @@
-const Category = require('../../model/category/category');
+const Category = require('../../model/playlist/playlist');
 
-exports.addCategory = async(req,res) => {
+exports.addPlaylist = async(req,res) => {
     try{
         const { name,description,role } = req.body;
         const userId = req.user.paylod._id;
