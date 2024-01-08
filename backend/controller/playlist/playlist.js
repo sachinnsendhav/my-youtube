@@ -1,4 +1,6 @@
 const Category = require('../../model/playlist/playlist');
+const UserType=require('../../model/user/userTypeModel')
+const mongoose = require('mongoose')
 
 exports.addPlaylist = async(req,res) => {
     try{
@@ -30,8 +32,6 @@ exports.addPlaylist = async(req,res) => {
 exports.removePlaylist = async(req,res) => {
     try{
         const paylistId = req.params.paylistId;
-        
-        console.log("req123",req.params.paylistId)
         const paylistExist=await Category.findById({_id:paylistId})
         if (!paylistExist) {
             return res.status(404).send({
@@ -39,7 +39,12 @@ exports.removePlaylist = async(req,res) => {
                 mesage: "Paylist with this id not found",
               })
         }
-        await Category.deleteOne({_id:userId})
+        await Category.deleteOne({_id:paylistId});
+        const findChildrenData = await UserType.find({userId:req.user.paylod._id})
+        const updateUSerType = await UserType.updateMany(
+            {userId:new mongoose.Types.ObjectId(req.user.paylod._id)},
+            {$pull:{playList:{_id:new mongoose.Types.ObjectId(paylistId)}}}
+        )
         res.status(204).send({ status:204, data:'' });
     }
     catch(error){
