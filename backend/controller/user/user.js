@@ -80,6 +80,23 @@ exports.addUsers = async(req,res) => {
         return res.status(400).send( { status:400, message:error.message } );
     }
 }
+
+exports.deleteUser = async(req,res) => {
+    try{
+        const id = req.params.id;
+        const delete_user = await UserType.findByIdAndDelete( {_id:id} );
+        if(delete_user){
+            res.status(200).send({ data:"User deleted successfully" });
+        }
+        else{
+            res.status(404).send({ message:`User id ${id} is not valid` })
+        }
+    }
+    catch(error){
+        res.status(400).send({ message:error.message });
+    }
+}
+
 // exports.getAllUser=async(req,res)=>{
 //     try{
 //         let user= await User.find()

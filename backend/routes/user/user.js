@@ -7,4 +7,5 @@ userrouter.post('/user/signup', usercontroller.signup);
 userrouter.post('/user/login',usercontroller.login)
 userrouter.put('/updateUser/:userId',usercontroller.updateUserDetail)
 userrouter.post('/user/addUser', auth, usercontroller.addUsers)
+userrouter.delete('/user/deleteUser/:id', auth, usercontroller.deleteUser);
 module.exports = userrouter;
