@@ -19,8 +19,8 @@ exports.signup = async(req,res) => {
         const password=await bcrypt.hash(userPassword,10);
         const payload = { firstName, lastName, email, phoneNumber,password, role };
         const user = new User(payload);
-        await user.save();
-        const token=issueJwt(payload)
+        const userData=await user.save();
+        const token=issueJwt(userData)
         return res.status(200).send( { status:200, message:"User registered successfully",token } );
     }
     catch(error){
@@ -39,6 +39,7 @@ exports.login= async(req,res)=>{
           if (!isPasswordValid) {
             return res.status(401).json({ status:"401",message: 'Invalid Password Authentication failed' });
           }
+          console.log("user1234",user)
           const token=issueJwt(user)
           const userData = { firstName:user.firstName, lastName:user.lastName, email:user.email, phoneNumber:user.phoneNumber, role:user.role }
           return res.status(200).json( { status:200, message:"Login successful",token,userData } );
