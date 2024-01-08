@@ -4,4 +4,5 @@ const videoController = require('../../controller/video/video');
 const auth = require('../../middleware/auth');
 
 videorouter.post('/video/uploadData',auth, videoController.video);
+videorouter.get('/video/getData', videoController.getVideo);
 module.exports = videorouter;

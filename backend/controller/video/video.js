@@ -1,6 +1,7 @@
 const videoDetails = require("../../model/user/videoModel");
- 
-exports.video = async(req,res) => {
+ module.exports={
+
+video:async(req,res) => {
     console.log(req.user.paylod,"auth req user");
     try{
         const role = req.user.paylod.role;
@@ -18,4 +19,15 @@ exports.video = async(req,res) => {
         return res.status(400).send( { status:400, message:error.message } );
 
     }
+},
+getVideo:async(req,res,next)=>{
+    try {
+        const videos = await videoDetails.find();
+        console.log(videos);
+        res.status(200).send({ status: 200, data: videos });
+    } catch (error) {
+        console.log("err", error);
+        return res.status(400).send({ status: 400, message: error.message });
+    }
+}
 }

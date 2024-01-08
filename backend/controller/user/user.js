@@ -1,4 +1,5 @@
 const User = require('../../model/user/userModel');
+const UserType = require('../../model/user/userTypeModel');
 const jwt=require('jsonwebtoken')
 const bcrypt = require('bcrypt');
 
@@ -46,7 +47,6 @@ exports.login= async(req,res)=>{
         res.status(500).json({ message: 'Internal server error' });
     }
 }
-//userid
 
 exports.updateUserDetail=async(req,res)=>{
     try{
@@ -66,6 +66,37 @@ exports.updateUserDetail=async(req,res)=>{
         return res.status(400).send( { status:400, message:error.message } );
     }
 }
+
+exports.addUsers = async(req,res) => {
+    try{
+        const { firstName,lastName,userName,password } = req.body;
+        const userId = req.user.paylod._id;
+        const usertype = new UserType( { firstName,lastName,userName,password,userId } );
+        await usertype.save();
+        return res.status(200).send( { status:200, data:{firstName,lastName,userName} } )
+    }
+    catch(error){
+        console.log("useres are",error);
+        return res.status(400).send( { status:400, message:error.message } );
+    }
+}
+
+exports.deleteUser = async(req,res) => {
+    try{
+        const id = req.params.id;
+        const delete_user = await UserType.findByIdAndDelete( {_id:id} );
+        if(delete_user){
+            res.status(200).send({ data:"User deleted successfully" });
+        }
+        else{
+            res.status(404).send({ message:`User id ${id} is not valid` })
+        }
+    }
+    catch(error){
+        res.status(400).send({ message:error.message });
+    }
+}
+
 // exports.getAllUser=async(req,res)=>{
 //     try{
 //         let user= await User.find()
