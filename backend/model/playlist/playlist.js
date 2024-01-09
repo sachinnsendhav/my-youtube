@@ -9,10 +9,6 @@ const playlistShema = new mongoose.Schema({
         type : String,
         required : true,
     },
-    role:{
-        type: Array,
-        default : []
-    },
     userId:{
         type : mongoose.Schema.Types.ObjectId,
         required : true
