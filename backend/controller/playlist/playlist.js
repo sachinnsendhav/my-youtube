@@ -97,10 +97,15 @@ try{
 exports.getUserPlaylist=async(req,res)=>{
     try{
         const userId=req.params.userId
-        let playlistData=await UserType.find({userId:userId})
-        res.status(200).json({status:200,message:"",data:playlistData.playList})
+        let playlistData=await UserType.findById({_id: new mongoose.Types.ObjectId(userId)})
+
+        if(!playlistData){
+         res.status(404).json({status:404,message:"User not found",data:""})
+        }
+        console.log("playlistDtaa",playlistData);
+        res.status(200).json({status:200,message:"",data: playlistData.playList})
     }catch(error){
-        console.error(err.message);
+        console.error(error.message);
         res.status(500).send("Server error");
     }
     }
