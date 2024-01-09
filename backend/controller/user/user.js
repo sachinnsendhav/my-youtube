@@ -21,7 +21,7 @@ exports.signup = async(req,res) => {
         const user = new User(payload);
         const userData=await user.save();
         const token=issueJwt(userData)
-        return res.status(200).send( { status:200, message:"User registered successfully",token } );
+        return res.status(200).send( { status:200, message:"User registered successfully",data:{token:token} } );
     }
     catch(error){
         return res.status(400).send( { status:400, message:error.message } );
@@ -42,7 +42,7 @@ exports.login= async(req,res)=>{
           console.log("user1234",user)
           const token=issueJwt(user)
           const userData = { firstName:user.firstName, lastName:user.lastName, email:user.email, phoneNumber:user.phoneNumber, role:user.role }
-          return res.status(200).json( { status:200, message:"Login successful",token,userData } );
+          return res.status(200).json( { status:200, message:"Login successful",data:{token:token,userData:userData} } );
     }catch(error){
         console.error(error);
         res.status(500).json({ message: 'Internal server error' });
@@ -61,7 +61,7 @@ exports.updateUserDetail=async(req,res)=>{
         userExist.email=email||userExist.email
         userExist.phoneNumber=phoneNumber|| userExist.phoneNumber
         await userExist.save()
-        res.json(userExist)    
+        res.json({status:201,message:"User Update Successfully",data:userExist})    
     }catch(error){
         console.error(error)
         return res.status(400).send( { status:400, message:error.message } );
@@ -74,7 +74,7 @@ exports.addUsers = async(req,res) => {
         const userId = req.user.paylod._id;
         const usertype = new UserType( { firstName,lastName,userName,password,userId } );
         await usertype.save();
-        return res.status(200).send( { status:200, data:{firstName,lastName,userName} } )
+        return res.status(200).send( { status:200,message:"User Added Successfully", data:{firstName,lastName,userName} } )
     }
     catch(error){
         console.log("useres are",error);
@@ -87,7 +87,7 @@ exports.deleteUser = async(req,res) => {
         const id = req.params.id;
         const delete_user = await UserType.findByIdAndDelete( {_id:id} );
         if(delete_user){
-            res.status(200).send({ data:"User deleted successfully" });
+            res.status(204).send({ status:204,message:"User deleted successfully",data:"" });
         }
         else{
             res.status(404).send({ message:`User id ${id} is not valid` })

@@ -22,7 +22,7 @@ exports.addPlaylist = async(req,res) => {
             name: category.name,
             description: category.description,
         };
-        res.status(200).send({ status:200, data:responseData });
+        res.status(200).send({ status:200,mesage:"Playlist Added Successfully", data:responseData });
     }
     catch(error){
         return res.status(400).send({ status:400, message:error.message });
@@ -45,7 +45,7 @@ exports.removePlaylist = async(req,res) => {
             {userId:new mongoose.Types.ObjectId(req.user.paylod._id)},
             {$pull:{playList:{_id:new mongoose.Types.ObjectId(paylistId)}}}
         )
-        res.status(204).send({ status:204, data:'' });
+        res.status(204).send({ status:204,status:"Playlist Delete Successfully", data:'' });
     }
     catch(error){
         return res.status(400).send({ status:400, message:error.message });
@@ -87,7 +87,7 @@ exports.getadminPlaylist=async(req,res)=>{
 try{
     const adminId=req.params.adminId
     let playlistData=await Category.find({userId:adminId})
-    res.status(200).json({data:playlistData})
+    res.status(200).json({status:200,message:"",data:playlistData})
 }catch(error){
     console.error(err.message);
     res.status(500).send("Server error");
@@ -129,7 +129,7 @@ exports.allotPlayList = async (req, res) => {
 
             // Fetch and return the updated user data
             const updatedUserData = await UserType.findById(id);
-            res.status(200).send({ data: updatedUserData });
+            res.status(200).send({status:200,message:"Playlist Alloted Successfully", data: updatedUserData });
         } else {
             res.status(404).send({ message: "User id is required" });
         }
@@ -154,7 +154,7 @@ exports.deleteUserTypePlayList = async (req,res) => {
         if(!updatedUser){
             res.status(404).send({message:"User not found"})
         }
-        res.status(200).send({data:updatedUser});
+        res.status(204).send({status:204,message:"Playlist Delete Successfully",data:""});
     }
     catch(error){
         res.status(400).send( { message : error.message } )
