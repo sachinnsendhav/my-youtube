@@ -11,8 +11,8 @@ module.exports={
             const { videoName, videoDescription, videoUrl, playListId} = req.body;
             const payload = {  videoName, videoDescription, videoUrl, playListId, userId:req.user.paylod._id };
             const video = new videoDetails(payload);
-            await video.save();
-            res.status(200).send( { status:200, message:"Video details has been added successfully" } );
+            const videoData=await video.save();
+            res.status(200).send( { status:200, message:"Video details has been added successfully",data:videoData } );
         }
         catch(error){
             console.log("err",error)
@@ -24,7 +24,7 @@ module.exports={
         try {
             const playListId = req.params.playListId;
             const videos = await videoDetails.find({playListId:playListId});
-            res.status(200).send({ status: 200, data: videos });
+            res.status(200).send({ status: 200,message:"", data: videos });
         } catch (error) {
             console.log("err", error);
             return res.status(400).send({ status: 400, message: error.message });
