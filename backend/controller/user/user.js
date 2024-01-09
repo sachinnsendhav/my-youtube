@@ -108,12 +108,12 @@ exports.deleteUser = async(req,res) => {
 //     }
 // }
 
-// exports.getAllUserById=async(req,res)=>{
-//     try{
-//         let user= await User.findById(req.params.userId)
-//         res.status(200).json(user)
-//     }catch(error){
-//         console.error(err.message);
-//         res.status(500).send("Server error");
-//     }
-// }
+exports.getAllUserByparentId=async(req,res)=>{
+    try{
+        let user= await UserType.find({userId:req.params.parentId})
+        res.status(200).json({status:200,message:"",data:user})
+    }catch(error){
+        console.error(error.message);
+        res.status(500).send("Server error");
+    }
+}
