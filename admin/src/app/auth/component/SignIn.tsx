@@ -1,8 +1,8 @@
 'use client'
-// import { Auth } from '@/service'
 import Link from 'next/link'
 import React, { useState } from 'react'
 import { useRouter } from 'next/navigation';
+import { Auth } from '@/services';
 
 function SignIn() {
     const [email, setEmail] = useState('')
@@ -17,12 +17,12 @@ function SignIn() {
             password: password
         }
         try {
-            // const result: any = await Auth.Login(data)
-            // if (result?.statusCode === 200) {
-            //     localStorage.setItem('access-token', result?.tokens?.access.token)
-            //     localStorage.setItem('refresh-token', result?.tokens?.refresh.token)
-            //     router.push('/')
-            // }
+            const result: any = await Auth.login(data)
+            if (result?.statusCode === 200) {
+                localStorage.setItem('access-token', result?.tokens?.access.token)
+                localStorage.setItem('refresh-token', result?.tokens?.refresh.token)
+                router.push('/')
+            }
         } catch (err: any) {
             alert(err.response.data.message)
         }

@@ -1,7 +1,7 @@
 'use client'
 import Image from 'next/image'
 import React, { useEffect } from 'react'
-// import logo from '../../../public/martb2b_logo.webp'
+import logo from '../../../public/MY YOUTUBE.png'
 import { RiDashboard3Fill } from "react-icons/ri";
 import { FaDatabase } from "react-icons/fa";
 import { MdKeyboardArrowLeft } from "react-icons/md";
@@ -24,9 +24,9 @@ function Sidenav({ isDrowerOn, menu, setMenu }: Props) {
     //     }
     // }, [token])
     return (
-        <div className={`w-60 bg-gray-800 h-screen ${isDrowerOn ? 'hidden' : 'block'}`}>
-            <div className='h-14 bg-yellow-400 flex jusify-center'>
-                {/* <Image src={logo} alt='logo' className='object-contain' /> */}
+        <div className={`w-60 bg-gray-800 h-screen p-0 m-0 ${isDrowerOn ? 'hidden' : 'block'}`}>
+            <div className='h-14 bg-red-500 flex jusify-center p-0 m-0'>
+                <Image src={logo} alt='logo' className='object-contain' />
             </div>
             <div className='px-5'>
                 <Link href='/'>
