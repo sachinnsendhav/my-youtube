@@ -29,5 +29,16 @@ module.exports={
             console.log("err", error);
             return res.status(400).send({ status: 400, message: error.message });
         }
+    },
+    deleteVideo:async(req,res)=>{
+        try{
+            const videoId = req.params.videoId;
+            console.log(videoId);
+            const video = await videoDetails.findByIdAndDelete({_id:videoId});
+            res.status(204).send({status:204, message:"Video Deleted Sucessfully", data:""});
+        }
+        catch(error){
+            res.status(400).send({status:400, message:error.message, data:""});
+        }
     }
 }
