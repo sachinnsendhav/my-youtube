@@ -40,5 +40,19 @@ module.exports={
         catch(error){
             res.status(400).send({status:400, message:error.message, data:""});
         }
+    },
+    getAllVideos:async(req,res)=>{
+        try{
+            const userId = req.user.paylod._id;
+            if(!userId){
+                res.status(404).send({status:'Not found', message:`Invalid request`, data:''});
+            }
+            console.log(userId);
+            const video_data = await videoDetails.find({userId:userId});
+            res.status(200).send({status:'Sucess', message:'Data fetch successfully', data:video_data})
+        }
+        catch(error){
+            res.status(400).send({status:400, message:error.message, data:""})
+        }
     }
 }
