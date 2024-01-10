@@ -111,7 +111,7 @@ exports.deleteUser = async(req,res) => {
 
 exports.getAllUserByparentId=async(req,res)=>{
     try{
-        let user= await UserType.find({userId:req.params.parentId})
+        let user= await UserType.find({userId:req.user.paylod._id})
         res.status(200).json({status:200,message:"",data:user})
     }catch(error){
         console.error(error.message);
