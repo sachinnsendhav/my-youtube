@@ -50,6 +50,11 @@ const usertypemodel = new mongoose.Schema({
     playList:{
         type : Array,
         default : []
+    },
+    role:{
+        type : String,
+        required : true,
+        enum: ['user']
     }
 });
 
