@@ -13,7 +13,7 @@ exports.signup = async(req,res) => {
         const { firstName, lastName, email, phoneNumber, userPassword } = req.body;
         let userExist = await User.findOne({email})
         if (userExist) {
-            return res.status(400).send( { status:400, message:"User already exists" } );
+            return res.status(400).send( { status:400, message:"User already exists", data:'' } );
         }
         const role = 'admin';
         const password=await bcrypt.hash(userPassword,10);
@@ -54,7 +54,7 @@ exports.updateUserDetail=async(req,res)=>{
         const { firstName, lastName, email, phoneNumber} = req.body;
         let userExist = await User.findById(req.params.userId)
         if (!userExist) {
-            return res.status(404).send( { status:404, message:"User not available" } );
+            return res.status(404).send( { status:404, message:"User not available", data:'' } );
         }
         userExist.firstName=firstName||userExist.firstName
         userExist.lastName=lastName|| userExist.lastName
@@ -91,7 +91,7 @@ exports.deleteUser = async(req,res) => {
             res.status(204).send({ status:204,message:"User deleted successfully",data:"" });
         }
         else{
-            res.status(404).send({ message:`User id ${id} is not valid` })
+            res.status(404).send({ status:404, message:`User id ${id} is not valid`, data:"" })
         }
     }
     catch(error){
