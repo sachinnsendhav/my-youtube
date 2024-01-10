@@ -9,11 +9,10 @@ function ViewAllPlayList() {
   const [menu, setMenu] = useState('');
   const [playlist, setPlaylist] = useState<any>([])
   const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
-  const adminId = typeof window !== 'undefined' ? localStorage.getItem('adminId') : '';
   const getPlaylist = async () => {
  
       try {
-        const result: any = await Playlist.getAllPlaylist(token, adminId)
+        const result: any = await Playlist.getAllPlaylist(token)
         console.log(result)
        setPlaylist(result?.data)
       } catch (err: any) {
