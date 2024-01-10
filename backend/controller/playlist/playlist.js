@@ -85,7 +85,7 @@ exports.updatePlaylist= async(req,res)=>{
 
 exports.getadminPlaylist=async(req,res)=>{
 try{
-    const adminId=req.params.adminId
+    const adminId = req.user.paylod._id;
     let playlistData=await Category.find({userId:adminId})
     res.status(200).json({status:200,message:"",data:playlistData})
 }catch(error){
