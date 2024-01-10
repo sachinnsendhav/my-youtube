@@ -1,13 +1,26 @@
 import { endpoints } from './endpoints';
 import axios from 'axios';
 
-const getCustomers = (token: any, perPage: number, currentPage: number) =>
+const createUSer = (token: any, body: any) =>
     new Promise((resolve, reject) => {
         axios
-            .get(`${endpoints.users}?limit=${perPage}&page=${currentPage}`, {
+            .post(`${endpoints.users.createUSer}`, body, {
                 headers: {
                     "Content-Type": 'application/json',
-                    'Authorization': `Bearer ${token}`,
+                    'Authorization': token,
+                },
+            })
+            .then((response: any) => resolve(response.data))
+            .catch((error: any) => reject(error)
+            );
+    });
+    const getAllUSerByParents = (token: any) =>
+    new Promise((resolve, reject) => {
+        axios
+            .get(`${endpoints.users.getAllUsers}`, {
+                headers: {
+                    "Content-Type": 'application/json',
+                    'Authorization': token,
                 },
             })
             .then((response: any) => resolve(response.data))
@@ -15,5 +28,6 @@ const getCustomers = (token: any, perPage: number, currentPage: number) =>
             );
     });
 export {
-    getCustomers
+    createUSer,
+    getAllUSerByParents
 }

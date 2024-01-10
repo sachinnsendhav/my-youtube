@@ -64,7 +64,7 @@ function AddPlayList() {
               )}
             </div>
             <div className='pt-3'>
-              <Button text='Add Brand' functionName={createPlayList} />
+              <Button text='Add Playlist' functionName={createPlayList} />
             </div>
           </div>
         </div>

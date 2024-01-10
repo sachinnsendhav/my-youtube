@@ -16,7 +16,7 @@ export const endpoints = {
     createPlaylist: `${url}/api/playlist/addPlaylist`,
     getPlaylistByParents: `${url}/api/playlist/getPlaylist`,
     updatePlaylist: `${url}/`,
-    deletePlaylist: `${url}/api/playlist/removePlaylist/`,
+    deletePlaylist: `${url}/api/playlist/removePlaylist`,
     addVideos: `${url}/api/video/uploadData`,
     getAllVideos: `${url}/api/video`,
     deleteVideo: `${url}/api/video/delete/`,

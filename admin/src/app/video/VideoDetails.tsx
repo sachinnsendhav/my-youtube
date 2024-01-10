@@ -11,10 +11,11 @@ function VideoDetails() {
   const [id, setId] = useState('');
   const [videoDetails, setVideoDetails] = useState<any>();
   const [relatedVideos, setRelatedVideos] = useState<any>();
+  const [newRoute, setNewRoute] = useState(0)
   useEffect(() => {
     const id: string = typeof window !== 'undefined' ? window.location.search?.split('=')[1] : '';
     setId(id)
-  }, [window.location.search])
+  }, [newRoute])
 
   useEffect(() => {
     getVideoDetails(id);
@@ -60,7 +61,7 @@ function VideoDetails() {
               <p className='text-xs font-semibold'>{videoDetails?.snippet?.channelTitle}</p>
             </div>
             <div className=''>
-              <Button text='Add Video'/>
+              <Button text='Add Video' />
             </div>
           </div>
           <div className='grid grid-cols-12'>
@@ -69,7 +70,7 @@ function VideoDetails() {
                 return (
                   item.id.videoId &&
                   <div className='col-span-3 text-black p-1'>
-                    <Link href={`video?id=${item?.id?.videoId}`}>
+                    <Link href={`video?id=${item?.id?.videoId}`} onClick={() => setNewRoute(newRoute + 1)}>
                       <div className='border border-gray-200'>
                         <img src={item?.snippet?.thumbnails?.medium?.url} className='w-full h-28 object-cover' />
                         <div className='py-1 px-2'>

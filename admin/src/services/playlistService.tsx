@@ -39,10 +39,10 @@ const updatePlaylist = (token: any, body: any) =>
             .then((response: any) => resolve(response.data))
             .catch((error: any) => reject(error));
     });
-const deletePlaylist = (token: any, body: any) =>
+const deletePlaylist = (token: any, id: any) =>
     new Promise((resolve, reject) => {
         axios
-            .post(`${endpoints.playlist.deletePlaylist}`, body, {
+            .delete(`${endpoints.playlist.deletePlaylist}/${id}`, {
                 headers: {
                     'Content-Type': 'application/json',
                     'Authorization': token
