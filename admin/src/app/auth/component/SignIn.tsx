@@ -18,13 +18,12 @@ function SignIn() {
         }
         try {
             const result: any = await Auth.login(data)
-            if (result?.statusCode === 200) {
-                localStorage.setItem('access-token', result?.tokens?.access.token)
-                localStorage.setItem('refresh-token', result?.tokens?.refresh.token)
+            if (result?.status === 200) {
+                localStorage.setItem('token', result?.data?.token)
                 router.push('/')
             }
         } catch (err: any) {
-            alert(err.response.data.message)
+            console.log(err,'error')
         }
         setLoading(false)
     }

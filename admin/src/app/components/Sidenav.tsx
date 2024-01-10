@@ -17,12 +17,12 @@ interface Props {
 }
 function Sidenav({ isDrowerOn, menu, setMenu }: Props) {
     const router = useRouter()
-    // const token = typeof window !== 'undefined' ? localStorage.getItem('access-token') : null;
-    // useEffect(() => {
-    //     if (!token) {
-    //         router.push('/auth/signin')
-    //     }
-    // }, [token])
+    const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
+    useEffect(() => {
+        if (!token) {
+            router.push('/auth/signin')
+        }
+    }, [token])
     return (
         <div className={`w-60 bg-gray-800 h-screen p-0 m-0 ${isDrowerOn ? 'hidden' : 'block'}`}>
             <div className='h-14 bg-red-500 flex jusify-center p-0 m-0'>

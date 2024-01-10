@@ -1,6 +1,7 @@
 import React from 'react'
 import Link from 'next/link'
 function Signup() {
+    
     return (
         <div className='flex bg-gray-300 justify-center'>
             <div className='w-[30%] bg-white my-10 rounded py-10 px-5'>
@@ -23,14 +24,8 @@ function Signup() {
                     <input type='text' className='w-full h-10 border border-gray-300' />
                 </div>
                 <div className='py-2'>
-                    <p className='text-md py-1 text-gray-600 font-bold'>Role</p>
-                    <select className='w-full h-10 border border-gray-300 text-black'>
-
-                        <option value='' disabled selected>Please Select Role</option>
-                        <option value='admin'>Admin</option>
-                        <option value='sub-admin'>Sub-admin</option>
-                        <option value='user'>User</option>
-                    </select>
+                    <p className='text-md py-1 text-gray-600 font-bold'>Phone Number</p>
+                    <input type='text' className='w-full h-10 border border-gray-300' />
                 </div>
                 <div className='flex py-4'>
                     <input type='checkbox' className='h-4 w-4 mt-1' />

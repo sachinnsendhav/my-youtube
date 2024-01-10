@@ -1,4 +1,4 @@
-const url = 'http://13.200.89.117:3512'
+const url = 'http://localhost:3005'
 const BASE_URL = 'https://youtube-v31.p.rapidapi.com';
 export const endpoints = {
   auth: {
@@ -14,6 +14,7 @@ export const endpoints = {
   },
   playlist: {
     createPlaylist: `${url}/api/playlist/addPlaylist`,
+    getPlaylistByParents: `${url}/api/playlist/getPlaylist`,
     updatePlaylist: `${url}/`,
     deletePlaylist: `${url}/api/playlist/removePlaylist/`,
     addVideos: `${url}/api/video/uploadData`,
