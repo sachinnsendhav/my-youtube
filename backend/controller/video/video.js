@@ -24,7 +24,7 @@ module.exports={
         try {
             const playListId = req.params.playListId;
             const videos = await videoDetails.find({playListId:playListId});
-            res.status(200).send({ status: 200,message:"", data: videos });
+            res.status(200).send({ status: 200,message:"Success", data: videos });
         } catch (error) {
             console.log("err", error);
             return res.status(400).send({ status: 400, message: error.message });

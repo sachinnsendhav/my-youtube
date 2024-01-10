@@ -10,12 +10,12 @@ function issueJwt(paylod){
 
 exports.signup = async(req,res) => {
     try{
-        const { firstName, lastName, email, phoneNumber, userPassword, userRole } = req.body;
+        const { firstName, lastName, email, phoneNumber, userPassword } = req.body;
         let userExist = await User.findOne({email})
         if (userExist) {
-            return res.status(400).send( { status:400, message:"User already exists" } );
+            return res.status(400).send( { status:400, message:"User already exists", data:'' } );
         }
-        const role = userRole || 'user';
+        const role = 'admin';
         const password=await bcrypt.hash(userPassword,10);
         const payload = { firstName, lastName, email, phoneNumber,password, role };
         const user = new User(payload);
@@ -54,7 +54,7 @@ exports.updateUserDetail=async(req,res)=>{
         const { firstName, lastName, email, phoneNumber} = req.body;
         let userExist = await User.findById(req.params.userId)
         if (!userExist) {
-            return res.status(404).send( { status:404, message:"User not available" } );
+            return res.status(404).send( { status:404, message:"User not available", data:'' } );
         }
         userExist.firstName=firstName||userExist.firstName
         userExist.lastName=lastName|| userExist.lastName
@@ -72,7 +72,8 @@ exports.addUsers = async(req,res) => {
     try{
         const { firstName,lastName,userName,password } = req.body;
         const userId = req.user.paylod._id;
-        const usertype = new UserType( { firstName,lastName,userName,password,userId } );
+        const role = 'user';
+        const usertype = new UserType( { firstName,lastName,userName,password,userId,role } );
         await usertype.save();
         return res.status(200).send( { status:200,message:"User Added Successfully", data:{firstName,lastName,userName} } )
     }
@@ -90,7 +91,7 @@ exports.deleteUser = async(req,res) => {
             res.status(204).send({ status:204,message:"User deleted successfully",data:"" });
         }
         else{
-            res.status(404).send({ message:`User id ${id} is not valid` })
+            res.status(404).send({ status:404, message:`User id ${id} is not valid`, data:"" })
         }
     }
     catch(error){

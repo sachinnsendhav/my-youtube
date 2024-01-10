@@ -22,10 +22,10 @@ exports.addPlaylist = async(req,res) => {
             name: category.name,
             description: category.description,
         };
-        res.status(200).send({ status:200,mesage:"Playlist Added Successfully", data:responseData });
+        res.status(200).send({ status:200,message:"Playlist Added Successfully", data:responseData });
     }
     catch(error){
-        return res.status(400).send({ status:400, message:error.message });
+        return res.status(400).send({ status:400, message:error.message, data:'' });
     }
 }
 
@@ -45,10 +45,10 @@ exports.removePlaylist = async(req,res) => {
             {userId:new mongoose.Types.ObjectId(req.user.paylod._id)},
             {$pull:{playList:{_id:new mongoose.Types.ObjectId(paylistId)}}}
         )
-        res.status(204).send({ status:204,status:"Playlist Delete Successfully", data:'' });
+        res.status(204).send({ status:204,message:"Playlist Delete Successfully", data:'' });
     }
     catch(error){
-        return res.status(400).send({ status:400, message:error.message });
+        return res.status(400).send({ status:400, message:error.message, data:'' });
     }
 }
 
@@ -79,13 +79,13 @@ exports.updatePlaylist= async(req,res)=>{
         
     }catch(error){
         console.log("err",error)
-        res.status(500).json({ message: 'Internal Server Error',error:error});
+        res.status(500).json({ status:500, message: `Internal Server Error ${error}`, data:''});
     }
 }
 
 exports.getadminPlaylist=async(req,res)=>{
 try{
-    const adminId=req.params.adminId
+    const adminId = req.user.paylod._id;
     let playlistData=await Category.find({userId:adminId})
     res.status(200).json({status:200,message:"",data:playlistData})
 }catch(error){
@@ -97,10 +97,15 @@ try{
 exports.getUserPlaylist=async(req,res)=>{
     try{
         const userId=req.params.userId
-        let playlistData=await UserType.find({userId:userId})
-        res.status(200).json({status:200,message:"",data:playlistData.playList})
+        let playlistData=await UserType.findById({_id: new mongoose.Types.ObjectId(userId)})
+
+        if(!playlistData){
+         res.status(404).json({status:404,message:"User not found",data:""})
+        }
+        console.log("playlistDtaa",playlistData);
+        res.status(200).json({status:200,message:"",data: playlistData.playList})
     }catch(error){
-        console.error(err.message);
+        console.error(error.message);
         res.status(500).send("Server error");
     }
     }
@@ -116,7 +121,7 @@ exports.allotPlayList = async (req, res) => {
             const userData = await UserType.findById(id);
 
             if (!userData) {
-                return res.status(404).send({ message: "User not found" });
+                return res.status(404).send({ status:404,message: "User not found",data:'' });
             }
 
             const existingPlaylistIds = userData.playList.map(item => item._id.toString()); // Convert ObjectIds to strings for comparison
@@ -142,7 +147,7 @@ exports.allotPlayList = async (req, res) => {
             const updatedUserData = await UserType.findById(id);
             res.status(200).send({status:200,message:"Playlist Alloted Successfully", data: updatedUserData });
         } else {
-            res.status(404).send({ message: "User id is required" });
+            res.status(404).send({ status:404,message: "User id is required",data:'' });
         }
     } catch (error) {
         res.status(400).send({ message: error.message });
@@ -153,7 +158,7 @@ exports.deleteUserTypePlayList = async (req,res) => {
     try{
         const { userTypeId, userTypePlayListId } = req.params;
         if(!userTypeId || !userTypePlayListId){
-            res.status(400).send( { message : "User id is required" } )
+            res.status(400).send( { status:400, message : "User id is required", data:'' } )
         }
 
         const updatedUser = await UserType.findByIdAndUpdate(
@@ -163,11 +168,11 @@ exports.deleteUserTypePlayList = async (req,res) => {
         );
 
         if(!updatedUser){
-            res.status(404).send({message:"User not found"})
+            res.status(404).send({status:404, message:"User not found", data:''})
         }
         res.status(204).send({status:204,message:"Playlist Delete Successfully",data:""});
     }
     catch(error){
-        res.status(400).send( { message : error.message } )
+        res.status(400).send( { status:400, message : error.message } )
     }
 }
