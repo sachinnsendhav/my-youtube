@@ -50,18 +50,18 @@ exports.verify=async(req,res)=>{
 
         const transporter = nodemailer.createTransport({
             service: "gmail",
-            host: "smtp.gmail.com",
-            port: 465,
+            host: process.env.HOST_NODEMAILER,
+            port: process.env.PORT_NODEMAILER,
             secure: true,
             auth: {
-              user: "pkmb69.pkmb69@gmail.com",
-              pass: "mwtc napp acfu dxct",
+              user: process.env.FORM_EMAIL_NODEMAILER,
+              pass: process.env.FORM_PASS_NODEMAILER,
             },
         });
 
         // Sending the mail to users:
         const mailOptions = {
-            from : 'pkmb69.pkmb69@gmail.com',
+            from : process.env.FORM_EMAIL_NODEMAILER,
             to : email,
             subject : 'Your OTP for registration',
             text : `Yout OTP is ${otp}`
