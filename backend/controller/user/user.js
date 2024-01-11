@@ -28,7 +28,14 @@ exports.signup = async(req,res) => {
         const user = new User(payload);
         const userData=await user.save();
         const token=issueJwt(userData)
-        return res.status(200).send( { status:200, message:"User registered successfully",data:{token:token} } );
+        const user_data = {
+            firstName: firstName,
+            lastName: lastName,
+            email: email,
+            phoneNumber: phoneNumber,
+            role: role
+        }
+        return res.status(200).send( { status:200, message:"User registered successfully",data:{token:token,userData:user_data} } );
     }
     catch(error){
         return res.status(400).send( { status:400, message:error.message } );
