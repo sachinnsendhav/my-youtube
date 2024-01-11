@@ -4,6 +4,7 @@ export const endpoints = {
   auth: {
     login: `${url}/api/user/login`,
     register: `${url}/api/user/signup`,
+    generateOtp:`${url}/api/generateOtp`
   },
   users: {
     createUSer: `${url}/api/user/addUser`,

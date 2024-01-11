@@ -9,6 +9,7 @@ function Signup() {
     const [email, setEmail] = useState('')
     const [password, setPassord] = useState('')
     const [phone, setPhone] = useState('')
+    const [otp, setOtp] = useState('')
     const [errors, setErrors] = useState<any>({});
     const [loading, setLoading] = useState(false)
     const router = useRouter()
@@ -30,6 +31,9 @@ function Signup() {
         if (password === "") {
             error.password = "Please enter password";
         }
+        if (otp === "") {
+            error.otp = "Please enter otp";
+        }
         setErrors(error);
         return Object.keys(error).length === 0;
     };
@@ -42,7 +46,8 @@ function Signup() {
                 lastName: lastName,
                 email: email,
                 userPassword: password,
-                phoneNumber: phone
+                phoneNumber: phone,
+                otp:Number(otp)
             }
             try {
                 const result: any = await Auth.register(data)
@@ -57,7 +62,23 @@ function Signup() {
         }
         setLoading(false)
     }
+    const SendOtp = async () => {
+        setLoading(true)
+        if (email !== "") {
+            const data: any = {
+                email: email
+            }
+            try {
+                const result: any = await Auth.generateOtp(data)
 
+            } catch (err: any) {
+                console.log(err, 'error')
+            }
+        } else {
+            alert("please enter Email Address")
+        }
+        setLoading(false)
+    }
     return (
         <div className='flex transition duration-500 ease-in-out bg-gradient-to-r from-[#e61e78] via-[#ffc34a] to-[#e61e78] shadow-xl justify-center'>
             <div className='w-[50%] bg-white my-10 rounded p-5'>
@@ -97,6 +118,23 @@ function Signup() {
                         {errors.phone && (
                             <p className="text-red-500 text-sm">{errors.phone}</p>
                         )}
+                    </div>
+                    <div className='p-2 col-span-1'>
+
+                        <p className='text-md py-1 text-gray-600 font-bold'>Otp</p>
+                        <div className='flex'>
+                            <div className='w-[60%] pr-5'>
+                                <input onChange={(e) => setOtp(e.target.value)} type='number' className='w-full px-2 h-10 border border-gray-300' />
+                                {errors.otp && (
+                                    <p className="text-red-500 text-sm">{errors.otp}</p>
+                                )}
+                            </div>
+                            <button
+                                onClick={() => SendOtp()}
+                                className='w-[40%] h-10 font-semibold rounded transition duration-500 ease-in-out bg-gradient-to-r from-[#ffc34a] via-[#e61e78] to-[#f593fa] hover:to-[#fc0303] hover:from-[#e61e78] text-white transform transition-transform hover:scale-105'>
+                                Send OTP
+                            </button>
+                        </div>
                     </div>
                 </div>
                 <div className='flex py-2'>

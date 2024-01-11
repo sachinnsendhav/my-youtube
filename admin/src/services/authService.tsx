@@ -24,8 +24,19 @@ const register = (body: any) =>
             .then((response: any) => resolve(response.data))
             .catch((error: any) => reject(error));
     });
-
+const generateOtp  = (body: any) =>
+new Promise((resolve, reject) => {
+    axios
+        .post(`${endpoints.auth.generateOtp}`, body, {
+            headers: {
+                'Content-Type': 'application/json'
+            },
+        })
+        .then((response: any) => resolve(response.data))
+        .catch((error: any) => reject(error));
+});
 export {
     login,
-    register
+    register,
+    generateOtp
 }
