@@ -10,7 +10,7 @@ export const endpoints = {
     addPlaylistToUser: `${url}/api/playlist/allotPlayList/`,
     removePlaylistFromUser: `${url}/api/playlist/deleteUserTypePlaylist/`,
     deleteUser: `${url}/api/user/deleteUser/`,
-    getAllUsers: `${url}/`
+    getAllUsers: `${url}/api/usersByAdminId`
   },
   playlist: {
     createPlaylist: `${url}/api/playlist/addPlaylist`,

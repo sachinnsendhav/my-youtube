@@ -75,7 +75,10 @@ function AllUsersList() {
                             <div className="font-semibold text-left text-lg">Name</div>
                           </th>
                           <th className="p-2 whitespace-nowrap">
-                            <div className="font-semibold text-left text-lg">Description</div>
+                            <div className="font-semibold text-left text-lg">Username</div>
+                          </th>
+                            <th className="p-2 whitespace-nowrap">
+                            <div className="font-semibold text-left text-lg">Password</div>
                           </th>
                           <th className="p-2 whitespace-nowrap">
                             <div className="font-semibold text-center text-lg">Action</div>
@@ -93,19 +96,24 @@ function AllUsersList() {
                             </td>
                             <td className="p-2 whitespace-nowrap">
                               <div className="flex items-center">
-                                <div className="font-medium text-gray-800">{item.firstName}</div>
+                                <div className="font-medium text-gray-800">{item.firstName} {item.lastName}</div>
                               </div>
                             </td>
                             <td className="p-2 whitespace-nowrap">
                               <div className="text-left font-medium text-green-500">
-                                {item.description}
+                                {item.userName}
+                              </div>
+                            </td> 
+                              <td className="p-2 whitespace-nowrap">
+                              <div className="text-left font-medium text-green-500">
+                                {item.password}
                               </div>
                             </td>
                             <td className="text-xs flex justify-center items-center h-full pt-4">
-                              <Link href={`/brands/view?id=${item?._id}`}>
+                              <Link href={`/users/view?id=${item?._id}`}>
                                 <FaEye className="text-lg cursor-pointer text-gray-600 mr-5" />
                               </Link>
-                              <Link href={`/brands/update?id=${item?._id}`}>
+                              <Link href={`/users/update?id=${item?._id}`}>
                                 <FaEdit className="text-lg cursor-pointer text-gray-600" />
                               </Link>
 

@@ -1,17 +1,22 @@
 'use client'
 import React, { useEffect, useState } from 'react'
 import { Button, Header, Sidenav } from '../components'
-import { YoutubeApi } from '@/services';
+import { Playlist, YoutubeApi } from '@/services';
 import ReactPlayer from 'react-player';
 import './video.css'
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+
 function VideoDetails() {
+  const router = useRouter()
   const [isDrowerOn, setIsDrowerOn] = useState(false)
   const [menu, setMenu] = useState('');
   const [id, setId] = useState('');
   const [videoDetails, setVideoDetails] = useState<any>();
   const [relatedVideos, setRelatedVideos] = useState<any>();
   const [newRoute, setNewRoute] = useState(0)
+  const [playlist, setPlaylist] = useState<any>([])
+  const [playlistId, setPlaylistId] = useState('')
   useEffect(() => {
     const id: string = typeof window !== 'undefined' ? window.location.search?.split('=')[1] : '';
     setId(id)
@@ -43,7 +48,23 @@ function VideoDetails() {
       }
     }
   }
-  console.log(videoDetails, '--s-')
+
+  const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
+  useEffect(() => {
+    getPlaylist()
+  }, [])
+
+  const getPlaylist = async () => {
+    try {
+      const result: any = await Playlist.getAllPlaylist(token)
+      setPlaylist(result?.data)
+    } catch (err: any) {
+      if (err.response.data.message === 'Unauthorized') {
+        router.push('/auth/signin');
+      }
+      console.error(err, 'error')
+    }
+  }
   return (
     <div className="flex bg-gray-200">
       <Sidenav isDrowerOn={isDrowerOn} menu={menu} setMenu={setMenu} />
@@ -60,7 +81,15 @@ function VideoDetails() {
               <p className='text-sm font-semibold'>{videoDetails?.snippet?.title}</p>
               <p className='text-xs font-semibold'>{videoDetails?.snippet?.channelTitle}</p>
             </div>
-            <div className=''>
+            <div className='flex'>
+              <select className='focus:outline-none mr-3 bg-white rounded-sm border border-gray-500 text-gray-600'>
+                <option disabled selected>please Select Playlist</option>
+                {playlist.map((item: any, index:number) => {
+                  return (
+                    <option key={index} value={item._id}>{item.name}</option>
+                  )
+                })}
+              </select>
               <Button text='Add Video' />
             </div>
           </div>

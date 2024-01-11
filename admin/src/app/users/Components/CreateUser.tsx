@@ -79,7 +79,7 @@ function CreateUser() {
 
             <div className='grid grid-cols-2'>
               <div className='py-2 col-span-1 mr-2'>
-                <p className='text-md py-1 text-gray-600'>User Name</p>
+                <p className='text-md py-1 text-gray-600'>Username</p>
                 <input onChange={(e) => setUserName(e.target.value)} type='text' className='w-full text-black pl-3  h-10 border border-gray-300' />
                 {errors.userName && (
                   <p className="text-red-500 text-sm">{errors.userName}</p>

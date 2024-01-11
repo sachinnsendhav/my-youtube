@@ -103,10 +103,10 @@ function ViewAllPlayList() {
                               </div>
                             </td>
                             <td className="text-xs flex justify-center items-center h-full pt-4">
-                              <Link href={`/brands/view?id=${item?._id}`}>
+                              <Link href={`/playlist/view?id=${item?._id}`}>
                                 <FaEye className="text-lg cursor-pointer text-gray-600 mr-5" />
                               </Link>
-                              <Link href={`/brands/update?id=${item?._id}`}>
+                              <Link href={`/playlist/update?id=${item?._id}`}>
                                 <FaEdit className="text-lg cursor-pointer text-gray-600" />
                               </Link>
 
