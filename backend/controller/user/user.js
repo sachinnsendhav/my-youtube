@@ -5,7 +5,7 @@ const jwt=require('jsonwebtoken')
 const bcrypt = require('bcrypt');
 const otpGenerator=require('otp-generator')
 const nodemailer = require('nodemailer');
-
+const sendMail=require('../../middleware/sendmail')
 function issueJwt(paylod){
     const token=jwt.sign({paylod},`my-youtube`,{expiresIn:'1h'})
     return token
@@ -95,6 +95,35 @@ exports.login= async(req,res)=>{
     }catch(error){
         console.error(error);
         res.status(500).json({ message: 'Internal server error' });
+    }
+}
+
+exports.forgetPassword=async(req,res)=>{
+    try{
+        
+        const {email}=req.body
+        sendMail(email)
+        let userExist = await User.findOne({email})
+        if (userExist) {
+            return res.status(400).send( { status:400, message:"User already exists", data:'' } );
+        }
+    }catch(error){
+        console.log("forgeterror",error)
+    }
+}
+
+exports.forgetPasswordSave=async(req,res)=>{
+    try{
+        const userId=req.user.paylod._id
+        const {email,password}=req.body
+        const userPassword=await bcrypt.hash(password,10);
+        const userpasswordUpdate = await User.findByIdAndUpdate({_id:userId},{password:userPassword},{new:true});
+        if (!userpasswordUpdate) {
+            return res.status(404).json({ status:"404",message: 'User Not Found' });
+          }
+        return res.status(201).json({status:"Success",message:"Password Update Successfully",data:userpasswordUpdate})  
+    }catch(error){
+        console.log("forgeterror",error)
     }
 }
 
