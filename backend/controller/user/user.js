@@ -244,3 +244,30 @@ exports.getAllUserByparentId=async(req,res)=>{
         res.status(500).send("Server error");
     }
 }
+
+exports.userTypeLogin = async(req,res) => {
+    try{
+        const { userName, password } = req.body;
+        const user = await UserType.find({ userName });
+        const user_data = user[0]
+        if(!user_data){
+            return res.status(404).send({status:404,message:'User Not Found',data:''});
+        }
+        if(user_data.userName === userName && user_data.password === password){
+            const token = issueJwt(user_data);
+            const formatted_data = {
+                firstName : user_data.firstName,
+                lastName : user_data.lastName,
+                userName : user_data.userName,
+                playList : user_data.playList
+            }
+            res.status(200).send({status:200,message:'Success',data:{ token:token, userData:formatted_data }});
+        }
+        else{
+            res.status(404).send({status:404,message:'Invalid Credentials',data:''});
+        }
+    }
+    catch(error){
+        res.status(400).send({status:400,message:error.message,data:''});
+    }
+}
