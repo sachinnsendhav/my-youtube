@@ -118,6 +118,22 @@ exports.login= async(req,res)=>{
     }
 }
 
+exports.updatePassword=async(req,res)=>{
+    const userId=req.user.paylod._id
+    const{oldPassword,updatePassword}=req.body
+    const data=await User.findOne({_id:userId})
+    if(!data){
+        return res.status(404).json({"status":404,message:"User not found",data:""})
+    }
+    const isPasswordValid = await bcrypt.compare(oldPassword, data.password);
+    if (!isPasswordValid) {
+        return res.status(401).json({ status:"401",message: 'Invalid Old Password Authentication failed' });
+    }
+    const newPassword=await bcrypt.hash(updatePassword,10);
+    const userData=await User.findByIdAndUpdate({_id:userId},{$set:{password:newPassword}})
+    res.status(201).json({status:201,message:"Password Updated SuccessFully",data:''})
+}
+
 exports.forgetPassword=async(req,res)=>{
     try{
         const {email}=req.body
