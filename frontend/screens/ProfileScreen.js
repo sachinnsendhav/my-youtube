@@ -1,21 +1,41 @@
-import React from 'react';
-import { View, Text, StyleSheet, TextInput } from 'react-native';
-import { FontAwesome } from '@expo/vector-icons'; // Import the FontAwesome icon library
+import React, { useState } from 'react';
+import {
+  View,
+  Text,
+  StyleSheet,
+  TextInput,
+  TouchableOpacity,
+  Modal,
+  Image,
+} from 'react-native';
 
 const ProfileScreen = () => {
+  const [isModalVisible, setModalVisible] = useState(false);
+
+  const toggleModal = () => {
+    setModalVisible(!isModalVisible);
+  };
+
   // Sample user data (replace this with your actual user data)
   const user = {
-    firstName: 'John',
+    firstName: 'John1',
     lastName: 'Doe',
     email: 'johndoe@example.com',
-    phoneNumber: '123-456-7890'
+    phoneNumber: '123-456-7890',
   };
+
+  // Image URL for the cartoon profile icon
+  const cartoonIconUrl =
+    'https://static.vecteezy.com/system/resources/previews/009/749/643/original/woman-profile-mascot-illustration-female-avatar-character-icon-cartoon-girl-head-face-business-user-logo-free-vector.jpg';
 
   return (
     <View style={styles.container}>
       <View style={styles.profileHeader}>
-        {/* Profile Icon */}
-        <FontAwesome name="user-circle" size={80} color="#000" />
+        {/* Cartoon Profile Icon */}
+        <Image
+          source={{ uri: cartoonIconUrl }}
+          style={styles.profileIcon}
+        />
 
         {/* User First Name */}
         <Text style={styles.userName}>{user.firstName}</Text>
@@ -44,7 +64,25 @@ const ProfileScreen = () => {
           <Text style={styles.label}>Phone Number:</Text>
           <TextInput style={styles.input} value={user.phoneNumber} editable={false} />
         </View>
+
+        {/* Signup Button */}
+        <TouchableOpacity style={styles.signupButton} onPress={toggleModal}>
+          <Text style={styles.signupButtonText}>Sign Up</Text>
+        </TouchableOpacity>
       </View>
+
+      {/* Modal */}
+      <Modal visible={isModalVisible} transparent animationType="slide">
+        <View style={styles.modalContainer}>
+          <TouchableOpacity style={styles.closeModalButton} onPress={toggleModal}>
+            <Text style={styles.closeModalButtonText}>Close Modal</Text>
+          </TouchableOpacity>
+          {/* Signup Button inside Modal */}
+          <TouchableOpacity style={styles.signupButton}>
+            <Text style={styles.signupButtonText}>Sign Up</Text>
+          </TouchableOpacity>
+        </View>
+      </Modal>
     </View>
   );
 };
@@ -54,11 +92,17 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 20,
     alignItems: 'center',
-    backgroundColor: '#FFF',
+    backgroundColor: '#9370db',
   },
   profileHeader: {
     alignItems: 'center',
     marginBottom: 20,
+  },
+  profileIcon: {
+    width: 80,
+    height: 80,
+    borderRadius: 40,
+    marginBottom: 10,
   },
   userName: {
     fontSize: 24,
@@ -66,7 +110,7 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   card: {
-    backgroundColor: '#F5F5F5',
+    backgroundColor: 'rgba(245, 245, 245, 0.6)', // Transparent background
     borderRadius: 10,
     padding: 20,
     width: '100%',
@@ -90,9 +134,42 @@ const styles = StyleSheet.create({
     flex: 2,
     height: 40,
     borderWidth: 1,
-    borderColor: '#ccc',
+    borderColor: 'FFFFF0',
     borderRadius: 5,
     paddingLeft: 10,
+    // backgroundColor: "white"
+  },
+  signupButton: {
+    marginTop: 20,
+    backgroundColor: '#6f2cdb',
+    padding: 15,
+    borderRadius: 8,
+    width: '100%',
+    alignItems: 'center',
+  },
+  signupButtonText: {
+    color: '#FFF',
+    fontSize: 18,
+    fontWeight: 'bold',
+  },
+  modalContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  },
+  closeModalButton: {
+    position: 'absolute',
+    top: 20,
+    right: 20,
+    padding: 10,
+    backgroundColor: '#6f2cdb',
+    borderRadius: 8,
+  },
+  closeModalButtonText: {
+    color: '#FFF',
+    fontSize: 16,
+    fontWeight: 'bold',
   },
 });
 
