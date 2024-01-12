@@ -80,8 +80,8 @@ function Signup() {
         setLoading(false)
     }
     return (
-        <div className='flex transition duration-500 ease-in-out bg-gradient-to-r from-[#e61e78] via-[#ffc34a] to-[#e61e78] shadow-xl justify-center'>
-            <div className='w-[50%] bg-white my-10 rounded p-5'>
+        <div className='h-screen py-5 flex items-center transition duration-500 ease-in-out bg-gradient-to-r from-[#e61e78] via-[#ffc34a] to-[#e61e78] shadow-xl justify-center'>
+            <div className='w-[50%] bg-white rounded p-5'>
                 <p className='text-3xl font-bold text-gray-600'> Parents - Sign Up</p>
                 <div className='grid grid-cols-2 mt-3 text-gray-600'>
                     <div className='p-2 col-span-1'>

@@ -37,6 +37,11 @@ function SignIn() {
                     router.push('/')
                 }
             } catch (err: any) {
+                if(err?.response?.data?.status ==="401"){
+                alert("Incorrect email or password")
+                }else{
+                    alert("somthing went wrong!")
+                }
                 console.log(err, 'error')
             }
         }
@@ -44,8 +49,8 @@ function SignIn() {
     }
 
     return (
-        <div className='flex transition duration-500 ease-in-out bg-gradient-to-r from-[#e61e78] via-[#ffc34a] to-[#e61e78] shadow-xl justify-center'>
-            <div className='w-[30%] bg-white my-10 rounded py-10 px-5'>
+        <div className='h-screen py-5 flex items-center transition duration-500 ease-in-out bg-gradient-to-r from-[#e61e78] via-[#ffc34a] to-[#e61e78] shadow-xl justify-center'>
+        <div className='w-[30%] bg-white rounded p-5'>
                 <p className='text-3xl font-bold text-gray-600'>Parents - Sign In</p>
                 <p className='text-md text-gray-500'>Log in to your account to continue.</p>
                 <div className='py-2 mt-5'>

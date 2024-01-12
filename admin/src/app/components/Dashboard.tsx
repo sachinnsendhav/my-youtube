@@ -42,7 +42,7 @@ function Dashboard() {
                         return (
                             item?.id?.videoId &&
                             <div className='col-span-3 text-black p-1'>
-                                <Link href={`video?id=${item?.id?.videoId}`}>
+                                <Link href={`video/${item?.id?.videoId}`}>
                                     <div className='border border-gray-200'>
                                         <img src={item?.snippet?.thumbnails?.medium?.url} className='w-full h-28 object-cover' />
                                         <div className='py-1 px-2'>
