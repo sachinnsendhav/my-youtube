@@ -48,6 +48,10 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true,
         enum: ['admin']
+    },
+    token:{
+        type:String,
+        default:''
     }
 });
 

@@ -11,6 +11,7 @@ const app = express();
 const hbs = require("hbs");
 const path = require("path");
 const fs = require('fs');
+const { randomUUID } = require('crypto');
 const template_path = path.join(__dirname, "../../templates/views"); //for templates files(hbs)
 const source = fs.readFileSync(path.join(template_path, 'otp.hbs'), 'utf8');
 const template = hbs.compile(source);
@@ -143,7 +144,10 @@ exports.forgetPassword=async(req,res)=>{
             return res.status(400).send( { status:400, message:"User does not exists", data:'' } );
         }
         else{
-            await sendMail(userExist)
+            const randomuuid=randomUUID()
+            const data=await User.updateOne({email:email},{$set:{token:randomuuid}})
+            await sendMail(userExist,randomuuid)
+            
             return res.status(201).send( { status:201, message:"Reset Password Link Has Been Send To Your Email", data:'' } );
         }
     }catch(error){
@@ -154,10 +158,14 @@ exports.forgetPassword=async(req,res)=>{
 
 exports.forgetPasswordSave=async(req,res)=>{
     try{
-        const userId=req.user.paylod._id
         const {email,password}=req.body
+        const token=req.query.token
+        const uuidExist=await User.findOne({token:token})
+        if(!uuidExist){
+            res.status(401).send({status:401,message:"Password Reset token already use"})
+        }
         const userPassword=await bcrypt.hash(password,10);
-        const userpasswordUpdate = await User.findByIdAndUpdate({_id:userId},{password:userPassword},{new:true});
+        const userpasswordUpdate = await User.findByIdAndUpdate({_id:uuidExist._id},{password:userPassword,token:""},{new:true});
         if (!userpasswordUpdate) {
             return res.status(404).json({ status:"404",message: 'User Not Found' });
           }
