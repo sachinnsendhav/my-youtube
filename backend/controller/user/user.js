@@ -120,15 +120,19 @@ exports.login= async(req,res)=>{
 
 exports.forgetPassword=async(req,res)=>{
     try{
-        
         const {email}=req.body
-        sendMail(email)
         let userExist = await User.findOne({email})
-        if (userExist) {
-            return res.status(400).send( { status:400, message:"User already exists", data:'' } );
+        console.log("userExist", userExist);
+        if (!userExist) {
+            return res.status(400).send( { status:400, message:"User does not exists", data:'' } );
+        }
+        else{
+            await sendMail(userExist)
+            return res.status(201).send( { status:201, message:"Reset Password Link Has Been Send To Your Email", data:'' } );
         }
     }catch(error){
         console.log("forgeterror",error)
+        return res.status(500).send({ status: 500, message: "Internal Server Error", data: '' });
     }
 }
 
