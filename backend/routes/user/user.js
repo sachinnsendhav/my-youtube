@@ -13,5 +13,5 @@ userrouter.post('/user/addUser', auth, usercontroller.addUsers)
 userrouter.delete('/user/deleteUser/:id', auth, usercontroller.deleteUser);
 userrouter.get('/usersByAdminId',auth,usercontroller.getAllUserByparentId)
 userrouter.post('/generateOtp',usercontroller.verify)
-userrouter.post('/userType/login', usercontroller.userTypeLogin)
+userrouter.post('/userType/login',usercontroller.userTypeLogin)
 module.exports = userrouter;
