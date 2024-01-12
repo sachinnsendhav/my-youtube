@@ -6,7 +6,7 @@ const template_path = path.join(__dirname, "../templates/views"); //for template
 const source = fs.readFileSync(path.join(template_path, 'resetPassword.hbs'), 'utf8');
 const template = hbs.compile(source);
 
-const sendMail = async (userData) => {
+const sendMail = async (userData,randomuuid) => {
     try {
         const { email, firstName, lastName } = userData;
 
@@ -26,7 +26,7 @@ const sendMail = async (userData) => {
             from: process.env.FORM_EMAIL_NODEMAILER,
             to: email,
             subject: 'Your Link For Reset Password',
-            html: template({ firstName, lastName }),
+            html: template({ firstName, lastName,randomuuid }),
             text: `Your Link For Reset Password`
         };
 
