@@ -1,5 +1,5 @@
 const express = require('express');
-const cors=require('corss')
+const cors=require('cors')
 const app = express();
 const PORT = 3005
 const bodyParser = require('body-parser');

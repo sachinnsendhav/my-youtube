@@ -4,7 +4,7 @@ export const endpoints = {
   auth: {
     login: `${url}/api/user/login`,
     register: `${url}/api/user/signup`,
-    generateOtp:`${url}/api/generateOtp`
+    generateOtp: `${url}/api/generateOtp`
   },
   users: {
     createUSer: `${url}/api/user/addUser`,
@@ -18,6 +18,8 @@ export const endpoints = {
     getPlaylistByParents: `${url}/api/playlist/getPlaylist`,
     updatePlaylist: `${url}/`,
     deletePlaylist: `${url}/api/playlist/removePlaylist`,
+  },
+  video: {
     addVideos: `${url}/api/video/uploadData`,
     getAllVideos: `${url}/api/video`,
     deleteVideo: `${url}/api/video/delete/`,
