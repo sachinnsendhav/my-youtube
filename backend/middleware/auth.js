@@ -1,9 +1,13 @@
 const jwt = require('jsonwebtoken');
 const authentication=(req,res,next)=>{
     console.log("inside middle",req.headers.authorization?.split(" ")?.[1])
+    const authorizationHeader = req.headers.authorization;
+    if(!authorizationHeader){
+      return res.status(401).json({ message: "Authorization header missing" });
+    }
     var token=req.headers.authorization||req.headers.authorization.split(" ")[1];
     if (!token) {
-      return res.status(401).json({message:"Authorization header missing"})
+      return res.status(401).json({message:"Authorization token missing"})
     }
     jwt.verify(token,"my-youtube",(err,decoded)=>{
          if (err) {

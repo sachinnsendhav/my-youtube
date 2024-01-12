@@ -1,10 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { View, StyleSheet, TextInput, ScrollView, TouchableOpacity } from 'react-native';
 import { Card, Title, Paragraph } from 'react-native-paper';
-import YouTube from 'react-native-youtube';
+import WebView from 'react-native-webview';
+import YoutubePlayer from 'react-native-youtube-iframe';
 
 const HomeScreen = () => {
-  const [youtubeVideoId, setYoutubeVideoId] = React.useState(null);
+  const [youtubeVideoId, setYoutubeVideoId] = useState(null);
 
   const handleCardPress = (videoId) => {
     setYoutubeVideoId(videoId);
@@ -20,9 +21,24 @@ const HomeScreen = () => {
         />
       </View>
       <ScrollView>
-        <TouchableOpacity onPress={() => handleCardPress('9JJeC9HPwG0')}>
+        <TouchableOpacity onPress={() => handleCardPress('k8sN7Vl3IFQ')}>
           <Card style={styles.card}>
-            <Card.Cover source={{ uri: 'https://img.youtube.com/vi/9JJeC9HPwG0/maxresdefault.jpg' }} />
+            {youtubeVideoId ? (
+              <YoutubePlayer
+                height={200}
+                play={true}
+                videoId={youtubeVideoId}
+                webViewStyle={styles.webViewStyle}
+              />
+            ) : (
+              <View style={styles.webViewStyle}>
+                <WebView
+                  source={{
+                    uri: 'https://www.youtube.com/watch?v=k8sN7Vl3IFQ',
+                  }}
+                />
+              </View>
+            )}
             <Card.Content>
               <Title>Video Title</Title>
               <Paragraph>Description of the video.</Paragraph>
@@ -32,19 +48,6 @@ const HomeScreen = () => {
 
         {/* Add more cards as needed */}
       </ScrollView>
-      {/* {youtubeVideoId && (
-        <YouTube
-          videoId={youtubeVideoId}
-          play
-          fullscreen
-          loop
-          onReady={() => console.log('Ready')}
-          onChangeState={(e) => console.log('State:', e.state)}
-          onChangeQuality={(e) => console.log('Quality: ', e.quality)}
-          onError={(e) => console.log('Error:', e.error)}
-          style={{ alignSelf: 'stretch', height: 300 }}
-        />
-      )} */}
     </View>
   );
 };
@@ -67,6 +70,9 @@ const styles = StyleSheet.create({
   },
   card: {
     margin: 16,
+  },
+  webViewStyle: {
+    height: 200, // Set the height of the video container
   },
 });
 

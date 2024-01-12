@@ -5,6 +5,17 @@ const jwt=require('jsonwebtoken')
 const bcrypt = require('bcrypt');
 const otpGenerator=require('otp-generator')
 const nodemailer = require('nodemailer');
+const sendMail=require('../../middleware/sendmail')
+const express = require('express');
+const app = express();
+const hbs = require("hbs");
+const path = require("path");
+const fs = require('fs');
+const template_path = path.join(__dirname, "../../templates/views"); //for templates files(hbs)
+const source = fs.readFileSync(path.join(template_path, 'otp.hbs'), 'utf8');
+const template = hbs.compile(source);
+app.set('view engine', 'hbs')
+app.set('views', template_path)  //for templates files (hbs)
 
 function issueJwt(paylod){
     const token=jwt.sign({paylod},`my-youtube`,{expiresIn:'1h'})
@@ -71,6 +82,8 @@ exports.verify=async(req,res)=>{
             from : process.env.FORM_EMAIL_NODEMAILER,
             to : email,
             subject : 'Your OTP for registration',
+            html : template({ otp }),
+            context : { otp },
             text : `Yout OTP is ${otp}`
         };
         const sendingMail = await transporter.sendMail(mailOptions);
@@ -102,6 +115,55 @@ exports.login= async(req,res)=>{
     }catch(error){
         console.error(error);
         res.status(500).json({ message: 'Internal server error' });
+    }
+}
+
+exports.updatePassword=async(req,res)=>{
+    const userId=req.user.paylod._id
+    const{oldPassword,updatePassword}=req.body
+    const data=await User.findOne({_id:userId})
+    if(!data){
+        return res.status(404).json({"status":404,message:"User not found",data:""})
+    }
+    const isPasswordValid = await bcrypt.compare(oldPassword, data.password);
+    if (!isPasswordValid) {
+        return res.status(401).json({ status:"401",message: 'Invalid Old Password Authentication failed' });
+    }
+    const newPassword=await bcrypt.hash(updatePassword,10);
+    const userData=await User.findByIdAndUpdate({_id:userId},{$set:{password:newPassword}})
+    res.status(201).json({status:201,message:"Password Updated SuccessFully",data:''})
+}
+
+exports.forgetPassword=async(req,res)=>{
+    try{
+        const {email}=req.body
+        let userExist = await User.findOne({email})
+        console.log("userExist", userExist);
+        if (!userExist) {
+            return res.status(400).send( { status:400, message:"User does not exists", data:'' } );
+        }
+        else{
+            await sendMail(userExist)
+            return res.status(201).send( { status:201, message:"Reset Password Link Has Been Send To Your Email", data:'' } );
+        }
+    }catch(error){
+        console.log("forgeterror",error)
+        return res.status(500).send({ status: 500, message: "Internal Server Error", data: '' });
+    }
+}
+
+exports.forgetPasswordSave=async(req,res)=>{
+    try{
+        const userId=req.user.paylod._id
+        const {email,password}=req.body
+        const userPassword=await bcrypt.hash(password,10);
+        const userpasswordUpdate = await User.findByIdAndUpdate({_id:userId},{password:userPassword},{new:true});
+        if (!userpasswordUpdate) {
+            return res.status(404).json({ status:"404",message: 'User Not Found' });
+          }
+        return res.status(201).json({status:"Success",message:"Password Update Successfully",data:userpasswordUpdate})  
+    }catch(error){
+        console.log("forgeterror",error)
     }
 }
 
