@@ -87,7 +87,13 @@ exports.getadminPlaylist=async(req,res)=>{
 try{
     const adminId = req.user.paylod._id;
     let playlistData=await Category.find({userId:adminId})
-    res.status(200).json({status:200,message:"",data:playlistData})
+    const updatedData=playlistData.map((item)=>({
+            "_id": item?._id,
+            "name": item?.name,
+            "description": item?.description,
+            "userId": item?.userId
+    }))
+    res.status(200).json({status:200,message:"",data:updatedData})
 }catch(error){
     console.error(err.message);
     res.status(500).send("Server error");
@@ -174,5 +180,83 @@ exports.deleteUserTypePlayList = async (req,res) => {
     }
     catch(error){
         res.status(400).send( { status:400, message : error.message } )
+    }
+}
+
+exports.moveUpVideo=async(req,res)=>{
+    try{
+        const playlistId=req.params.playlistId
+        const sNo=req.params.sNo
+        const playlistExist=await Category.findById({_id:playlistId})
+        if (!playlistExist) {
+            return res.status(404).json({
+              status: "FAILED",
+              message: "Playlist not found",
+            });
+          }
+          console.log("playlistExist",playlistExist)
+          const videoIndex = playlistExist.video.findIndex((item) => {
+            console.log("sNo:", Number(sNo),item);
+            console.log("item.sNo:", item.sNo,item.sNo === Number(sNo));
+            return item.sNo === Number(sNo);
+        });
+        if (videoIndex === -1) {
+            return res.status(404).json({
+              status: 400,
+              message: "Video with sNo not found",
+            });
+          }
+        if (videoIndex === 0) {
+            return res.status(400).json({
+              status: 400,
+              message: "Video is already at the top",
+            });
+          }
+        const temp=playlistExist.video[videoIndex]
+        playlistExist.video[videoIndex]=playlistExist.video[videoIndex-1]
+        playlistExist.video[videoIndex-1]=temp
+        playlistExist.video[videoIndex-1]-1
+        const data=await playlistExist.save()
+        res.status(200).send({status:200, message:"User not found", data:data})
+    }catch(error){
+        console.log("err",error)
+        res.status(400).send({status:400, message:"User not found", data:error})
+
+    }
+}
+
+exports.moveDownVideo=async(req,res)=>{ 
+    try{
+        const playlistId=req.params.playlistId
+        const sNo=req.params.sNo
+        const playlistExist=await Category.findById({_id:playlistId})
+        if (!playlistExist) {
+            return res.status(404).json({
+              status: "FAILED",
+              message: "Playlist not found",
+            });
+          }
+          console.log("playlistExist",playlistExist)
+          const videoIndex = playlistExist.video.findIndex((item) => {
+            console.log("sNo:", Number(sNo),item);
+            console.log("item.sNo:", item.sNo,item.sNo === Number(sNo));
+            return item.sNo === Number(sNo);
+        });
+        if (videoIndex === -1) {
+            return res.status(404).json({
+              status: 400,
+              message: "Video with sNo not found",
+            });
+          }
+        const temp=playlistExist.video[videoIndex]
+        playlistExist.video[videoIndex]=playlistExist.video[videoIndex+1]
+        playlistExist.video[videoIndex+1]=temp
+        playlistExist.video[videoIndex+1]+1
+        const data=await playlistExist.save()
+        res.status(200).send({status:200, message:"User not found", data:data})
+    }catch(error){
+        console.log("err",error)
+        res.status(400).send({status:400, message:"User not found", data:error})
+
     }
 }
