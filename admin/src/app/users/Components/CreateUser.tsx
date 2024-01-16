@@ -32,7 +32,6 @@ function CreateUser() {
     return Object.keys(error).length === 0;
   };
   const createNewUser = async () => {
-    console.log("fddddddddddddd")
     if (validateForm()) {
       const data: any = {
         firstName: firstName,
@@ -47,6 +46,9 @@ function CreateUser() {
           router.push('/users/list')
         }
       } catch (err: any) {
+        if (err.response.data.message === 'Unauthorized') {
+          router.push('/auth/signin');
+        }
         console.error(err, 'error')
       }
     }
@@ -58,7 +60,7 @@ function CreateUser() {
       <div className='w-full  h-screen overflow-y-scroll'>
         <Header setIsDrowerOn={setIsDrowerOn} isDrowerOn={isDrowerOn} />
         <div className='px-5 py-3'>
-          <Title title='Create User' />
+          <Title title='Create User - (Children)' />
           <div className='w-[60%] bg-white border border-gray-200 p-5 mt-5 rounded'>
             <div className='grid grid-cols-2'>
               <div className='py-2 col-span-1 mr-2'>

@@ -22,8 +22,8 @@ export const endpoints = {
   video: {
     addVideos: `${url}/api/video/uploadData`,
     getAllVideos: `${url}/api/video`,
-    deleteVideo: `${url}/api/video/delete/`,
-    getVideosByPlaylist: `${url}/api/video/getData/`
+    deleteVideo: `${url}/api/video/delete`,
+    getVideosByPlaylist: `${url}/api/video/getData`
   },
   youtubeApi: {
     search: `${BASE_URL}/search?part=snippet&q=`,

@@ -66,6 +66,7 @@ function VideoDetails({ id }: any) {
       }
       try {
         const resp = await Video.addVideoToPlaylist(token, data)
+        alert('video added!')
         console.log("first", resp)
 
       } catch (err) {
