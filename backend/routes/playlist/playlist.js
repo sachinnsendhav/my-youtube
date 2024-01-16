@@ -10,4 +10,7 @@ playlistrouter.get('/playlist/getPlaylist',auth,playlistcontroller.getadminPlayl
 playlistrouter.post('/playlist/allotPlayList/:id', auth, playlistcontroller.allotPlayList);
 playlistrouter.put('/playlist/deleteUserTypePlaylist/:userTypeId/userTypePlayList/:userTypePlayListId', auth, playlistcontroller.deleteUserTypePlayList);
 playlistrouter.get('/playlist/getUserPlaylist/:userId',playlistcontroller.getUserPlaylist)
+playlistrouter.post('/moveup/:playlistId/:sNo',auth,playlistcontroller.moveUpVideo)
+playlistrouter.post('/movedown/:playlistId/:sNo',auth,playlistcontroller.moveDownVideo)
+
 module.exports = playlistrouter;

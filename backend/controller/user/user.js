@@ -7,6 +7,7 @@ const otpGenerator=require('otp-generator')
 const nodemailer = require('nodemailer');
 const sendMail=require('../../middleware/sendmail')
 const express = require('express');
+const mongoose = require('mongoose')
 const app = express();
 const hbs = require("hbs");
 const path = require("path");
@@ -19,7 +20,12 @@ app.set('view engine', 'hbs')
 app.set('views', template_path)  //for templates files (hbs)
 
 function issueJwt(paylod){
-    const token=jwt.sign({paylod},`my-youtube`,{expiresIn:'1h'})
+    const token=jwt.sign({paylod},`my-youtube`,{expiresIn:'15d'})
+    return token
+}
+
+function issueJwtForUserType(paylod){
+    const token=jwt.sign({paylod},`my-youtube`)
     return token
 }
 
@@ -245,6 +251,21 @@ exports.getAllUserByparentId=async(req,res)=>{
     }
 }
 
+exports.userTypeDetailuserTypeId=async(req,res)=>{
+    try{
+        const userTypeId=req.params.userTypeId
+        const parentId=req.user.paylod._id
+        let user= await UserType.findOne({ $and: [{ _id:userTypeId }, { userId:parentId }] })
+        if(!user){
+            return res.sendStatus(404).send({status:404,message:"User not found"})
+        }
+        res.status(200).json({status:200,message:"",data:user})
+    }catch(error){
+        console.error(error.message);
+        res.status(500).send("Server error");
+    }
+}
+
 exports.userTypeLogin = async(req,res) => {
     try{
         const { userName, password } = req.body;
@@ -253,15 +274,10 @@ exports.userTypeLogin = async(req,res) => {
         if(!user_data){
             return res.status(404).send({status:404,message:'User Not Found',data:''});
         }
+        const adminData=await User.findById({_id:user_data.userId})
         if(user_data.userName === userName && user_data.password === password){
-            const token = issueJwt(user_data);
-            const formatted_data = {
-                firstName : user_data.firstName,
-                lastName : user_data.lastName,
-                userName : user_data.userName,
-                playList : user_data.playList
-            }
-            res.status(200).send({status:200,message:'Success',data:{ token:token, userData:formatted_data }});
+            const token = issueJwtForUserType(user_data);        
+            res.status(200).send({status:200,message:'Success',data:{ token:token, userData:{...user_data.toObject(),parentfirstName:adminData?.firstName,parentLastName:adminData?.lastName,parentPhoneNumber:adminData?.phoneNumber} }});
         }
         else{
             res.status(404).send({status:404,message:'Invalid Credentials',data:''});
