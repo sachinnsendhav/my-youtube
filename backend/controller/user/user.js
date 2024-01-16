@@ -274,9 +274,10 @@ exports.userTypeLogin = async(req,res) => {
         if(!user_data){
             return res.status(404).send({status:404,message:'User Not Found',data:''});
         }
+        const adminData=await User.findById({_id:user_data.userId})
         if(user_data.userName === userName && user_data.password === password){
-            const token = issueJwtForUserType(user_data);
-            res.status(200).send({status:200,message:'Success',data:{ token:token, userData:user_data }});
+            const token = issueJwtForUserType(user_data);        
+            res.status(200).send({status:200,message:'Success',data:{ token:token, userData:{...user_data.toObject(),parentfirstName:adminData?.firstName,parentLastName:adminData?.lastName,parentPhoneNumber:adminData?.phoneNumber} }});
         }
         else{
             res.status(404).send({status:404,message:'Invalid Credentials',data:''});
