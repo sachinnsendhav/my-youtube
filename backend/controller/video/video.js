@@ -1,5 +1,5 @@
 const videoDetails = require("../../model/user/videoModel");
-
+const Category = require('../../model/playlist/playlist');
 module.exports={
     video:async(req,res) => {
         console.log(req.user.paylod,"auth req user");
@@ -41,7 +41,7 @@ module.exports={
     getVideo:async(req,res,next)=>{
         try {
             const playListId = req.params.playListId;
-            const videos = await videoDetails.find({playListId:playListId});
+            const videos = await Category.findById({_id:playListId});
             res.status(200).send({ status: 200,message:"Success", data: videos });
         } catch (error) {
             console.log("err", error);

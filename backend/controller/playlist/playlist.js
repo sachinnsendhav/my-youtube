@@ -91,7 +91,8 @@ try{
             "_id": item?._id,
             "name": item?.name,
             "description": item?.description,
-            "userId": item?.userId
+            "userId": item?.userId,
+            "videoCount":item?.video.length
     }))
     res.status(200).json({status:200,message:"",data:updatedData})
 }catch(error){
