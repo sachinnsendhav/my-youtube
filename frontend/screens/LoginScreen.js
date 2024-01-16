@@ -1,20 +1,41 @@
 import React, { useState } from 'react';
 import { StyleSheet, View, ImageBackground, Image, TextInput, TouchableOpacity, Text, Alert } from 'react-native';
+import axios from 'axios';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const LoginScreen = ({ onLoginSuccess }) => {
-  const [email, setEmail] = useState('');
+  const [userName, setUsername] = useState('');
   const [password, setPassword] = useState('');
-
-  const dummyUsers = [
-    { id: 1, email: 'user@example.com', password: 'password123' },
-    // Add more dummy users as needed
-  ];
 
   const handleLogin = async () => {
     try {
-      const user = dummyUsers.find((user) => user.email === email && user.password === password);
+      // Make a POST request to your login API endpoint
+      const response = await axios.post('http://192.168.29.163:3005/api/userType/login', {
+        userName: userName,
+        password: password,
+      });
+      const userObjectId = response.data.data.userData.userId;
+      const userFirstName = response.data.data.userData.firstName;
+      const userLastName = response.data.data.userData.lastName;
+      const userUserName = response.data.data.userData.userName;
+      const userPlayListId = response.data.data.userData.playList;
+console.log(userPlayListId,"userPlayListId");
 
-      if (user) {
+      await AsyncStorage.setItem("userId",userObjectId);
+      await AsyncStorage.setItem("userFirstName",userFirstName);
+      await AsyncStorage.setItem("userLastName",userLastName);
+      await AsyncStorage.setItem("userUserName",userUserName);
+      await AsyncStorage.setItem("userPlayListId",JSON.stringify(userPlayListId));
+      
+      console.log(userObjectId,"userObjectId");
+      const tokenGet = response.data.data.token
+      console.log(tokenGet,"response");
+
+      await AsyncStorage.setItem("token",tokenGet);
+      const getttingAsyncToken = await AsyncStorage.getItem('token');
+      console.log(getttingAsyncToken, "token......");
+            // Assuming your API returns a success status
+      if (response.status === 200) {
         // If login successful, trigger the onLoginSuccess callback
         onLoginSuccess();
         Alert.alert('Login Successful', 'You have successfully logged in.');
@@ -31,17 +52,17 @@ const LoginScreen = ({ onLoginSuccess }) => {
 
   return (
     <View style={styles.container}>
-      <ImageBackground source={{ uri: 'https://www.bootdey.com/image/280x280/9370DB/9370DB' }} style={styles.backgroundImage}>
+      <ImageBackground source={{ uri: 'https://www.colorhexa.com/9370db.png' }} style={styles.backgroundImage}>
         <View style={styles.logoContainer}>
           <Image source={{ uri: 'https://bootdey.com/img/Content/avatar/avatar3.png' }} style={styles.logo} />
         </View>
         <View style={styles.formContainer}>
           <View style={styles.card}>
             <TextInput
-              placeholder="Email"
+              placeholder="Username"
               style={styles.input}
-              value={email}
-              onChangeText={setEmail}
+              value={userName}
+              onChangeText={setUsername}
             />
           </View>
           <View style={styles.card}>
@@ -102,9 +123,8 @@ const styles = StyleSheet.create({
     padding: 10,
   },
   input: {
-    height: 40,
+    height: 30,
     paddingHorizontal: 10,
-    borderBottomWidth: 1,
     borderBottomColor: '#B0C4DE',
   },
   loginButton: {
