@@ -8,10 +8,12 @@ export const endpoints = {
   },
   users: {
     createUSer: `${url}/api/user/addUser`,
-    addPlaylistToUser: `${url}/api/playlist/allotPlayList/`,
-    removePlaylistFromUser: `${url}/api/playlist/deleteUserTypePlaylist/`,
-    deleteUser: `${url}/api/user/deleteUser/`,
-    getAllUsers: `${url}/api/usersByAdminId`
+    addPlaylistToUser: `${url}/api/playlist/allotPlayList`,
+    removePlaylistFromUser: `${url}/api/playlist/deleteUserTypePlaylist`,
+    deleteUser: `${url}/api/user/deleteUser`,
+    getAllUsers: `${url}/api/usersByAdminId`,
+    getUserDetails: `${url}/api/userTypeDetail`,
+
   },
   playlist: {
     createPlaylist: `${url}/api/playlist/addPlaylist`,

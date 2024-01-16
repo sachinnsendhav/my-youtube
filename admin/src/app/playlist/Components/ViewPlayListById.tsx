@@ -20,7 +20,8 @@ function ViewPlayListById({ id }: any) {
   const getVideosByPlaylist = async (id: string) => {
     try {
       const result: any = await Video.getVideosByPlaylist(token, id)
-      setVideos(result?.data)
+      console.log("re", result)
+      setVideos(result?.data?.video)
     } catch (err: any) {
       if (err.response.data.message === 'Unauthorized') {
         router.push('/auth/signin');
@@ -28,10 +29,10 @@ function ViewPlayListById({ id }: any) {
       console.error(err, 'error')
     }
   }
-  const deleteVideo = async (id: string) => {
+  const deleteVideo = async (videoId: string) => {
     try {
-      const result: any = await Video.deleteVideo(token, id)
-      const newArray = videos.filter((item: any) => item._id !== id);
+      const result: any = await Video.deleteVideo(token, videoId, id)
+      const newArray = videos.filter((item: any) => item._id !== videoId);
       setVideos(newArray)
       console.log(newArray);
       alert('video Deleted..!')
@@ -56,7 +57,7 @@ function ViewPlayListById({ id }: any) {
             return (
               <div className='my-5 border border-gray-500 p-2'>
                 <ReactPlayer
-                  url={item?.videoUrl}
+                  url={`https://www.youtube.com/watch?v=${item?.videoUrl}`}
                   className="react-player"
                   controls
                 />

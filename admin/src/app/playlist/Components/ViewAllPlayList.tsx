@@ -79,6 +79,9 @@ function ViewAllPlayList() {
                             <div className="font-semibold text-left text-lg">Description</div>
                           </th>
                           <th className="p-2 whitespace-nowrap">
+                            <div className="font-semibold text-left text-lg">Video</div>
+                          </th>
+                          <th className="p-2 whitespace-nowrap">
                             <div className="font-semibold text-center text-lg">Action</div>
                           </th>
                         </tr>
@@ -100,6 +103,11 @@ function ViewAllPlayList() {
                             <td className="p-2 whitespace-nowrap">
                               <div className="text-left font-medium text-green-500">
                                 {item.description}
+                              </div>
+                            </td>
+                            <td className="p-2 whitespace-nowrap">
+                              <div className="text-left font-medium text-green-500">
+                                {item.videoCount}
                               </div>
                             </td>
                             <td className="text-xs flex justify-center items-center h-full pt-4">

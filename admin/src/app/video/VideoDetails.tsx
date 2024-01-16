@@ -61,7 +61,7 @@ function VideoDetails({ id }: any) {
       const data = {
         videoName: videoDetails?.snippet?.title,
         videoDescription: videoDetails?.snippet?.description,
-        videoUrl: `https://www.youtube.com/watch?v=${id}`,
+        videoUrl: id,
         playListId: playlistId
       }
       try {
