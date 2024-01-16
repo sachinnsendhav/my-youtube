@@ -7,6 +7,7 @@ const otpGenerator=require('otp-generator')
 const nodemailer = require('nodemailer');
 const sendMail=require('../../middleware/sendmail')
 const express = require('express');
+const mongoose = require('mongoose')
 const app = express();
 const hbs = require("hbs");
 const path = require("path");
@@ -243,6 +244,21 @@ exports.deleteUser = async(req,res) => {
 exports.getAllUserByparentId=async(req,res)=>{
     try{
         let user= await UserType.find({userId:req.user.paylod._id})
+        res.status(200).json({status:200,message:"",data:user})
+    }catch(error){
+        console.error(error.message);
+        res.status(500).send("Server error");
+    }
+}
+
+exports.userTypeDetailuserTypeId=async(req,res)=>{
+    try{
+        const userTypeId=req.params.userTypeId
+        const parentId=req.user.paylod._id
+        let user= await UserType.findOne({ $and: [{ _id:userTypeId }, { userId:parentId }] })
+        if(!user){
+            return res.sendStatus(404).send({status:404,message:"User not found"})
+        }
         res.status(200).json({status:200,message:"",data:user})
     }catch(error){
         console.error(error.message);
