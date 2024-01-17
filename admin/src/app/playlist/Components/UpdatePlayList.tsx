@@ -3,7 +3,7 @@ import { Header, Sidenav, Title } from '@/app/components'
 import React, { useState } from 'react'
 
 
-function UpdatePlayList() {
+function UpdatePlayList({ id }: any) {
   const [isDrowerOn, setIsDrowerOn] = useState(false)
   const [menu, setMenu] = useState('');
   return (

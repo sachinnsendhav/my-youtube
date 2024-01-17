@@ -2,9 +2,10 @@
 import { Header, Sidenav, Title } from '@/app/components'
 import React, { useState } from 'react'
 
-function ViewUser() {
+function ViewUser({id}:any) {
   const [isDrowerOn, setIsDrowerOn] = useState(false)
   const [menu, setMenu] = useState('');
+  console.log(id,'=-----------------i--d')
   return (
     <div className="flex bg-gray-200">
       <Sidenav isDrowerOn={isDrowerOn} menu={menu} setMenu={setMenu} />

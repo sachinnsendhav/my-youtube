@@ -25,9 +25,9 @@ function AllUsersList() {
       console.log(result)
       setUsersData(result?.data)
     } catch (err: any) {
-      // if (err.response.data.message === 'Unauthorized') {
-      //   router.push('/auth/signin');
-      // }
+      if (err.response.data.message === 'Unauthorized') {
+        router.push('/auth/signin');
+      }
       console.error(err, 'error')
     }
     setLoading(false)
@@ -110,10 +110,10 @@ function AllUsersList() {
                               </div>
                             </td>
                             <td className="text-xs flex justify-center items-center h-full pt-4">
-                              <Link href={`/users/view?id=${item?._id}`}>
+                              <Link href={`/users/view/${item?._id}`}>
                                 <FaEye className="text-lg cursor-pointer text-gray-600 mr-5" />
                               </Link>
-                              <Link href={`/users/update?id=${item?._id}`}>
+                              <Link href={`/users/update/${item?._id}`}>
                                 <FaEdit className="text-lg cursor-pointer text-gray-600" />
                               </Link>
 

@@ -61,11 +61,12 @@ function VideoDetails({ id }: any) {
       const data = {
         videoName: videoDetails?.snippet?.title,
         videoDescription: videoDetails?.snippet?.description,
-        videoUrl: `https://www.youtube.com/watch?v=${id}`,
+        videoUrl: id,
         playListId: playlistId
       }
       try {
         const resp = await Video.addVideoToPlaylist(token, data)
+        alert('video added!')
         console.log("first", resp)
 
       } catch (err) {

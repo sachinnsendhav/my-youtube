@@ -8,10 +8,12 @@ export const endpoints = {
   },
   users: {
     createUSer: `${url}/api/user/addUser`,
-    addPlaylistToUser: `${url}/api/playlist/allotPlayList/`,
-    removePlaylistFromUser: `${url}/api/playlist/deleteUserTypePlaylist/`,
-    deleteUser: `${url}/api/user/deleteUser/`,
-    getAllUsers: `${url}/api/usersByAdminId`
+    addPlaylistToUser: `${url}/api/playlist/allotPlayList`,
+    removePlaylistFromUser: `${url}/api/playlist/deleteUserTypePlaylist`,
+    deleteUser: `${url}/api/user/deleteUser`,
+    getAllUsers: `${url}/api/usersByAdminId`,
+    getUserDetails: `${url}/api/userTypeDetail`,
+
   },
   playlist: {
     createPlaylist: `${url}/api/playlist/addPlaylist`,
@@ -22,8 +24,8 @@ export const endpoints = {
   video: {
     addVideos: `${url}/api/video/uploadData`,
     getAllVideos: `${url}/api/video`,
-    deleteVideo: `${url}/api/video/delete/`,
-    getVideosByPlaylist: `${url}/api/video/getData/`
+    deleteVideo: `${url}/api/video/delete`,
+    getVideosByPlaylist: `${url}/api/video/getData`
   },
   youtubeApi: {
     search: `${BASE_URL}/search?part=snippet&q=`,

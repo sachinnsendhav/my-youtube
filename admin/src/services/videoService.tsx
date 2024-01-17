@@ -40,10 +40,10 @@ const getVideosByPlaylist = (token: any, id: string) =>
             .then((response: any) => resolve(response.data))
             .catch((error: any) => reject(error));
     });
-const deleteVideo = (token: any, id: any) =>
+const deleteVideo = (token: any, id: any, playlistId: string) =>
     new Promise((resolve, reject) => {
         axios
-            .delete(`${endpoints.video.deleteVideo}/${id}`, {
+            .delete(`${endpoints.video.deleteVideo}/${id}?paylistId=${playlistId}`, {
                 headers: {
                     'Content-Type': 'application/json',
                     'Authorization': token
