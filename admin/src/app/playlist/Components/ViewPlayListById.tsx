@@ -57,7 +57,7 @@ function ViewPlayListById({ id }: any) {
             return (
               <div className='my-5 border border-gray-500 p-2'>
                 <ReactPlayer
-                  url={`https://www.youtube.com/watch?v=${item?.videoUrl}`}
+                  url={item?.videoUrl}
                   className="react-player"
                   controls
                 />
