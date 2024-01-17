@@ -11,7 +11,6 @@ function UpdateUser({ id }: any) {
   const router = useRouter()
   const [isDrowerOn, setIsDrowerOn] = useState(false)
   const [menu, setMenu] = useState('');
-  console.log("id----------", id)
   const [playlist, setPlaylist] = useState<any>([])
   const [playlistIds, setPlaylistIds] = useState([])
   const [userData, setUserData] = useState<any>()
@@ -21,11 +20,19 @@ function UpdateUser({ id }: any) {
     getPlaylist()
     getUserDetails(id)
   }, [id])
-  console.log("playlistIds", playlistIds)
+
+  useEffect(() => {
+    setPlaylist((prevPlaylist: any) =>
+      prevPlaylist.map((secondItem: any) => {
+        const matchingFirstItem = playlistIds.find((firstItem: any) => firstItem._id === secondItem._id);
+        return { ...secondItem, exisit: Boolean(matchingFirstItem) };
+      })
+    );
+  }, [playlistIds]);
+
   const getUserDetails = async (id: string) => {
     try {
       const result: any = await Users.getUserDetails(token, id)
-      console.log(result, "get-user")
       setPlaylistIds(result?.data?.playList)
       setUserData(result?.data)
     } catch (err: any) {
@@ -39,7 +46,6 @@ function UpdateUser({ id }: any) {
     setLoading(true)
     try {
       const result: any = await Playlist.getAllPlaylist(token)
-      console.log(result)
       setPlaylist(result?.data)
     } catch (err: any) {
       if (err.response.data.message === 'Unauthorized') {
@@ -55,7 +61,6 @@ function UpdateUser({ id }: any) {
         playlistId: [playlistid]
       }
       const result: any = await Users.alotPlaylistToUser(token, data, id)
-      console.log(result)
       getUserDetails(id)
       alert('playlist added')
     } catch (err: any) {
@@ -72,7 +77,6 @@ function UpdateUser({ id }: any) {
       try {
         const result: any = await Users.removePlaylistFromUser(token, id, playlistId)
         getUserDetails(id)
-
         alert('Playlist removed from this user!')
       } catch (error: any) {
         if (error.response.data.message === 'Unauthorized') {
@@ -83,18 +87,6 @@ function UpdateUser({ id }: any) {
       }
     }
   }
-//   useEffect(() => {
-//     playlist.forEach((element: any) => {
-//       playlistIds.forEach((element2: any) => {
-//         if (element._id === element2._id) {
-//           element.exisit = true
-//         } else {
-//           element.exisit = false
-//         }
-//       });
-//     });
-//   }, [playlist])
-// console.log(playlist,' playlist.exisit = true')
   return (
     <div className="flex bg-gray-200">
       <Sidenav isDrowerOn={isDrowerOn} menu={menu} setMenu={setMenu} />
@@ -131,10 +123,12 @@ function UpdateUser({ id }: any) {
               <div className='flex py-2'>
                 {playlistIds.map((item: any) => {
                   return (
-                    <div className='bg-pink-700 mx-2 px-2 py-1 text-white flex rounded'>
+                    <div className='bg-pink-600 mx-2 text-white flex rounded'>
                       <Link href={`/playlist/view/${item._id}`}>
-                        <p className='text-md'>{item?.name}</p></Link>
-                      <MdDelete className='mt-1 text-sm mx-1 cursor-pointer' onClick={() => removePlaylistFromUser(item._id)} />
+                        <p className='text-md px-2 py-1'>{item?.name}</p></Link>
+                      <div className='px-2 bg-pink-700 rounded-r cursor-pointer' onClick={() => removePlaylistFromUser(item._id)} >
+                        <MdDelete className='mt-2 text-sm mx-1 ' />
+                      </div>
                     </div>
                   )
                 })}
@@ -144,10 +138,16 @@ function UpdateUser({ id }: any) {
             <div className='flex py-3'>
               {playlist?.map((item: any) => {
                 return (
-                  <div className='bg-pink-700 mx-2 px-2 py-1 text-white flex rounded'>
-                    <p className=''>{item.name}</p>
-                    <FaPlus className='mt-1 text-sm mx-1 cursor-pointer' onClick={() => alotPlaylistToUser(item._id)} />
+                  <div className='bg-pink-600 mx-2 text-white flex rounded'>
+                    <Link href={`/playlist/view/${item._id}`}>
+                      <p className='px-2 py-1'>{item.name}</p>
+                    </Link>
+                    {item.exisit ? '' :
+                      <div className='px-2 bg-pink-700 rounded-r cursor-pointer' onClick={() => alotPlaylistToUser(item._id)}>
+                        <FaPlus className='mt-2 text-sm mx-1 ' />
 
+                      </div>
+                    }
                   </div>
                 )
               })}
