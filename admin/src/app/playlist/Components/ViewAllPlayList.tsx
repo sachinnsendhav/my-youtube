@@ -79,6 +79,9 @@ function ViewAllPlayList() {
                             <div className="font-semibold text-left text-lg">Description</div>
                           </th>
                           <th className="p-2 whitespace-nowrap">
+                            <div className="font-semibold text-left text-lg">Video</div>
+                          </th>
+                          <th className="p-2 whitespace-nowrap">
                             <div className="font-semibold text-center text-lg">Action</div>
                           </th>
                         </tr>
@@ -102,11 +105,16 @@ function ViewAllPlayList() {
                                 {item.description}
                               </div>
                             </td>
+                            <td className="p-2 whitespace-nowrap">
+                              <div className="text-left font-medium text-green-500">
+                                {item.videoCount}
+                              </div>
+                            </td>
                             <td className="text-xs flex justify-center items-center h-full pt-4">
-                              <Link href={`/playlist/view?id=${item?._id}`}>
+                              <Link href={`/playlist/view/${item?._id}`}>
                                 <FaEye className="text-lg cursor-pointer text-gray-600 mr-5" />
                               </Link>
-                              <Link href={`/playlist/update?id=${item?._id}`}>
+                              <Link href={`/playlist/update/${item?._id}`}>
                                 <FaEdit className="text-lg cursor-pointer text-gray-600" />
                               </Link>
 
