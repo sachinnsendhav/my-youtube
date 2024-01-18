@@ -1,5 +1,6 @@
 const User = require('../../model/user/userModel');
 const UserType = require('../../model/user/userTypeModel');
+const playlist=require('../../model/playlist/playlist')
 const otpSchema=require('../../model/otp/otp')
 const jwt=require('jsonwebtoken')
 const bcrypt = require('bcrypt');
@@ -251,6 +252,56 @@ exports.getAllUserByparentId=async(req,res)=>{
     }
 }
 
+exports.getcustomerList=async(req,res)=>{
+    try{
+        const role=req.user.paylod.role
+        if(role!="superadmin"){
+            return res.status(401).send({status:401,message:"Not authorized"})
+        }
+        let adminData=await User.find({role:"admin"})
+        const data=adminData.map((item)=>({
+            "adminId": item._id,
+            "firstName": item.firstName,
+            "lastName": item.lastName,
+            "email": item.email,
+            "phoneNumber": item.phoneNumber,
+            "role": item.role,
+        }))
+        res.status(200).json({status:200,message:"",data:data})
+    }catch(error){
+        console.error(error.message);
+        res.status(500).send("Server error");
+    }
+}
+
+exports.getcustomersDetails=async(req,res)=>{
+    try{
+        const role=req.user.paylod.role
+        const customerId=req.params.customerId
+        if(role!="superadmin"){
+            return res.status(401).send({status:401,message:"Not authorized"})
+        }
+        let adminData=await User.findById({_id:customerId})
+        if (!adminData) {
+            return res.status(404).send({status:404,message:"Customer not found"})
+        }
+        const adminModifyData={
+            "adminId": adminData._id,
+            "firstName": adminData.firstName,
+            "lastName": adminData.lastName,
+            "email": adminData.email,
+            "phoneNumber": adminData.phoneNumber,
+            "role": adminData.role,
+        }
+        const userByAdminId=await UserType.find({userId:customerId})
+        const playlistByAdminId=await playlist.find({userId:customerId})
+        res.status(200).json({status:200,message:"",data:{parentData:adminModifyData,userData:userByAdminId,playlistData:playlistByAdminId}})
+    }catch(error){
+        console.error(error.message);
+        res.status(500).send("Server error");
+    }
+}
+
 exports.userTypeDetailuserTypeId=async(req,res)=>{
     try{
         const userTypeId=req.params.userTypeId
@@ -274,9 +325,10 @@ exports.userTypeLogin = async(req,res) => {
         if(!user_data){
             return res.status(404).send({status:404,message:'User Not Found',data:''});
         }
+        const adminData=await User.findById({_id:user_data.userId})
         if(user_data.userName === userName && user_data.password === password){
-            const token = issueJwtForUserType(user_data);
-            res.status(200).send({status:200,message:'Success',data:{ token:token, userData:user_data }});
+            const token = issueJwtForUserType(user_data);        
+            res.status(200).send({status:200,message:'Success',data:{ token:token, userData:{...user_data.toObject(),parentfirstName:adminData?.firstName,parentLastName:adminData?.lastName,parentPhoneNumber:adminData?.phoneNumber} }});
         }
         else{
             res.status(404).send({status:404,message:'Invalid Credentials',data:''});
