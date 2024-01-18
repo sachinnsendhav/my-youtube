@@ -1,7 +1,7 @@
 import React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Alert } from "react-native";
-import HomeScreen from "../screens/HomeScreen";
+import HomeScreen from "../screens/parents/HomeScreen";
 import CategoryScreen from "../screens/CategoryScreen";
 import ProfileScreen from "../screens/ProfileScreen";
 import { MaterialIcons } from "@expo/vector-icons";
@@ -26,14 +26,7 @@ const LogoutButton = ({ navigation, onLogout }) => {
             // Handle the logout functionality here
             // You can call the onLogout prop passed from App.js or any other logic you prefer
             // For now, it clears the token from AsyncStorage and sets isLoggedIn to false
-            await AsyncStorage.removeItem("userObjectId");
-            await AsyncStorage.removeItem("userFirstName");
-            await AsyncStorage.removeItem("userLastName");
-            await AsyncStorage.removeItem("userUserName");
-            await AsyncStorage.removeItem("userParentFirstName");
-            await AsyncStorage.removeItem("userParentLastName");
-            await AsyncStorage.removeItem("userPlayListId");
-            await AsyncStorage.removeItem("token");
+            await AsyncStorage.clear()
             onLogout();
           },
         },
@@ -53,7 +46,7 @@ const LogoutButton = ({ navigation, onLogout }) => {
   );
 };
 
-const BottomTabNavigator = ({ onLogout }) => {
+const ParentsBottomTabNavigator = ({ onLogout }) => {
   return (
     <Tab.Navigator
       screenOptions={({ route, navigation }) => ({
@@ -72,9 +65,11 @@ const BottomTabNavigator = ({ onLogout }) => {
 
           if (route.name === "Home") {
             iconName = focused ? "home" : "home";
-          } else if (route.name === "Category") {
+          } else if (route.name === "Playlist") {
             iconName = focused ? "list" : "list";
-          } else if (route.name === "Profile") {
+          } else if (route.name === "User") {
+            iconName = focused ? "group" : "group";
+        } else if (route.name === "Profile") {
             iconName = focused ? "person" : "person-outline";
           }
           // You can add more icons based on your requirements
@@ -84,10 +79,11 @@ const BottomTabNavigator = ({ onLogout }) => {
       })}
     >
       <Tab.Screen name="Home" component={HomeScreen} />
-      <Tab.Screen name="Category" component={CategoryScreen} />
+      <Tab.Screen name="Playlist" component={CategoryScreen} />
+      <Tab.Screen name="User" component={CategoryScreen} />
       <Tab.Screen name="Profile" component={ProfileScreen} />
     </Tab.Navigator>
   );
 };
 
-export default BottomTabNavigator;
+export default ParentsBottomTabNavigator;

@@ -1,62 +1,93 @@
-import React, { useState } from 'react';
-import { StyleSheet, View, ImageBackground, Image, TextInput, TouchableOpacity, Text, Alert } from 'react-native';
-import axios from 'axios';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import React, { useState } from "react";
+import {
+  StyleSheet,
+  View,
+  ImageBackground,
+  Image,
+  TextInput,
+  TouchableOpacity,
+  Text,
+  Alert,
+} from "react-native";
+import axios from "axios";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { Auth } from "../services";
 
 const LoginScreen = ({ onLoginSuccess }) => {
-  const [userName, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-
+  const [userName, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [role, setRole] = useState("user");
   const handleLogin = async () => {
     try {
       // Make a POST request to your login API endpoint
-      const response = await axios.post('http://192.168.29.163:3005/api/userType/login', {
+      const data = {
         userName: userName,
         password: password,
-      });
-      const userObjectId = response.data.data.userData._id;
-      const userFirstName = response.data.data.userData.firstName;
-      const userLastName = response.data.data.userData.lastName;
-      const userUserName = response.data.data.userData.userName;
-      const userPlayListId = response.data.data.userData.playList;
-      const userParentFirstName = response.data.data.userData.parentfirstName;
-      const userParentLastName = response.data.data.userData.parentLastName;
+      };
+      const response = await Auth.userLogin(data);
+      console.log("resp------", response);
+      // const response = await axios.post(
+      //   "http://173.214.174.234:3005/api/userType/login",
+      //   {
+      //     userName: userName,
+      //     password: password,
+      //   }
+      // );
+      const userObjectId = response.data.userData._id;
+      const userFirstName = response.data.userData.firstName;
+      const userLastName = response.data.userData.lastName;
+      const userUserName = response.data.userData.userName;
+      const userPlayListId = response.data.userData.playList;
+      const userParentFirstName = response.data.userData.parentfirstName;
+      const userParentLastName = response.data.userData.parentLastName;
+      const role = response.data.userData.role;
+      await AsyncStorage.setItem("userObjectId", userObjectId);
+      await AsyncStorage.setItem("userFirstName", userFirstName);
+      await AsyncStorage.setItem("userLastName", userLastName);
+      await AsyncStorage.setItem("userUserName", userUserName);
+      await AsyncStorage.setItem("userParentFirstName", userParentFirstName);
+      await AsyncStorage.setItem("userParentLastName", userParentLastName);
+      await AsyncStorage.setItem("role", role);
+      await AsyncStorage.setItem(
+        "userPlayListId",
+        JSON.stringify(userPlayListId)
+      );
 
-
-      await AsyncStorage.setItem("userObjectId",userObjectId);
-      await AsyncStorage.setItem("userFirstName",userFirstName);
-      await AsyncStorage.setItem("userLastName",userLastName);
-      await AsyncStorage.setItem("userUserName",userUserName);
-      await AsyncStorage.setItem("userParentFirstName",userParentFirstName);
-      await AsyncStorage.setItem("userParentLastName",userParentLastName);
-      await AsyncStorage.setItem("userPlayListId",JSON.stringify(userPlayListId));
-      
       // console.log(userObjectId,"userObjectId");
-      const tokenGet = response.data.data.token
+      const tokenGet = response.data.token;
       // console.log(tokenGet,"response");
 
-      await AsyncStorage.setItem("token",tokenGet);
-      const getttingAsyncToken = await AsyncStorage.getItem('token');
+      await AsyncStorage.setItem("token", tokenGet);
+      const getttingAsyncToken = await AsyncStorage.getItem("token");
       // console.log(getttingAsyncToken, "token......");
-            // Assuming your API returns a success status
+      // Assuming your API returns a success status
       if (response.status === 200) {
         // If login successful, trigger the onLoginSuccess callback
         onLoginSuccess();
-        Alert.alert('Login Successful', 'You have successfully logged in.');
+        Alert.alert("Login Successful", "You have successfully logged in.");
       } else {
         // If login fails, show an error message
-        Alert.alert('Login Failed', 'Invalid credentials. Please try again.');
+        Alert.alert("Login Failed", "Invalid credentials. Please try again.");
       }
     } catch (error) {
-      Alert.alert('Error', 'An error occurred while logging in');
+      console.log(error)
+      Alert.alert("Error", "An error occurred while logging in");
     }
   };
 
   return (
     <View style={styles.container}>
-      <ImageBackground source={{ uri: 'https://www.colorhexa.com/9370db.png' }} style={styles.backgroundImage}>
+      <ImageBackground
+        source={{ uri: "https://www.colorhexa.com/9370db.png" }}
+        style={styles.backgroundImage}
+      >
         <View style={styles.logoContainer}>
-          <Image source={{ uri: 'https://bootdey.com/img/Content/avatar/avatar3.png' }} style={styles.logo} />
+          <Image
+            source={{
+              uri: "https://bootdey.com/img/Content/avatar/avatar3.png",
+            }}
+            style={styles.logo}
+          />
         </View>
         <View style={styles.formContainer}>
           <View style={styles.card}>
@@ -88,14 +119,14 @@ const LoginScreen = ({ onLoginSuccess }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: "#fff",
   },
   backgroundImage: {
     flex: 1,
-    resizeMode: 'cover',
+    resizeMode: "cover",
   },
   logoContainer: {
-    alignItems: 'center',
+    alignItems: "center",
     marginTop: 160,
   },
   logo: {
@@ -108,12 +139,12 @@ const styles = StyleSheet.create({
     marginTop: 50,
     padding: 20,
     borderRadius: 10,
-    backgroundColor: 'rgba(255, 255, 255, 0.3)',
+    backgroundColor: "rgba(255, 255, 255, 0.3)",
   },
   card: {
-    backgroundColor: '#fff',
+    backgroundColor: "#fff",
     borderRadius: 10,
-    shadowColor: '#000',
+    shadowColor: "#000",
     shadowOffset: {
       width: 0,
       height: 2,
@@ -127,17 +158,17 @@ const styles = StyleSheet.create({
   input: {
     height: 30,
     paddingHorizontal: 10,
-    borderBottomColor: '#B0C4DE',
+    borderBottomColor: "#B0C4DE",
   },
   loginButton: {
-    backgroundColor: '#7B68EE',
+    backgroundColor: "#7B68EE",
     padding: 10,
     borderRadius: 10,
-    alignItems: 'center',
+    alignItems: "center",
     marginTop: 20,
   },
   loginButtonText: {
-    color: '#fff',
+    color: "#fff",
     fontSize: 16,
   },
 });
