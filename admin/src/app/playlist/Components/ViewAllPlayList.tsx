@@ -117,7 +117,6 @@ function ViewAllPlayList() {
                               <Link href={`/playlist/update/${item?._id}`}>
                                 <FaEdit className="text-lg cursor-pointer text-gray-600" />
                               </Link>
-
                               <MdDelete className="text-lg cursor-pointer text-gray-600 ml-5" onClick={() => DeletePlaylist(item?._id)} />
                             </td>
                           </tr>

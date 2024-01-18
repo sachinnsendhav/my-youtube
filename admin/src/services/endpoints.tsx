@@ -6,6 +6,10 @@ export const endpoints = {
     register: `${url}/api/user/signup`,
     generateOtp: `${url}/api/generateOtp`
   },
+  admin: {
+    customersList: `${url}/api/customersList`,
+    customerDetails: `${url}/api/customersDetails`
+  },
   users: {
     createUSer: `${url}/api/user/addUser`,
     addPlaylistToUser: `${url}/api/playlist/allotPlayList`,
