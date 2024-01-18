@@ -23,6 +23,7 @@
     "react-native": "0.72.6",
     "react-native-login-screen": "^5.0.0",
     "react-native-paper": "^5.11.6",
+    "react-native-vector-icons": "^10.0.3",
     "react-native-webview": "^13.6.4",
     "react-native-youtube": "^2.0.2",
     "react-native-youtube-iframe": "^2.3.0"

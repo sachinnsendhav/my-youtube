@@ -14,26 +14,30 @@ const LoginScreen = ({ onLoginSuccess }) => {
         userName: userName,
         password: password,
       });
-      const userObjectId = response.data.data.userData.userId;
+      const userObjectId = response.data.data.userData._id;
       const userFirstName = response.data.data.userData.firstName;
       const userLastName = response.data.data.userData.lastName;
       const userUserName = response.data.data.userData.userName;
       const userPlayListId = response.data.data.userData.playList;
-console.log(userPlayListId,"userPlayListId");
+      const userParentFirstName = response.data.data.userData.parentfirstName;
+      const userParentLastName = response.data.data.userData.parentLastName;
 
-      await AsyncStorage.setItem("userId",userObjectId);
+
+      await AsyncStorage.setItem("userObjectId",userObjectId);
       await AsyncStorage.setItem("userFirstName",userFirstName);
       await AsyncStorage.setItem("userLastName",userLastName);
       await AsyncStorage.setItem("userUserName",userUserName);
+      await AsyncStorage.setItem("userParentFirstName",userParentFirstName);
+      await AsyncStorage.setItem("userParentLastName",userParentLastName);
       await AsyncStorage.setItem("userPlayListId",JSON.stringify(userPlayListId));
       
-      console.log(userObjectId,"userObjectId");
+      // console.log(userObjectId,"userObjectId");
       const tokenGet = response.data.data.token
-      console.log(tokenGet,"response");
+      // console.log(tokenGet,"response");
 
       await AsyncStorage.setItem("token",tokenGet);
       const getttingAsyncToken = await AsyncStorage.getItem('token');
-      console.log(getttingAsyncToken, "token......");
+      // console.log(getttingAsyncToken, "token......");
             // Assuming your API returns a success status
       if (response.status === 200) {
         // If login successful, trigger the onLoginSuccess callback
@@ -44,8 +48,6 @@ console.log(userPlayListId,"userPlayListId");
         Alert.alert('Login Failed', 'Invalid credentials. Please try again.');
       }
     } catch (error) {
-      // Handle network errors or other exceptions
-      console.error('Error occurred:', error.message);
       Alert.alert('Error', 'An error occurred while logging in');
     }
   };

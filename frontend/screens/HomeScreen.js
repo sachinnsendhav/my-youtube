@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { View, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
+import { View, StyleSheet, ScrollView, TouchableWithoutFeedback, Dimensions, RefreshControl } from 'react-native';
 import { Card, Title } from 'react-native-paper';
 import YoutubePlayer from 'react-native-youtube-iframe';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -8,37 +8,56 @@ const HomeScreen = () => {
   const [youtubeVideoId, setYoutubeVideoId] = useState(null);
   const playerRef = useRef(null);
   const [videos, setVideos] = useState([]);
+  const [isRefreshing, setIsRefreshing] = useState(false);
 
-  useEffect(() => {
-    const fetchVideos = async () => {
-      try {
-        const playList = await AsyncStorage.getItem('userPlayListId');
-        const parsedPlayList = JSON.parse(playList);
+  const onRefresh = async () => {
+    setIsRefreshing(true);
+    try {
+      await fetchVideos();
+    } finally {
+      setIsRefreshing(false);
+    }
+  };
 
-        if (Array.isArray(parsedPlayList)) {
-          const videoPromises = parsedPlayList.map(async (playlistItem) => {
+  const fetchVideos = async () => {
+    try {
+      const playList = await AsyncStorage.getItem('userPlayListId');
+      const parsedPlayList = JSON.parse(playList);
+
+      if (Array.isArray(parsedPlayList)) {
+        const videoPromises = parsedPlayList.map(async (playlistItem) => {
+          try {
             const response = await fetch(`http://192.168.29.163:3005/api/video/getData/${playlistItem._id}`);
             const data = await response.json();
-            if (data.status === 200) {
-              return data.data;
+
+            if (data.status === 200 && Array.isArray(data.data.video) && data.data.video.length > 0) {
+              const videosForId = data.data.video.map((video) => ({
+                _id: playlistItem._id,
+                videoUrl: video.videoUrl,
+                videoName: video.videoName,
+              }));
+              return videosForId;
             } else {
-              console.error('Error fetching videos:', data.message);
               return [];
             }
-          });
+          } catch (error) {
+            console.error('Error fetching videos:', error);
+            return [];
+          }
+        });
 
-          const allVideos = await Promise.all(videoPromises);
-          const flattenedVideos = [].concat(...allVideos);
-
-          setVideos(flattenedVideos);
-        } else {
-          console.error('Invalid playlist format');
-        }
-      } catch (error) {
-        console.error('Error fetching videos:', error);
+        const allVideos = await Promise.all(videoPromises);
+        const flattenedVideos = [].concat(...allVideos);
+        setVideos(flattenedVideos);
+      } else {
+        console.error('Invalid playlist format');
       }
-    };
+    } catch (error) {
+      console.error('Error fetching videos:', error);
+    }
+  };
 
+  useEffect(() => {
     fetchVideos();
   }, []);
 
@@ -55,27 +74,34 @@ const HomeScreen = () => {
 
   return (
     <View style={styles.container}>
-      <ScrollView>
+      <ScrollView
+        refreshControl={
+          <RefreshControl refreshing={isRefreshing} onRefresh={onRefresh} />
+        }
+      >
         {videos.map((video) => (
-          <TouchableOpacity key={video._id} onPress={() => handleCardPress(video._id)}>
-            <Card style={styles.card}>
-              <YoutubePlayer
-                ref={playerRef}
-                height={200}
-                play={youtubeVideoId === video._id}
-                videoId={video.videoUrl.split('v=')[1]}
-                webViewStyle={styles.webViewStyle}
-              />
-              <View style={styles.videoInfoContainer}>
-                <Title style={styles.videoName}>{video.videoName}</Title>
-              </View>
-            </Card>
-          </TouchableOpacity>
+          <TouchableWithoutFeedback key={video._id} onPress={() => handleCardPress(video._id)}>
+            <View>
+              <Card style={styles.card}>
+                <YoutubePlayer
+                  ref={playerRef}
+                  height={200}
+                  play={youtubeVideoId === video._id}
+                  videoId={video.videoUrl.split('v=')[1]}
+                  webViewStyle={styles.webViewStyle}
+                />
+                <View style={styles.videoInfoContainer}>
+                  <Title style={styles.videoName}>{video.videoName}</Title>
+                </View>
+              </Card>
+            </View>
+          </TouchableWithoutFeedback>
         ))}
       </ScrollView>
     </View>
   );
 };
+
 
 const styles = StyleSheet.create({
   container: {
@@ -83,8 +109,8 @@ const styles = StyleSheet.create({
     backgroundColor: '#f5f5f5',
   },
   card: {
-    margin: 0, // Remove margin to fit the screen
-    borderRadius:0
+    margin: 0,
+    borderRadius: 0,
   },
   webViewStyle: {
     height: 200,
@@ -93,7 +119,7 @@ const styles = StyleSheet.create({
     padding: 8,
   },
   videoName: {
-    fontSize: 16, // Adjust the font size to make the name smaller
+    fontSize: 16,
   },
 });
 

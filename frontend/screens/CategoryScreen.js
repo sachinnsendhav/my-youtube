@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, FlatList, StyleSheet, TouchableOpacity, Linking } from 'react-native';
+import React, { useState, useEffect, useCallback } from 'react';
+import { View, Text, FlatList, StyleSheet, TouchableOpacity, Linking, RefreshControl } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import YoutubePlayer from 'react-native-youtube-iframe';
 
@@ -7,36 +7,46 @@ const CategoryScreen = () => {
   const [playlistData, setPlaylistData] = useState([]);
   const [selectedPlaylistItem, setSelectedPlaylistItem] = useState(null);
   const [videoData, setVideoData] = useState([]);
+  const [isRefreshing, setRefreshing] = useState(false);
+
+  const fetchData = async () => {
+    const gettingUserId = await AsyncStorage.getItem("userObjectId");
+
+    try {
+      const response = await fetch(`http://192.168.29.163:3005/api/playlist/getUserPlaylist/${gettingUserId}`);
+      const data = await response.json();
+      setPlaylistData(data.data);
+    } catch (error) {
+      console.error('Error fetching playlist data:', error);
+    }
+  };
+
+  const fetchVideoData = async () => {
+    if (selectedPlaylistItem) {
+      try {
+        const response = await fetch(`http://192.168.29.163:3005/api/video/getData/${selectedPlaylistItem._id}`);
+        const data = await response.json();
+        setVideoData(data.data.video);
+      } catch (error) {
+        console.error('Error fetching video data:', error);
+      }
+    }
+  };
+
+  const handleRefresh = useCallback(() => {
+    setRefreshing(true);
+    fetchData();
+    if (selectedPlaylistItem) {
+      fetchVideoData();
+    }
+    setRefreshing(false);
+  }, [selectedPlaylistItem]);
 
   useEffect(() => {
-    const fetchData = async () => {
-      const gettingUserId = await AsyncStorage.getItem("userId");
-
-      try {
-        const response = await fetch(`http://192.168.29.163:3005/api/playlist/getUserPlaylist/${gettingUserId}`);
-        const data = await response.json();
-        setPlaylistData(data.data);
-      } catch (error) {
-        console.error('Error fetching playlist data:', error);
-      }
-    };
-
     fetchData();
   }, []);
 
   useEffect(() => {
-    const fetchVideoData = async () => {
-      if (selectedPlaylistItem) {
-        try {
-          const response = await fetch(`http://192.168.29.163:3005/api/video/getData/${selectedPlaylistItem._id}`);
-          const data = await response.json();
-          setVideoData(data.data);
-        } catch (error) {
-          console.error('Error fetching video data:', error);
-        }
-      }
-    };
-
     fetchVideoData();
   }, [selectedPlaylistItem]);
 
@@ -75,6 +85,12 @@ const CategoryScreen = () => {
             data={videoData}
             keyExtractor={(item) => item._id}
             renderItem={renderYoutubeVideoCard}
+            refreshControl={
+              <RefreshControl
+                refreshing={isRefreshing}
+                onRefresh={handleRefresh}
+              />
+            }
           />
         </View>
       ) : (
@@ -82,6 +98,12 @@ const CategoryScreen = () => {
           data={playlistData}
           keyExtractor={(item) => item._id}
           renderItem={renderPlaylistCard}
+          refreshControl={
+            <RefreshControl
+              refreshing={isRefreshing}
+              onRefresh={handleRefresh}
+            />
+          }
         />
       )}
     </View>
