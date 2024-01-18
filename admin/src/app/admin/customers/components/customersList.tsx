@@ -76,7 +76,7 @@ function customersList() {
                               </td>
                               <td className="p-2 whitespace-nowrap">
                                 <div className="flex items-center">
-                                  <div className="font-medium text-gray-800">{item.firstName}</div>
+                                  <div className="font-medium text-gray-800">{item.firstName} {item.lastName}</div>
                                 </div>
                               </td>
                               <td className="p-2 whitespace-nowrap">
@@ -86,17 +86,17 @@ function customersList() {
                               </td>
                               <td className="p-2 whitespace-nowrap">
                                 <div className="text-left font-medium text-green-500">
-                                  {item.phone}
+                                  {item.phoneNumber}
                                 </div>
                               </td>
                               <td className="text-xs flex justify-center items-center h-full pt-4">
-                                <Link href={`/playlist/view/${item?._id}`}>
+                                <Link href={`/admin/customers/view/${item?.adminId}`}>
                                   <FaEye className="text-lg cursor-pointer text-gray-600 mr-5" />
                                 </Link>
-                                <Link href={`/playlist/update/${item?._id}`}>
+                                {/* <Link href={`/playlist/update/${item?.adminId}`}>
                                   <FaEdit className="text-lg cursor-pointer text-gray-600" />
-                                </Link>
-                                {/* <MdDelete className="text-lg cursor-pointer text-gray-600 ml-5" onClick={() => DeletePlaylist(item?._id)} /> */}
+                                </Link> */}
+                                {/* <MdDelete className="text-lg cursor-pointer text-gray-600 ml-5" onClick={() => DeletePlaylist(item?.adminId)} /> */}
                               </td>
                             </tr>
                           ))}
