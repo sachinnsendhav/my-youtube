@@ -2,8 +2,9 @@ import React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Alert } from "react-native";
 import HomeScreen from "../screens/parents/HomeScreen";
-import CategoryScreen from "../screens/CategoryScreen";
-import ProfileScreen from "../screens/ProfileScreen";
+import UserScreen from "../screens/parents/UsersScreen";
+import PlaylistScreen from "../screens/parents/PlaylistScreen";
+import ProfileScreen from "../screens/parents/ProfileScreen";
 import { MaterialIcons } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
@@ -11,7 +12,6 @@ const Tab = createBottomTabNavigator();
 
 const LogoutButton = ({ navigation, onLogout }) => {
   const handleLogout = async () => {
-    // Show an alert for confirmation
     Alert.alert(
       "Logout",
       "Are you sure you want to logout?",
@@ -26,7 +26,7 @@ const LogoutButton = ({ navigation, onLogout }) => {
             // Handle the logout functionality here
             // You can call the onLogout prop passed from App.js or any other logic you prefer
             // For now, it clears the token from AsyncStorage and sets isLoggedIn to false
-            await AsyncStorage.clear()
+            await AsyncStorage.clear();
             onLogout();
           },
         },
@@ -69,7 +69,7 @@ const ParentsBottomTabNavigator = ({ onLogout }) => {
             iconName = focused ? "list" : "list";
           } else if (route.name === "User") {
             iconName = focused ? "group" : "group";
-        } else if (route.name === "Profile") {
+          } else if (route.name === "Profile") {
             iconName = focused ? "person" : "person-outline";
           }
           // You can add more icons based on your requirements
@@ -79,8 +79,8 @@ const ParentsBottomTabNavigator = ({ onLogout }) => {
       })}
     >
       <Tab.Screen name="Home" component={HomeScreen} />
-      <Tab.Screen name="Playlist" component={CategoryScreen} />
-      <Tab.Screen name="User" component={CategoryScreen} />
+      <Tab.Screen name="Playlist" component={PlaylistScreen} />
+      <Tab.Screen name="User" component={UserScreen} />
       <Tab.Screen name="Profile" component={ProfileScreen} />
     </Tab.Navigator>
   );

@@ -47,15 +47,15 @@ export default function App() {
 
   return (
     <NavigationContainer>
-      {isLoggedIn ? (
-        role === "user" ? (
+      {/* {isLoggedIn ? ( */}
+      {  role !== "user" ? (
           <BottomTabNavigator onLogout={handleLogout} />
         ) : (
           <ParentsBottomTabNavigator onLogout={handleLogout} />
-        )
-      ) : (
+        )}
+      {/* ) : (
         <LoginScreen onLoginSuccess={handleLoginSuccess} />
-      )}
-    </NavigationContainer>
+      )} */}
+    </NavigationContainer> 
   );
 }
