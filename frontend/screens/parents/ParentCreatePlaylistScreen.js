@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 import { StyleSheet, Text, View, TextInput, Button } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Playlist } from '../../services';
 
 
 const ParentCreatePlaylistScreen = () => {
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
+  const [playlist, setPlaylist] = useState('');
 
   const handleAddPlaylist = async () => {
     // Handle the logic to add the playlist with playlistName and description
@@ -18,19 +20,17 @@ const ParentCreatePlaylistScreen = () => {
         name:name,
         description:description
     }
+    console.log(data,"dataa")
     try {
         const response = await Playlist.createPlaylist(token,data);
         console.log(response,"response aaya kya ");
-  
-        // setPlaylist(response.data);
+        setPlaylist(response.data);
         console.log(playlist,"playlist me set hua kya ")
       } catch (error) {
         console.error('Error creating  playlist data:', error);
         // Alert.alert('Error', 'Failed to fetch playlist data');
       }
-    // };
 
-    // You can add your logic here to perform actions with the playlistName and description
   };
 
   return (
