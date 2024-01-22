@@ -10,6 +10,7 @@ import {
   Alert,
 } from "react-native";
 import axios from "axios";
+import { RadioButton } from "react-native-paper";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Auth } from "../services";
 
@@ -17,61 +18,133 @@ const LoginScreen = ({ onLoginSuccess }) => {
   const [userName, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [role, setRole] = useState("user");
+  const [checked, setChecked] = useState("User");
+
   const handleLogin = async () => {
+    console.log("user")
+    // await AsyncStorage.removeItem("token");
+    // await AsyncStorage.removeItem("userObjectId");
+    // await AsyncStorage.removeItem("role")
     try {
-      // Make a POST request to your login API endpoint
       const data = {
         userName: userName,
         password: password,
       };
-      const response = await Auth.userLogin(data);
+
+      let response;
+      if (role === "user") {
+        response = await Auth.userLogin(data);
+      } else if (role === "admin") {
+        const adminData = {
+          email: userName, // Assuming the admin uses email as a username
+          password: password,
+        };
+        response = await Auth.login(adminData);
+      }
+
       console.log("resp------", response);
-      // const response = await axios.post(
-      //   "http://173.214.174.234:3005/api/userType/login",
-      //   {
-      //     userName: userName,
-      //     password: password,
-      //   }
-      // );
-      const userObjectId = response.data.userData._id;
-      const userFirstName = response.data.userData.firstName;
-      const userLastName = response.data.userData.lastName;
-      const userUserName = response.data.userData.userName;
-      const userPlayListId = response.data.userData.playList;
-      const userParentFirstName = response.data.userData.parentfirstName;
-      const userParentLastName = response.data.userData.parentLastName;
-      const role = response.data.userData.role;
-      await AsyncStorage.setItem("userObjectId", userObjectId);
-      await AsyncStorage.setItem("userFirstName", userFirstName);
-      await AsyncStorage.setItem("userLastName", userLastName);
-      await AsyncStorage.setItem("userUserName", userUserName);
-      await AsyncStorage.setItem("userParentFirstName", userParentFirstName);
-      await AsyncStorage.setItem("userParentLastName", userParentLastName);
-      await AsyncStorage.setItem("role", role);
-      await AsyncStorage.setItem(
-        "userPlayListId",
-        JSON.stringify(userPlayListId)
-      );
 
-      // console.log(userObjectId,"userObjectId");
-      const tokenGet = response.data.token;
-      // console.log(tokenGet,"response");
 
-      await AsyncStorage.setItem("token", tokenGet);
-      const getttingAsyncToken = await AsyncStorage.getItem("token");
-      // console.log(getttingAsyncToken, "token......");
-      // Assuming your API returns a success status
-      if (response.status === 200) {
-        // If login successful, trigger the onLoginSuccess callback
-        onLoginSuccess();
-        Alert.alert("Login Successful", "You have successfully logged in.");
+      if (response && response.data) {
+        const userObjectId = response.data.userData._id;
+        const userFirstName = response.data.userData.firstName;
+        const userLastName = response.data.userData.lastName;
+        const userUserName = response.data.userData.userName;
+        const userPlayListId = response.data.userData.playList;
+        const userParentFirstName = response.data.userData.parentfirstName;
+        const userParentLastName = response.data.userData.parentLastName;
+        const userRole = response.data.userData.role;
+        console.log(userRole,"userRole")
+
+        // if (userObjectId !== undefined && userObjectId !== null) {
+        //   await AsyncStorage.setItem("userObjectId", userObjectId);
+        // } else {
+        //   console.warn("Attempted to store undefined value in AsyncStorage.");
+        //   // Handle the case where userObjectId is undefined.
+        // }
+
+        await AsyncStorage.setItem("userObjectId", userObjectId);
+        await AsyncStorage.setItem("userFirstName", userFirstName);
+        await AsyncStorage.setItem("userLastName", userLastName);
+        await AsyncStorage.setItem("userUserName", userUserName);
+        // await AsyncStorage.setItem("userParentFirstName", userParentFirstName);
+        // await AsyncStorage.setItem("userParentLastName", userParentLastName);
+        await AsyncStorage.setItem("role", userRole);
+        await AsyncStorage.setItem(
+          "userPlayListId",
+          JSON.stringify(userPlayListId)
+        );
+
+        const tokenGet = response.data.token;
+        await AsyncStorage.setItem("token", tokenGet);
+        const getttingAsyncToken = await AsyncStorage.getItem("token");
+
+        // Assuming your API returns a success status
+        if (response.status === 200) {
+          // If login successful, trigger the onLoginSuccess callback
+          onLoginSuccess();
+          Alert.alert("Login Successful", "You have successfully logged in.");
+        } else {
+          // If login fails, show an error message
+          Alert.alert("Login Failed", "Invalid credentials. Please try again.");
+        }
       } else {
-        // If login fails, show an error message
+        // Handle the case where response or response.data is undefined
         Alert.alert("Login Failed", "Invalid credentials. Please try again.");
       }
     } catch (error) {
-      console.log(error)
+      console.log(error);
       Alert.alert("Error", "An error occurred while logging in");
+    }
+  };
+
+  const parentLogin = async () => {
+    console.log("parent");
+
+    // await AsyncStorage.removeItem("token");
+    // await AsyncStorage.removeItem("userObjectId");
+    // await AsyncStorage.removeItem("role")
+    try {
+      const adminData = {
+        email: userName, // Assuming the admin uses email as a username
+        password: password,
+      };
+     const response = await Auth.login(adminData);
+      console.log(response);
+
+      
+      if (response && response.data) {
+        const userObjectId = response.data.userData._id;
+        const userUserName = response.data.userData.email;
+        const userParentFirstName = response.data.userData.firstName;
+        const userParentLastName = response.data.userData.lastName;
+        const userRole = response.data.userData.role;
+
+      await AsyncStorage.setItem("userParentFirstName", userParentFirstName);
+      await AsyncStorage.setItem("userUserName",userUserName)
+      await AsyncStorage.setItem("userParentLastName", userParentLastName);
+      await AsyncStorage.setItem("role", userRole);
+
+      await AsyncStorage.setItem("token",  response.data.token);
+        // const getttingAsyncToken = await AsyncStorage.getItem("token");
+      
+         // Assuming your API returns a success status
+         if (response.status === 200) {
+          // If login successful, trigger the onLoginSuccess callback
+          onLoginSuccess();
+          Alert.alert("Login Successful", "You have successfully logged in admin.");
+        } else {
+          // If login fails, show an error message
+          Alert.alert("Login Failed", "Invalid credentials. Please try again.");
+        }
+      } else {
+        // Handle the case where response or response.data is undefined
+        Alert.alert("Login Failed", "Invalid credentials. Please try again.");
+      }
+
+    } catch (err) {
+      console.log(err);
+      Alert.alert("Error", "An error occurred while logging in admin");
     }
   };
 
@@ -90,6 +163,26 @@ const LoginScreen = ({ onLoginSuccess }) => {
           />
         </View>
         <View style={styles.formContainer}>
+          <View style={styles.radioButton}>
+            <RadioButton
+              value="User"
+              status={checked === "User" ? "checked" : "unchecked"}
+              onPress={() => {
+                setChecked("User");
+                setRole("user");
+              }}
+            />
+            <Text>User</Text>
+            <RadioButton
+              value="Admin"
+              status={checked === "Admin" ? "checked" : "unchecked"}
+              onPress={() => {
+                setChecked("Admin");
+                setRole("admin");
+              }}
+            />
+            <Text>Admin</Text>
+          </View>
           <View style={styles.card}>
             <TextInput
               placeholder="Username"
@@ -107,7 +200,10 @@ const LoginScreen = ({ onLoginSuccess }) => {
               onChangeText={setPassword}
             />
           </View>
-          <TouchableOpacity style={styles.loginButton} onPress={handleLogin}>
+          <TouchableOpacity
+            style={styles.loginButton}
+            onPress={role === "user" ? handleLogin : parentLogin}
+          >
             <Text style={styles.loginButtonText}>Log In</Text>
           </TouchableOpacity>
         </View>
@@ -170,6 +266,9 @@ const styles = StyleSheet.create({
   loginButtonText: {
     color: "#fff",
     fontSize: 16,
+  },
+  radioButton: {
+    flexDirection: "row",
   },
 });
 

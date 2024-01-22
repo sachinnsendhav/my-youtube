@@ -12,6 +12,7 @@ export default function App() {
   useEffect(() => {
     checkLoginStatus();
   }, []);
+  
 
   const checkLoginStatus = async () => {
     try {
@@ -19,11 +20,12 @@ export default function App() {
       const token = await AsyncStorage.getItem("token");
       setLoggedIn(!!token);
       setRole(await AsyncStorage.getItem("role"));
+      setLoading(false);
     } catch (error) {
+      setLoading(false);
       console.error("Error checking login status:", error.message);
     } finally {
       // Set loading to false once the token check is completed
-      setLoading(false);
     }
   };
 
@@ -35,8 +37,8 @@ export default function App() {
   };
 
   const handleLogout = async () => {
-    // Remove the token from AsyncStorage on logout
-    await AsyncStorage.removeItem("token");
+    console.log("hitingggg");
+    AsyncStorage.clear();
     setLoggedIn(false);
   };
 
@@ -44,10 +46,12 @@ export default function App() {
   if (loading) {
     return null; // You can replace this with a loading spinner or splash screen
   }
-
+  console.log("role-------------h-", role);
   return (
     <NavigationContainer>
-      {isLoggedIn ? (
+      {loading ? (
+        ""
+      ) : isLoggedIn ? (
         role === "user" ? (
           <BottomTabNavigator onLogout={handleLogout} />
         ) : (

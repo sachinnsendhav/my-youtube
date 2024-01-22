@@ -1,16 +1,26 @@
 import React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+// import { createStackNavigator } from "@react-navigation/stack";
 import { Alert } from "react-native";
-import HomeScreen from "../screens/parents/HomeScreen";
-import CategoryScreen from "../screens/CategoryScreen";
-import ProfileScreen from "../screens/ProfileScreen";
+import ParentHomeScreen from "../screens/parents/ParentHomeScreen";
+import ParentPlaylistScreen from "../screens/parents/ParentPlaylistScreen";
+import ParentUsersScreen from "../screens/parents/ParentUsersScreen";
+import ParentProfileScreen from "../screens/parents/ParentProfileScreen";
+import ParentViewScreen from "../screens/parents/ParentViewScreen";
+import ParentUpdateScreen from "../screens/parents/ParentUpdateScreen";
 import { MaterialIcons } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { useNavigation } from "@react-navigation/native";
+
+const Stack = createNativeStackNavigator();
 
 const Tab = createBottomTabNavigator();
+// const Stack = createStackNavigator();
 
 const LogoutButton = ({ navigation, onLogout }) => {
   const handleLogout = async () => {
+    const navigation = useNavigation();
     // Show an alert for confirmation
     Alert.alert(
       "Logout",
@@ -46,6 +56,16 @@ const LogoutButton = ({ navigation, onLogout }) => {
   );
 };
 
+const MyStack = () => {
+return(
+  <Stack.Navigator>
+    {/* <Stack.Screen name="Playlist" component={ParentPlaylistScreen}/> */}
+    <Stack.Screen name="View" component={ParentViewScreen}/>
+    <Stack.Screen name="Update" component={ParentUpdateScreen}/>
+  </Stack.Navigator>
+)
+}
+
 const ParentsBottomTabNavigator = ({ onLogout }) => {
   return (
     <Tab.Navigator
@@ -78,10 +98,10 @@ const ParentsBottomTabNavigator = ({ onLogout }) => {
         },
       })}
     >
-      <Tab.Screen name="Home" component={HomeScreen} />
-      <Tab.Screen name="Playlist" component={CategoryScreen} />
-      <Tab.Screen name="User" component={CategoryScreen} />
-      <Tab.Screen name="Profile" component={ProfileScreen} />
+      <Tab.Screen name="Home" component={ParentHomeScreen} />
+      <Tab.Screen name="Playlist" component={ParentPlaylistScreen} />
+      <Tab.Screen name="User" component={ParentUsersScreen} />
+      <Tab.Screen name="Profile" component={MyStack} />
     </Tab.Navigator>
   );
 };
