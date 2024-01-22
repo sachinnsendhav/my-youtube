@@ -2,21 +2,21 @@ import React, { useState, useEffect } from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import BottomTabNavigator from "./components/BottomTabNavigator";
-import LoginScreen from "./screens/LoginScreen";
 import ParentsBottomTabNavigator from "./components/ParentsBottomTabNavigator";
-
+import LoginScreen from "./screens/LoginScreen";
+ 
 export default function App() {
   const [isLoggedIn, setLoggedIn] = useState(false);
-  const [loading, setLoading] = useState(true); // Added loading state
+  const [loading, setLoading] = useState(true);
   const [role, setRole] = useState("");
+  const [navigatorComponent, setNavigatorComponent] = useState(null);
+ 
   useEffect(() => {
     checkLoginStatus();
   }, []);
-  
-
+ 
   const checkLoginStatus = async () => {
     try {
-      // Check if token is available
       const token = await AsyncStorage.getItem("token");
       setLoggedIn(!!token);
       setRole(await AsyncStorage.getItem("role"));
@@ -24,39 +24,43 @@ export default function App() {
     } catch (error) {
       setLoading(false);
       console.error("Error checking login status:", error.message);
-    } finally {
-      // Set loading to false once the token check is completed
     }
   };
-
+ 
   const handleLoginSuccess = async () => {
-    // No need to generate a new token here since it is handled in LoginScreen.js
-
-    // Update the state to reflect the user being logged in
     setLoggedIn(true);
+    // Role should be set after successful login
+    setRole(await AsyncStorage.getItem("role"));
   };
-
+ 
   const handleLogout = async () => {
-    console.log("hitingggg");
-    AsyncStorage.clear();
-    setLoggedIn(false);
+    try {
+      await AsyncStorage.clear();
+      setLoggedIn(false);
+      setRole(""); // Clear the role after logout
+    } catch (error) {
+      console.error("Error during logout:", error.message);
+    }
   };
-
-  // Display a loading indicator while checking login status
+ 
+  useEffect(() => {
+    if (role === "user") {
+      setNavigatorComponent(<BottomTabNavigator onLogout={handleLogout} />);
+    } else if (role === "admin") {
+      setNavigatorComponent(<ParentsBottomTabNavigator onLogout={handleLogout} />);
+    } else {
+      setNavigatorComponent(null);
+    }
+  }, [role]);
+ 
   if (loading) {
-    return null; // You can replace this with a loading spinner or splash screen
+    return null;
   }
-  console.log("role-------------h-", role);
+ 
   return (
     <NavigationContainer>
-      {loading ? (
-        ""
-      ) : isLoggedIn ? (
-        role === "user" ? (
-          <BottomTabNavigator onLogout={handleLogout} />
-        ) : (
-          <ParentsBottomTabNavigator onLogout={handleLogout} />
-        )
+      {isLoggedIn && navigatorComponent ? (
+        navigatorComponent
       ) : (
         <LoginScreen onLoginSuccess={handleLoginSuccess} />
       )}
