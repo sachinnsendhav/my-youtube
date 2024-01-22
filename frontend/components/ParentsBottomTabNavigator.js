@@ -10,6 +10,7 @@ import ParentViewScreen from "../screens/parents/ParentViewScreen";
 import ParentUpdateScreen from "../screens/parents/ParentUpdateScreen";
 import ParentCreatePlaylistScreen from "../screens/parents/ParentCreatePlaylistScreen";
 import ParentCreateUserScreen from "../screens/parents/ParentCreateUserScreen";
+import ParentVideoDetailScreen from "../screens/parents/ParentVideoDetailScreen";
 import { MaterialIcons } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
@@ -61,7 +62,8 @@ const LogoutButton = ({ navigation, onLogout }) => {
 const MyStack = () => {
 return(
   <Stack.Navigator>
-    <Stack.Screen name="CreatePlaylist" component={ParentCreatePlaylistScreen}/>
+    {/* <Stack.Screen name="CreatePlaylist" component={ParentCreatePlaylistScreen}/> */}
+    <Stack.Screen name="Video" component={ParentVideoDetailScreen}/>
     <Stack.Screen name="View" component={ParentViewScreen}/>
     <Stack.Screen name="Update" component={ParentUpdateScreen}/>
   </Stack.Navigator>
@@ -101,9 +103,12 @@ const ParentsBottomTabNavigator = ({ onLogout }) => {
       })}
     >
       <Tab.Screen name="Home" component={ParentHomeScreen} />
+      <Tab.Screen name="Video" component={ParentVideoDetailScreen}/>
       <Tab.Screen name="Playlist" component={ParentPlaylistScreen} />
       <Tab.Screen name="User" component={ParentUsersScreen} />
-      <Tab.Screen name="Profile" component={ParentCreateUserScreen} />
+      {/* <Tab.Screen name="Profile" component={ParentCreateUserScreen} /> */}
+      <Tab.Screen name="Profile" component={ParentProfileScreen} />
+
     </Tab.Navigator>
   );
 };
