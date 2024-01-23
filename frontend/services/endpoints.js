@@ -2,11 +2,11 @@ const url = 'http://173.214.174.234:3005'
 const BASE_URL = 'https://youtube-v31.p.rapidapi.com';
 export const endpoints = {
   auth: {
-    login: `${url}/api/user/login`,
+    login: `${url}/api/user/login`, //admin,,,,parent
     register: `${url}/api/user/signup`,
     generateOtp: `${url}/api/generateOtp`,
     generateOtp: `${url}/api/generateOtp`,
-    userLogin:`${url}/api/userType/login`
+    userLogin:`${url}/api/userType/login`  //user,,,child
   },
   users: {
     createUSer: `${url}/api/user/addUser`,

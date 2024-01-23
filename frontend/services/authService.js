@@ -10,6 +10,7 @@ const login = (body) =>
                 },
             })
             .then((response) => resolve(response.data))
+            // console.log("hello")
             .catch((error) => reject(error));
     });
 
@@ -22,6 +23,7 @@ const login = (body) =>
                 },
             })
             .then((response) => resolve(response.data))
+            // console.log("yaaaa")
             .catch((error) => reject(error));
     });
 

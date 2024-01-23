@@ -1,16 +1,26 @@
 import React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Alert } from "react-native";
-import HomeScreen from "../screens/parents/HomeScreen";
-import UserScreen from "../screens/parents/UsersScreen";
-import PlaylistScreen from "../screens/parents/PlaylistScreen";
-import ProfileScreen from "../screens/parents/ProfileScreen";
+import ParentHomeScreen from "../screens/parents/ParentHomeScreen";
+import ParentPlaylistScreen from "../screens/parents/ParentPlaylistScreen";
+import ParentUsersScreen from "../screens/parents/ParentUsersScreen";
+import ParentProfileScreen from "../screens/parents/ParentProfileScreen";
+import ParentViewScreen from "../screens/parents/ParentViewScreen";
+import ParentUpdateScreen from "../screens/parents/ParentUpdateScreen";
+import ParentCreatePlaylistScreen from "../screens/parents/ParentCreatePlaylistScreen";
+import ParentCreateUserScreen from "../screens/parents/ParentCreateUserScreen";
+import ParentVideoDetailScreen from "../screens/parents/ParentVideoDetailScreen";
 import { MaterialIcons } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { useNavigation } from "@react-navigation/native";
+ 
+const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
-
-const LogoutButton = ({ navigation, onLogout }) => {
+ 
+const LogoutButton = ({ onLogout }) => {
+  const navigation = useNavigation();
+ 
   const handleLogout = async () => {
     Alert.alert(
       "Logout",
@@ -34,7 +44,7 @@ const LogoutButton = ({ navigation, onLogout }) => {
       { cancelable: false }
     );
   };
-
+ 
   return (
     <MaterialIcons
       name="logout"
@@ -45,24 +55,28 @@ const LogoutButton = ({ navigation, onLogout }) => {
     />
   );
 };
+ 
 
+ 
 const ParentsBottomTabNavigator = ({ onLogout }) => {
+  const navigation = useNavigation();
+ 
   return (
     <Tab.Navigator
-      screenOptions={({ route, navigation }) => ({
+      screenOptions={({ route }) => ({
         headerRight: () => {
           if (
             route.name === "Home" ||
             route.name === "Category" ||
             route.name === "Profile"
           ) {
-            return <LogoutButton navigation={navigation} onLogout={onLogout} />;
+            return <LogoutButton onLogout={onLogout} />;
           }
           return null;
         },
         tabBarIcon: ({ focused, color, size }) => {
           let iconName;
-
+ 
           if (route.name === "Home") {
             iconName = focused ? "home" : "home";
           } else if (route.name === "Playlist") {
@@ -72,18 +86,17 @@ const ParentsBottomTabNavigator = ({ onLogout }) => {
           } else if (route.name === "Profile") {
             iconName = focused ? "person" : "person-outline";
           }
-          // You can add more icons based on your requirements
-
+ 
           return <MaterialIcons name={iconName} size={size} color={color} />;
         },
       })}
     >
-      <Tab.Screen name="Home" component={HomeScreen} />
-      <Tab.Screen name="Playlist" component={PlaylistScreen} />
-      <Tab.Screen name="User" component={UserScreen} />
-      <Tab.Screen name="Profile" component={ProfileScreen} />
+      <Tab.Screen name="Home" component={ParentHomeScreen} />
+      <Tab.Screen name="Playlist" component={ParentPlaylistScreen} />
+      <Tab.Screen name="User" component={ParentUsersScreen} />
+      <Tab.Screen name="Profile" component={ParentProfileScreen} />
     </Tab.Navigator>
   );
 };
-
+ 
 export default ParentsBottomTabNavigator;
