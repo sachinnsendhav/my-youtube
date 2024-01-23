@@ -58,7 +58,6 @@ const LoginScreen = ({ onLoginSuccess }) => {
  
         const tokenGet = response.data.token;
         await AsyncStorage.setItem("token", tokenGet);
- 
         if (response.status === 200) {
           onLoginSuccess();
           Alert.alert("Login Successful", "You have successfully logged in.");
@@ -94,14 +93,17 @@ const LoginScreen = ({ onLoginSuccess }) => {
         await AsyncStorage.setItem("userParentLastName", userParentLastName);
         await AsyncStorage.setItem("role", userRole);
         await AsyncStorage.setItem("token", response.data.token);
- 
+        console.log("response.status",response.status)
         if (response.status === 200) {
           onLoginSuccess();
           Alert.alert("Login Successful", "You have successfully logged in admin.");
         } else {
+        console.log("response.status",response.status)
+
           Alert.alert("Login Failed", "Invalid credentials. Please try again.");
         }
       } else {
+        console.log("response.status",response.status)
         Alert.alert("Login Failed", "Invalid credentials. Please try again.");
       }
     } catch (err) {

@@ -9,6 +9,7 @@ import { MultiSelect } from 'react-native-element-dropdown';
 // import ModalDropdown from 'react-native-modal-dropdown';
 import { Dropdown } from 'react-native-element-dropdown';
 import AntDesign from '@expo/vector-icons/AntDesign';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 function ParentVideoDetailScreen({ route }) {
     console.log("route",route.params)
@@ -19,7 +20,6 @@ function ParentVideoDetailScreen({ route }) {
   const [isFocus, setIsFocus] = useState(false);
   const [playlist, setPlaylist] = useState([]);
   const [playlistId, setPlaylistId] = useState('');
-  const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXlsb2QiOnsidG9rZW4iOiIiLCJfaWQiOiI2NWExMTUxYTJjZDBmYzUyODAyNGNhYmIiLCJmaXJzdE5hbWUiOiJEaXZ5YW5zaCIsImxhc3ROYW1lIjoiQmFqcGFpIiwiZW1haWwiOiJkaXZtYXR0ZXIxNUBnbWFpbC5jb20iLCJwaG9uZU51bWJlciI6OTg3NjU2NTY0MywicGFzc3dvcmQiOiIkMmIkMTAkaWl2RkNTOTJERVFzMDVuYVBLTVgvLkVXYndXSXdDR3JnSHBPVlhDOU9JTzFtZkZDdUFxMUMiLCJyb2xlIjoiYWRtaW4iLCJfX3YiOjB9LCJpYXQiOjE3MDU5MjA2ODcsImV4cCI6MTcwNzIxNjY4N30.TXo0QjFZ7rvF6mKZkV8SvoGKdZiIUm2vylzz6Xu_mNY';
  
   useEffect(() => {
     getVideoDetails(videoId);
@@ -47,6 +47,7 @@ function ParentVideoDetailScreen({ route }) {
     }
   };
   const getPlaylist = async () => {
+  const token = await AsyncStorage.getItem('token');
     try {
       const result = await Playlist.getAllPlaylist(token);
       setPlaylist(result?.data || []);
@@ -69,6 +70,7 @@ function ParentVideoDetailScreen({ route }) {
         playListId: playlistId,
       };
       try {
+        const token = await AsyncStorage.getItem('token');
         const resp = await Video.addVideoToPlaylist(token, data);
         Alert.alert('Video added!');
         console.log('first', resp);

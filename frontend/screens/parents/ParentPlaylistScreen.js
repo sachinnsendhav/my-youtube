@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, FlatList, Alert, StyleSheet } from 'react-native';
 import { Playlist } from '../../services';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation,useFocusEffect } from '@react-navigation/native';
 
 const PlaylistCard = ({ data, onView, onUpdate, onDelete }) => (
   // <Text >Hii guys</Text>
@@ -31,10 +31,16 @@ const ParentPlaylistScreen = () => {
   const navigation = useNavigation();
   const [playlist, setPlaylist] = useState([]);
 
-  useEffect(() => {
-    fetchPlaylistData();
-  }, []);
+  // useEffect(() => {
+  //   fetchPlaylistData();
+  // }, []);
   
+  useFocusEffect(
+    React.useCallback(() => {
+      // Fetch updated playlist data when the screen comes into focus
+      fetchPlaylistData();
+    }, [])
+  );
   const fetchPlaylistData = async () => {
     const token = await AsyncStorage.getItem('token')
     console.log(token,'token')
@@ -61,8 +67,14 @@ const ParentPlaylistScreen = () => {
     console.log('Update:', item);
   };
 
-  const handleDelete = (item) => {
+  const handleDelete = async(item) => {
     // Handle delete action (show confirmation and perform deletion)
+    const token = await AsyncStorage.getItem('token')
+    const id=item._id
+    await Playlist.deletePlaylist(token,item._id)
+    const newArray = playlist.filter((item) => item._id !== id);
+        setPlaylist(newArray)
+        Alert.alert('Playlist deleted!')
     console.log('Delete:', item);
   };
 

@@ -24,7 +24,7 @@ const MyStack = ({ onLogout }) => {
         {() => <ParentsBottomTabNavigator onLogout={onLogout} />}
       </Stack.Screen>
       <Stack.Screen name="Video" component={ParentVideoDetailScreen} />
-      <Stack.Screen name="Playlist" component={ParentPlaylistScreen} />
+      {/* <Stack.Screen name="Playlist" component={ParentPlaylistScreen} /> */}
       <Stack.Screen name="ParentViewScreen" component={ParentViewScreen} />
       <Stack.Screen name="ParentUserViewScreen" component={ParentUserViewScreen}/>
       <Stack.Screen name="ParentUpdateUserScreen" component={ParentUpdateUserScreen}/>

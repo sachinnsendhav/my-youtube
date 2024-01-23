@@ -36,6 +36,8 @@ const ParentViewScreen = ({ route }) => {
     try {
       // Perform the deletion logic using the API or service method
       // Example: await Video.deleteVideo(token, item._id);
+      await Video.deleteVideo(token,item._id,clickedPlaylistId)
+      Alert.alert('Video delete SuccessFully from the playlist');
 
       // After deletion, refresh the playlist data
       fetchPlaylistData();
