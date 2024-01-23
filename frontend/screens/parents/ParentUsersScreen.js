@@ -3,9 +3,8 @@ import { View, Text, TouchableOpacity, FlatList, Alert, StyleSheet } from 'react
 import { Users } from '../../services';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from '@react-navigation/native';
- 
+
 const UserCard = ({ data, onView, onUpdate, onDelete }) => (
- 
   <View style={styles.card}>
     <Text style={styles.cardText}>{`Name: ${data.firstName} ${data.lastName}`}</Text>
     <Text style={styles.cardText}>{`UserName: ${data.userName}`}</Text>
@@ -23,50 +22,48 @@ const UserCard = ({ data, onView, onUpdate, onDelete }) => (
     </View>
   </View>
 );
- 
- 
- 
-const ParentUsersScreen = () => {
-  const navigation = useNavigation();
+
+const ParentUsersScreen = ({ navigation }) => {
   const [user, setUser] = useState([]);
- 
+
   useEffect(() => {
     fetchPlaylistData();
   }, []);
- 
+
   const fetchPlaylistData = async () => {
-    const token = await AsyncStorage.getItem('token')
-    console.log(token,'token')
+    const token = await AsyncStorage.getItem('token');
     try {
       const response = await Users.getAllUSerByParents(token);
-      console.log(response,"response aaya kya ");
- 
       setUser(response.data);
-      console.log(user,"user me set hua kya ")
     } catch (error) {
       console.error('Error fetching user data:', error);
       Alert.alert('Error', 'Failed to fetch user data');
     }
   };
- 
+
   const handleView = (item) => {
-    // Handle view action (navigate to view screen or show details)
-    navigation.navigate('ParentViewScreen');
-    console.log('View:', item);
+    navigation.navigate('ParentUserViewScreen', { id: item._id });
   };
- 
+
   const handleUpdate = (item) => {
-    // Handle update action (navigate to update screen or show update form)
-    console.log('Update:', item);
+    navigation.navigate('ParentUpdateUserScreen', { id: item._id });
   };
- 
+
   const handleDelete = (item) => {
-    // Handle delete action (show confirmation and perform deletion)
     console.log('Delete:', item);
   };
- 
+
+  const handleCreate = () => {
+    // Handle create action (navigate to create screen or show create form)
+    // For demonstration purposes, you can navigate to the same update screen
+    navigation.navigate('ParentCreateUserScreen');
+  };
+
   return (
     <View style={styles.container}>
+      <TouchableOpacity style={styles.createButton} onPress={handleCreate}>
+        <Text style={styles.createButtonText}>Create User</Text>
+      </TouchableOpacity>
       <FlatList
         data={user}
         renderItem={({ item }) => (
@@ -82,7 +79,7 @@ const ParentUsersScreen = () => {
     </View>
   );
 };
- 
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -108,6 +105,17 @@ const styles = StyleSheet.create({
     color: '#007BFF',
     fontSize: 16,
   },
+  createButton: {
+    backgroundColor: '#007BFF',
+    borderRadius: 8,
+    padding: 12,
+    marginBottom: 16,
+  },
+  createButtonText: {
+    color: 'white',
+    fontSize: 18,
+    textAlign: 'center',
+  },
 });
- 
+
 export default ParentUsersScreen;

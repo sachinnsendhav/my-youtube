@@ -5,6 +5,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from '@react-navigation/native';
 
 const PlaylistCard = ({ data, onView, onUpdate, onDelete }) => (
+  // <Text >Hii guys</Text>
   
   <View style={styles.card}>
     <Text style={styles.cardText}>{`Name: ${data.name}`}</Text>
@@ -51,7 +52,7 @@ const ParentPlaylistScreen = () => {
 
   const handleView = (item) => {
     // Handle view action (navigate to view screen or show details)
-    navigation.navigate('ParentViewScreen');
+  {navigation.navigate("ParentViewScreen",{ id: item._id })};
     console.log('View:', item);
   };
 
@@ -65,8 +66,17 @@ const ParentPlaylistScreen = () => {
     console.log('Delete:', item);
   };
 
+  const handleCreate = () => {
+    // Handle create action (navigate to create screen or show create form)
+    // For demonstration purposes, you can navigate to the same update screen
+    navigation.navigate('ParentCreatePlaylistScreen');
+  };
+
   return (
     <View style={styles.container}>
+      <TouchableOpacity style={styles.createButton} onPress={handleCreate}>
+        <Text style={styles.createButtonText}>Create Playlist</Text>
+      </TouchableOpacity>
       <FlatList
         data={playlist}
         renderItem={({ item }) => (
@@ -107,6 +117,17 @@ const styles = StyleSheet.create({
   buttonText: {
     color: '#007BFF',
     fontSize: 16,
+  },
+  createButton: {
+    backgroundColor: '#007BFF',
+    borderRadius: 8,
+    padding: 12,
+    marginBottom: 16,
+  },
+  createButtonText: {
+    color: 'white',
+    fontSize: 18,
+    textAlign: 'center',
   },
 });
 

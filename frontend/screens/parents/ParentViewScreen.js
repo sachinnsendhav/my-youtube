@@ -1,78 +1,112 @@
-import React, {useState} from 'react';
-import {Alert, Modal, StyleSheet, Text, Pressable, View} from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { StyleSheet, Text, View, FlatList, TouchableOpacity, Alert } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+import { Video } from '../../services';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { MaterialIcons } from "@expo/vector-icons";
+import YoutubePlayer from 'react-native-youtube-iframe';
 
-const ParentViewScreen = () => {
-  const [modalVisible, setModalVisible] = useState(false);
+const ParentViewScreen = ({ route }) => {
+  const clickedPlaylistId = route.params.id;
+  const navigation = useNavigation();
+  const [videos, setVideos] = useState([]);
+
+  useEffect(() => {
+    fetchPlaylistData();
+  }, []);
+
+  const fetchPlaylistData = async () => {
+    const token = await AsyncStorage.getItem('token');
+    try {
+      const response = await Video.getVideosByPlaylist(token, clickedPlaylistId);
+      setVideos(response.data.video);
+    } catch (error) {
+      console.error('Error fetching playlist data:', error);
+      Alert.alert('Error', 'Failed to fetch playlist data');
+    }
+  };
+
+  const handleView = (item) => {
+    // Handle view action (navigate to view screen or show details)
+    console.log('View:', item);
+  };
+
+  const handleDelete = async (item) => {
+    const token = await AsyncStorage.getItem('token');
+    try {
+      // Perform the deletion logic using the API or service method
+      // Example: await Video.deleteVideo(token, item._id);
+
+      // After deletion, refresh the playlist data
+      fetchPlaylistData();
+    } catch (error) {
+      console.error('Error deleting playlist item:', error);
+      Alert.alert('Error', 'Failed to delete playlist item');
+    }
+  };
+
   return (
-    <View style={styles.centeredView}>
-      <Modal
-        animationType="slide"
-        transparent={true}
-        visible={modalVisible}
-        onRequestClose={() => {
-          Alert.alert('Modal has been closed.');
-          setModalVisible(!modalVisible);
-        }}>
-        <View style={styles.centeredView}>
-          <View style={styles.modalView}>
-            <Text style={styles.modalText}>Hello World!</Text>
-            <Pressable
-              style={[styles.button, styles.buttonClose]}
-              onPress={() => setModalVisible(!modalVisible)}>
-              <Text style={styles.textStyle}>Hide Modal</Text>
-            </Pressable>
+    <View style={styles.container}>
+      <FlatList
+        data={videos}
+        renderItem={({ item }) => (
+          <View style={styles.card}>
+            <Text style={styles.videoName}>{item.videoName}</Text>
+            <YoutubePlayer
+              height={200}
+              videoId={getYouTubeVideoId(item.videoUrl)}
+            />
+            <TouchableOpacity style={styles.viewButton} onPress={() => handleView(item)}>
+              <Text style={styles.buttonText}>View</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.deleteButton} onPress={() => handleDelete(item)}>
+              <Text style={styles.buttonText}>Delete</Text>
+            </TouchableOpacity>
           </View>
-        </View>
-      </Modal>
-      <Pressable
-        style={[styles.button, styles.buttonOpen]}
-        onPress={() => setModalVisible(true)}>
-        <Text style={styles.textStyle}>Show Modal</Text>
-      </Pressable>
+        )}
+        keyExtractor={(item) => item._id}
+      />
     </View>
   );
 };
 
+const getYouTubeVideoId = (url) => {
+  const videoIdRegex = /(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|\S*?[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})/;
+  const match = url.match(videoIdRegex);
+  return match ? match[1] : '';
+};
+
 const styles = StyleSheet.create({
-  centeredView: {
+  container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginTop: 22,
+    padding: 20,
   },
-  modalView: {
-    margin: 20,
-    backgroundColor: 'white',
-    borderRadius: 20,
-    padding: 35,
-    alignItems: 'center',
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
-    elevation: 5,
-  },
-  button: {
-    borderRadius: 20,
+  card: {
+    borderWidth: 1,
+    borderColor: '#ccc',
+    borderRadius: 5,
+    marginBottom: 10,
     padding: 10,
-    elevation: 2,
   },
-  buttonOpen: {
-    backgroundColor: '#F194FF',
-  },
-  buttonClose: {
-    backgroundColor: '#2196F3',
-  },
-  textStyle: {
-    color: 'white',
+  videoName: {
+    fontSize: 18,
     fontWeight: 'bold',
-    textAlign: 'center',
+    marginBottom: 5,
   },
-  modalText: {
-    marginBottom: 15,
+  viewButton: {
+    backgroundColor: 'blue',
+    padding: 10,
+    borderRadius: 5,
+    marginTop: 5,
+  },
+  deleteButton: {
+    backgroundColor: 'red',
+    padding: 10,
+    borderRadius: 5,
+    marginTop: 5,
+  },
+  buttonText: {
+    color: 'white',
     textAlign: 'center',
   },
 });
