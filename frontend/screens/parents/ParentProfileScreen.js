@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, Image } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
+
 const ParentProfileScreen = () => {
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
@@ -30,7 +31,12 @@ const ParentProfileScreen = () => {
   return (
     <View style={styles.container}>
         <View style={styles.card}>
-          <Image source={{ uri: 'https://bootdey.com/img/Content/avatar/avatar3.png' }} style={styles.profileImage} />
+          {/* <Image source={{ uri: 'https://bootdey.com/img/Content/avatar/avatar3.png' }} style={styles.profileImage} /> */}
+          {/* <Image source={{ uri: './assets/ParentProfilePic.avif' }} style={styles.profileImage} /> */}
+          <Image source={require('../../assets/ParentProfilePic.png')} style={styles.profileImage} />
+
+
+
           <Text style={styles.fullNameText}>{`${firstName} ${lastName}`}</Text>
           <Text style={styles.userNameText}>{userName}</Text>
           <Text style={styles.userParentFullNameText}> {`${userParentFirstName} ${userParentLastName}`}</Text>
