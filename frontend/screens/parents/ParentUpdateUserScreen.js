@@ -139,8 +139,9 @@ function ParentUpdateUserScreen({ route }) {
 
           <Text style={{ fontSize: 16, marginBottom: 5, color: '#555' }}>Playlists</Text>
           <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
+
             {playlistIds.map((item) => (
-              <View key={item._id} style={{ backgroundColor: '#f06292', margin: 5, padding: 10, borderRadius: 8, flexDirection: 'row' }}>
+              <View key={item._id} style={{ backgroundColor: '#0099ff', margin: 5, padding: 10, borderRadius: 8, flexDirection: 'row' }}>
                 <Text style={{ fontSize: 16, color: 'white', marginRight: 10 }}>{item?.name}</Text>
                 <TouchableOpacity onPress={() => removePlaylistFromUser(item._id)}>
                 <Icon name="remove" size={24} color="white" />
@@ -152,8 +153,9 @@ function ParentUpdateUserScreen({ route }) {
 
           <Text style={{ fontSize: 16, marginTop: 10, marginBottom: 5, color: '#555', fontWeight: 'bold' }}>Assign Playlist</Text>
           <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
+
             {playlist.map((item) => (
-              <View key={item._id} style={{ backgroundColor: '#f06292', margin: 5, padding: 10, borderRadius: 8, flexDirection: 'row' }}>
+              <View key={item._id} style={{ backgroundColor: '#0099ff', margin: 5, padding: 10, borderRadius: 8, flexDirection: 'row' }}>
                 <Text style={{ fontSize: 16, color: 'white', marginRight: 10 }}>{item?.name}</Text>
                 {!item.exisit && (
                   <TouchableOpacity onPress={() => alotPlaylistToUser(item._id)}>

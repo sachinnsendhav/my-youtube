@@ -26,10 +26,10 @@ const ParentViewScreen = ({ route }) => {
     }
   };
 
-  const handleView = (item) => {
-    // Handle view action (navigate to view screen or show details)
-    console.log('View:', item);
-  };
+  // const handleView = (item) => {
+  //   // Handle view action (navigate to view screen or show details)
+  //   console.log('View:', item);
+  // };
 
   const handleDelete = async (item) => {
     const token = await AsyncStorage.getItem('token');
@@ -58,9 +58,9 @@ const ParentViewScreen = ({ route }) => {
               height={200}
               videoId={getYouTubeVideoId(item.videoUrl)}
             />
-            <TouchableOpacity style={styles.viewButton} onPress={() => handleView(item)}>
+            {/* <TouchableOpacity style={styles.viewButton} onPress={() => handleView(item)}>
               <Text style={styles.buttonText}>View</Text>
-            </TouchableOpacity>
+            </TouchableOpacity> */}
             <TouchableOpacity style={styles.deleteButton} onPress={() => handleDelete(item)}>
               <Text style={styles.buttonText}>Delete</Text>
             </TouchableOpacity>
@@ -102,13 +102,14 @@ const styles = StyleSheet.create({
     marginTop: 5,
   },
   deleteButton: {
-    backgroundColor: 'red',
+    backgroundColor: 'white',
     padding: 10,
     borderRadius: 5,
     marginTop: 5,
   },
   buttonText: {
-    color: 'white',
+    fontSize:21,
+    color: 'red',
     textAlign: 'center',
   },
 });

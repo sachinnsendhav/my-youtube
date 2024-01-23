@@ -15,9 +15,9 @@ const PlaylistCard = ({ data, onView, onUpdate, onDelete }) => (
       <TouchableOpacity onPress={() => onView(data)}>
         <Text style={styles.buttonText}>View</Text>
       </TouchableOpacity>
-      <TouchableOpacity onPress={() => onUpdate(data)}>
+      {/* <TouchableOpacity onPress={() => onUpdate(data)}>
         <Text style={styles.buttonText}>Update</Text>
-      </TouchableOpacity>
+      </TouchableOpacity> */}
       <TouchableOpacity onPress={() => onDelete(data)}>
         <Text style={styles.buttonText}>Delete</Text>
       </TouchableOpacity>

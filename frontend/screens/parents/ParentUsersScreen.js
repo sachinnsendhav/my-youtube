@@ -10,15 +10,15 @@ const UserCard = ({ data, onView, onUpdate, onDelete }) => (
     <Text style={styles.cardText}>{`UserName: ${data.userName}`}</Text>
     <Text style={styles.cardText}>{`Password: ${data.password}`}</Text>
     <View style={styles.actionButtons}>
-      <TouchableOpacity onPress={() => onView(data)}>
+      {/* <TouchableOpacity onPress={() => onView(data)}>
         <Text style={styles.buttonText}>View</Text>
-      </TouchableOpacity>
+      </TouchableOpacity> */}
       <TouchableOpacity onPress={() => onUpdate(data)}>
         <Text style={styles.buttonText}>Update</Text>
       </TouchableOpacity>
-      <TouchableOpacity onPress={() => onDelete(data)}>
+      {/* <TouchableOpacity onPress={() => onDelete(data)}>
         <Text style={styles.buttonText}>Delete</Text>
-      </TouchableOpacity>
+      </TouchableOpacity> */}
     </View>
   </View>
 );
