@@ -26,7 +26,7 @@ const PlaylistCard = ({ data, onView, onUpdate, onDelete }) => (
 
 
 
-const PlaylistScreen = () => {
+const ParentPlaylistScreen = () => {
   const navigation = useNavigation();
   const [playlist, setPlaylist] = useState([]);
 
@@ -110,4 +110,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default PlaylistScreen;
+export default ParentPlaylistScreen;

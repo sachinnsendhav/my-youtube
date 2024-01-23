@@ -4,6 +4,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import BottomTabNavigator from "./components/BottomTabNavigator";
 import ParentsBottomTabNavigator from "./components/ParentsBottomTabNavigator";
 import LoginScreen from "./screens/LoginScreen";
+import MyStack from "./components/MyStack";
  
 export default function App() {
   const [isLoggedIn, setLoggedIn] = useState(false);
@@ -47,7 +48,9 @@ export default function App() {
     if (role === "user") {
       setNavigatorComponent(<BottomTabNavigator onLogout={handleLogout} />);
     } else if (role === "admin") {
-      setNavigatorComponent(<ParentsBottomTabNavigator onLogout={handleLogout} />);
+      // setNavigatorComponent(<ParentsBottomTabNavigator onLogout={handleLogout} />);
+      setNavigatorComponent(<MyStack onLogout={handleLogout} />);
+
     } else {
       setNavigatorComponent(null);
     }

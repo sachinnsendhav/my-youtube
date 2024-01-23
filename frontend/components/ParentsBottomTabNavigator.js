@@ -57,15 +57,7 @@ const LogoutButton = ({ onLogout }) => {
   );
 };
  
-const MyStack = () => {
-  return (
-    <Stack.Navigator>
-      <Stack.Screen name="Video" component={ParentVideoDetailScreen} />
-      <Stack.Screen name="View" component={ParentViewScreen} />
-      <Stack.Screen name="Update" component={ParentUpdateScreen} />
-    </Stack.Navigator>
-  );
-};
+
  
 const ParentsBottomTabNavigator = ({ onLogout }) => {
   const navigation = useNavigation();
@@ -101,7 +93,6 @@ const ParentsBottomTabNavigator = ({ onLogout }) => {
       })}
     >
       <Tab.Screen name="Home" component={ParentHomeScreen} />
-      <Tab.Screen name="Video" component={ParentVideoDetailScreen} />
       <Tab.Screen name="Playlist" component={ParentPlaylistScreen} />
       <Tab.Screen name="User" component={ParentUsersScreen} />
       <Tab.Screen name="Profile" component={ParentProfileScreen} />
