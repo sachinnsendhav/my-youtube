@@ -1,10 +1,14 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text, View, TextInput, Button } from 'react-native';
+import { StyleSheet, Text, View, TextInput, Button, Alert } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Playlist } from '../../services';
+import { useNavigation } from '@react-navigation/native';
+
 
 
 const ParentCreatePlaylistScreen = () => {
+  const navigation = useNavigation();
+
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [playlist, setPlaylist] = useState('');
@@ -26,6 +30,26 @@ const ParentCreatePlaylistScreen = () => {
         console.log(response,"response aaya kya ");
         setPlaylist(response.data);
         console.log(playlist,"playlist me set hua kya ")
+        // alert("create playlist")
+        
+
+        const confirmPlaylist = await new Promise((resolve) =>
+      Alert.alert(
+        'Confirm Playlist',
+        'Playlist added successfully',
+        [
+          {
+            text: 'OK',
+            onPress: () => resolve(true),
+          },
+        ],
+        { cancelable: false }
+      ))
+
+      if (confirmPlaylist){
+        navigation.navigate("Playlist");
+      }
+        
       } catch (error) {
         console.error('Error creating  playlist data:', error);
         // Alert.alert('Error', 'Failed to fetch playlist data');

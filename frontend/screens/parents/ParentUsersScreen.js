@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, FlatList, Alert, StyleSheet } from 'react-native';
 import { Users } from '../../services';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation , useFocusEffect} from '@react-navigation/native';
 
 const UserCard = ({ data, onView, onUpdate, onDelete }) => (
   <View style={styles.card}>
@@ -26,9 +26,16 @@ const UserCard = ({ data, onView, onUpdate, onDelete }) => (
 const ParentUsersScreen = ({ navigation }) => {
   const [user, setUser] = useState([]);
 
-  useEffect(() => {
-    fetchPlaylistData();
-  }, []);
+  // useEffect(() => {
+  //   fetchPlaylistData();
+  // }, []);
+
+  useFocusEffect(
+    React.useCallback(() => {
+      // Fetch updated playlist data when the screen comes into focus
+      fetchPlaylistData();
+    }, [])
+  );
 
   const fetchPlaylistData = async () => {
     const token = await AsyncStorage.getItem('token');

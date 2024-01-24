@@ -1,10 +1,14 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text, View, TextInput, Button } from 'react-native';
+import { StyleSheet, Text, View, TextInput, Button, Alert } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Users } from '../../services';
+import { useNavigation } from '@react-navigation/native';
 
 
 const ParentCreateUserScreen = () => {
+
+  const navigation = useNavigation();
+
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [userName, setUserName] = useState('');
@@ -34,6 +38,24 @@ const ParentCreateUserScreen = () => {
         console.log(response,"response aaya kya ");
         setUser(response.data);
         console.log(user,"users me set hua kya ")
+
+        const confirmUser = await new Promise((resolve) =>
+        Alert.alert(
+          'Confirm User',
+          'User added successfully',
+          [
+            {
+              text: 'OK',
+              onPress: () => resolve(true),
+            },
+          ],
+          { cancelable: false }
+        ))
+  
+        if (confirmUser){
+          navigation.navigate("User");
+        }
+
       } catch (error) {
         console.error('Error creating  users data:', error);
         // Alert.alert('Error', 'Failed to fetch playlist data');
