@@ -72,7 +72,24 @@ function ParentVideoDetailScreen({ route }) {
       try {
         const token = await AsyncStorage.getItem('token');
         const resp = await Video.addVideoToPlaylist(token, data);
-        Alert.alert('Video added!');
+        // Alert.alert('Video added!');
+
+        const confirmVideo = await new Promise((resolve) =>
+        Alert.alert(
+          'Video added!',
+          'Video added successfully',
+          [
+            {
+              text: 'OK',
+              onPress: () => resolve(true),
+            },
+          ],
+          { cancelable: false }
+        ))
+  
+        if (confirmVideo){
+          navigation.navigate("HomeScreen");
+        }
         console.log('first', resp);
       } catch (err) {
         console.error(err);

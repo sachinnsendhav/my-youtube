@@ -25,8 +25,8 @@ function HomeScreen() {
    
   return (
     <>
-    <View>
-      <Searchbar
+    <View style={{marginTop : 15, backgroundColor:"white" }}>
+      <Searchbar style={{marginLeft:10,marginRight:10, backgroundColor:"white"}}
        placeholder="Type Here..."
        onChangeText={setsearchText}
        onClearIconPress={()=>setsearchText('')}
@@ -40,7 +40,7 @@ function HomeScreen() {
                 <TouchableOpacity
                   key={item.id.videoId}
                   style={{ flexBasis: '50%', padding: 5 }}
-                  onPress={()=>navigation.navigate("Video",{ videoId: item.id.videoId })}
+                  onPress={()=>navigation.navigate("Add Video",{ videoId: item.id.videoId })}
                 >
                   <View style={{ borderWidth: 1, borderColor: '#ddd', borderRadius: 8 }}>
                     <Image source={{ uri: item?.snippet?.thumbnails?.medium?.url }} style={{ width: '100%', height: 100, resizeMode: 'cover' }} />

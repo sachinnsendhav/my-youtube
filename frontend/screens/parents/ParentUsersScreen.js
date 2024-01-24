@@ -63,7 +63,7 @@ const ParentUsersScreen = ({ navigation }) => {
   const handleCreate = () => {
     // Handle create action (navigate to create screen or show create form)
     // For demonstration purposes, you can navigate to the same update screen
-    navigation.navigate('ParentCreateUserScreen');
+    navigation.navigate('Create User');
   };
 
   return (

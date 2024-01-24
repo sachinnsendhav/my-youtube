@@ -19,17 +19,15 @@ const Stack = createNativeStackNavigator();
 const MyStack = ({ onLogout }) => {
   return (
     <Stack.Navigator>
-      {/* <Stack.Screen name="Video" component={ParentVideoDetailScreen} /> */}
-      <Stack.Screen options={{ headerShown: false }} name="Home">
+      <Stack.Screen options={{ headerShown: false }} name="HomeScreen">
         {() => <ParentsBottomTabNavigator onLogout={onLogout} />}
       </Stack.Screen>
-      <Stack.Screen name="Video" component={ParentVideoDetailScreen} />
-      {/* <Stack.Screen name="Playlist" component={ParentPlaylistScreen} /> */}
+      <Stack.Screen name="Add Video" component={ParentVideoDetailScreen} />
       <Stack.Screen name="ParentViewScreen" component={ParentViewScreen} />
       <Stack.Screen name="ParentUserViewScreen" component={ParentUserViewScreen}/>
       <Stack.Screen name="ParentUpdateUserScreen" component={ParentUpdateUserScreen}/>
-      <Stack.Screen name="ParentCreateUserScreen" component={ParentCreateUserScreen}/>
-      <Stack.Screen name="ParentCreatePlaylistScreen" component={ParentCreatePlaylistScreen}/>
+      <Stack.Screen name="Create User" component={ParentCreateUserScreen}/>
+      <Stack.Screen name="Create Playlist" component={ParentCreatePlaylistScreen}/>
       <Stack.Screen name="Update" component={ParentUpdateScreen} />
       <Stack.Screen name="Login" component={LoginScreen} />
     </Stack.Navigator>

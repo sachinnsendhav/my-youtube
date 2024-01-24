@@ -12,20 +12,20 @@ import {
 import { RadioButton } from "react-native-paper";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Auth } from "../services";
- 
+
 const LoginScreen = ({ onLoginSuccess }) => {
   const [userName, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [role, setRole] = useState("user");
   const [checked, setChecked] = useState("user");
- 
+
   const handleLogin = async () => {
     try {
       const data = {
         userName: userName,
         password: password,
       };
- 
+
       let response;
       if (role === "user") {
         response = await Auth.userLogin(data);
@@ -36,7 +36,7 @@ const LoginScreen = ({ onLoginSuccess }) => {
         };
         response = await Auth.login(adminData);
       }
- 
+
       if (response && response.data) {
         const userObjectId = response.data.userData._id;
         const userFirstName = response.data.userData.firstName;
@@ -46,7 +46,7 @@ const LoginScreen = ({ onLoginSuccess }) => {
         const userParentFirstName = response.data.userData.parentfirstName;
         const userParentLastName = response.data.userData.parentLastName;
         const userRole = response.data.userData.role;
- 
+
         await AsyncStorage.setItem("userObjectId", userObjectId);
         await AsyncStorage.setItem("userFirstName", userFirstName);
         await AsyncStorage.setItem("userLastName", userLastName);
@@ -54,8 +54,11 @@ const LoginScreen = ({ onLoginSuccess }) => {
         await AsyncStorage.setItem("userParentFirstName", userParentFirstName);
         await AsyncStorage.setItem("userParentLastName", userParentLastName);
         await AsyncStorage.setItem("role", userRole);
-        await AsyncStorage.setItem("userPlayListId", JSON.stringify(userPlayListId));
- 
+        await AsyncStorage.setItem(
+          "userPlayListId",
+          JSON.stringify(userPlayListId)
+        );
+
         const tokenGet = response.data.token;
         await AsyncStorage.setItem("token", tokenGet);
         if (response.status === 200) {
@@ -72,7 +75,7 @@ const LoginScreen = ({ onLoginSuccess }) => {
       Alert.alert("Error", "An error occurred while logging in");
     }
   };
- 
+
   const parentLogin = async () => {
     try {
       const adminData = {
@@ -80,30 +83,33 @@ const LoginScreen = ({ onLoginSuccess }) => {
         password: password,
       };
       const response = await Auth.login(adminData);
- 
+
       if (response && response.data) {
         const userObjectId = response.data.userData._id;
         const userUserName = response.data.userData.email;
         const userParentFirstName = response.data.userData.firstName;
         const userParentLastName = response.data.userData.lastName;
         const userRole = response.data.userData.role;
- 
+
         await AsyncStorage.setItem("userParentFirstName", userParentFirstName);
         await AsyncStorage.setItem("userUserName", userUserName);
         await AsyncStorage.setItem("userParentLastName", userParentLastName);
         await AsyncStorage.setItem("role", userRole);
         await AsyncStorage.setItem("token", response.data.token);
-        console.log("response.status",response.status)
+        console.log("response.status", response.status);
         if (response.status === 200) {
           onLoginSuccess();
-          Alert.alert("Login Successful", "You have successfully logged in admin.");
+          Alert.alert(
+            "Login Successful",
+            "You have successfully logged in admin."
+          );
         } else {
-        console.log("response.status",response.status)
+          console.log("response.status", response.status);
 
           Alert.alert("Login Failed", "Invalid credentials. Please try again.");
         }
       } else {
-        console.log("response.status",response.status)
+        console.log("response.status", response.status);
         Alert.alert("Login Failed", "Invalid credentials. Please try again.");
       }
     } catch (err) {
@@ -111,7 +117,7 @@ const LoginScreen = ({ onLoginSuccess }) => {
       Alert.alert("Error", "An error occurred while logging in admin");
     }
   };
- 
+
   return (
     <View style={styles.container}>
       <ImageBackground
@@ -127,26 +133,32 @@ const LoginScreen = ({ onLoginSuccess }) => {
           />
         </View>
         <View style={styles.formContainer}>
-          <View style={styles.radioButton}>
+          <View style={styles.radioButtonContainer}>
             <RadioButton
               value="user"
               status={checked === "user" ? "checked" : "unchecked"}
               onPress={() => {
                 setChecked("user");
+
                 setRole("user");
               }}
             />
-            <Text>User</Text>
+
+            <Text style={styles.radioButtonText}>User</Text>
+
             <RadioButton
               value="admin"
               status={checked === "admin" ? "checked" : "unchecked"}
               onPress={() => {
                 setChecked("admin");
+
                 setRole("admin");
               }}
             />
-            <Text>Admin</Text>
+
+            <Text style={styles.radioButtonText}>Admin</Text>
           </View>
+
           <View style={styles.card}>
             <TextInput
               placeholder="Username"
@@ -175,7 +187,7 @@ const LoginScreen = ({ onLoginSuccess }) => {
     </View>
   );
 };
- 
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -231,9 +243,16 @@ const styles = StyleSheet.create({
     color: "#fff",
     fontSize: 16,
   },
-  radioButton: {
+  radioButtonContainer: {
     flexDirection: "row",
+    alignItems: "center",
+    marginTop: 10,
+    marginBottom:15
+  },
+ 
+  radioButtonText: {
+    marginLeft: 5, // Adjust the margin as needed
   },
 });
- 
+
 export default LoginScreen;
