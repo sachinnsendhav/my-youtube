@@ -31,7 +31,7 @@ const ParentProfileScreen = () => {
   return (
     <View style={styles.container}>
         <View style={styles.card}>
-          <Image source={require('../../assets/ParentProfilePic.png')} style={styles.profileImage} />
+          <Image source={require('../../assets/parent-profile-screen.png')} style={styles.profileImage} />
           <Text style={styles.fullNameText}>{`${firstName} ${lastName}`}</Text>
           <Text style={styles.userNameText}>{userName}</Text>
           <Text style={styles.userParentFullNameText}> {`${userParentFirstName} ${userParentLastName}`}</Text>

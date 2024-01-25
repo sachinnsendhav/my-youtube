@@ -43,6 +43,7 @@ export default function App() {
     try {
       await AsyncStorage.clear();
       setLoggedIn(false);
+      setIsLogInScreen(true)
       setRole(""); // Clear the role after logout
     } catch (error) {
       console.error("Error during logout:", error.message);
@@ -55,7 +56,7 @@ export default function App() {
     } else if (role === "admin" ) {
       setNavigatorComponent(<MyStack onLogout={handleLogout} />);
     } else {
-      setNavigatorComponent(<ParentSignUpScreen />);
+      setNavigatorComponent(null);
     }
   }, [role]);
  

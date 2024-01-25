@@ -85,9 +85,6 @@ const ParentsBottomTabNavigator = ({ onLogout }) => {
             iconName = focused ? "group" : "group";
           } else if (route.name === "Profile") {
             iconName = focused ? "person" : "person-outline";
-          } else if (route.name == "SignUp") {
-            iconName = focused ? "person" : "person-outline";
-            
           }
  
           return <MaterialIcons name={iconName} size={size} color={color} />;
