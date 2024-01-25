@@ -12,20 +12,22 @@ import {
 import { RadioButton } from "react-native-paper";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Auth } from "../services";
+import { useNavigation } from "@react-navigation/native";
 
-const LoginScreen = ({ onLoginSuccess }) => {
+const LoginScreen = ({ onLoginSuccess,setIsLogInScreen }) => {
+  const navigation = useNavigation();
   const [userName, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [role, setRole] = useState("user");
   const [checked, setChecked] = useState("user");
-
+  
   const handleLogin = async () => {
     try {
       const data = {
         userName: userName,
         password: password,
       };
-
+      
       let response;
       if (role === "user") {
         response = await Auth.userLogin(data);
@@ -36,7 +38,7 @@ const LoginScreen = ({ onLoginSuccess }) => {
         };
         response = await Auth.login(adminData);
       }
-
+      
       if (response && response.data) {
         const userObjectId = response.data.userData._id;
         const userFirstName = response.data.userData.firstName;
@@ -46,7 +48,7 @@ const LoginScreen = ({ onLoginSuccess }) => {
         const userParentFirstName = response.data.userData.parentfirstName;
         const userParentLastName = response.data.userData.parentLastName;
         const userRole = response.data.userData.role;
-
+        
         await AsyncStorage.setItem("userObjectId", userObjectId);
         await AsyncStorage.setItem("userFirstName", userFirstName);
         await AsyncStorage.setItem("userLastName", userLastName);
@@ -74,6 +76,12 @@ const LoginScreen = ({ onLoginSuccess }) => {
       console.log(error);
       Alert.alert("Error", "An error occurred while logging in");
     }
+  };
+
+  const handleSignup = async () => {
+    // Alert.alert("Sign Up", "Signup functionality needs to be implemented.");
+    navigation.navigate("Sign UP")
+    setIsLogInScreen(false)
   };
 
   const parentLogin = async () => {
@@ -117,6 +125,8 @@ const LoginScreen = ({ onLoginSuccess }) => {
       Alert.alert("Error", "An error occurred while logging in admin");
     }
   };
+
+
 
   return (
     <View style={styles.container}>
@@ -182,6 +192,19 @@ const LoginScreen = ({ onLoginSuccess }) => {
           >
             <Text style={styles.loginButtonText}>Log In</Text>
           </TouchableOpacity>
+
+          {/* <TouchableOpacity style={styles.signupButton} onPress={handleSignup}>
+            <Text style={styles.signupButtonText}>Sign Up</Text>
+          </TouchableOpacity> */}
+
+           <Text style={{ color: "#555", textAlign: "center", marginTop: 10 }}>
+              Create a new account?{" "}
+           <Text style={{ color: "blue", textDecorationLine: "underline" }} onPress={() => handleSignup()}  >
+          Sign Up
+        </Text>
+        </Text>
+
+
         </View>
       </ImageBackground>
     </View>
@@ -239,6 +262,10 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginTop: 20,
   },
+  signupButtonText: {
+    color: "#fff",
+    fontSize: 16,
+  },
   loginButtonText: {
     color: "#fff",
     fontSize: 16,
@@ -247,11 +274,18 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     marginTop: 10,
-    marginBottom:15
+    marginBottom: 15,
   },
- 
+
   radioButtonText: {
     marginLeft: 5, // Adjust the margin as needed
+  },
+  signupButton: {
+    backgroundColor: "blue", // Green color, adjust as needed
+    padding: 10,
+    borderRadius: 10,
+    alignItems: "center",
+    marginTop: 20,
   },
 });
 
