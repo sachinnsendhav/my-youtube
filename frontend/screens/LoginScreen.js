@@ -135,12 +135,19 @@ const LoginScreen = ({ onLoginSuccess,setIsLogInScreen }) => {
         style={styles.backgroundImage}
       >
         <View style={styles.logoContainer}>
-          <Image
-            source={{
-              uri: "https://bootdey.com/img/Content/avatar/avatar3.png",
-            }}
-            style={styles.logo}
-          />
+          {role === "admin" ? (
+            <Image
+              source={require('../assets/parent-profile-screen.png')}
+              style={styles.logo}
+            />
+          ) : (
+            <Image
+              source={{
+                uri: "https://bootdey.com/img/Content/avatar/avatar3.png",
+              }}
+              style={styles.logo}
+            />
+          )}
         </View>
         <View style={styles.formContainer}>
           <View style={styles.radioButtonContainer}>
