@@ -68,12 +68,12 @@ const ParentSignUpScreen = ({onLoginSuccess, setIsLogInScreen}) => {
           const userObjectId = result.data.userData._id;
           const userUserName = result.data.userData.email;
           const userParentFirstName = result.data.userData.firstName;
-          // const userParentLastName = result.data.userData.lastName;
+          const userParentLastName = result.data.userData.lastName;
           const userRole = result.data.userData.role;
   
           await AsyncStorage.setItem("userParentFirstName", userParentFirstName);
-          // await AsyncStorage.setItem("userUserName", userUserName);
-          // await AsyncStorage.setItem("userParentLastName", userParentLastName);
+          await AsyncStorage.setItem("userUserName", userUserName);
+          await AsyncStorage.setItem("userParentLastName", userParentLastName);
           await AsyncStorage.setItem("role", userRole);
           await AsyncStorage.setItem("token", result.data.token);
           console.log("result.status", result.status);

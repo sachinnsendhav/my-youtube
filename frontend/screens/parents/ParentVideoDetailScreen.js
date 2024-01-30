@@ -143,8 +143,8 @@ function ParentVideoDetailScreen({ route }) {
 <Button title="Add Video" onPress={addVideoToPlaylist} />
 </View>
         ) : (
-<TouchableOpacity onPress={() => navigation.navigate('CreatePlaylist')}>
-<Button title="Create New Playlist" />
+<TouchableOpacity>
+<Button title="Create New Playlist"  onPress={() => navigation.navigate('Create Playlist')}/>
 </TouchableOpacity>
         )}
 </View>
