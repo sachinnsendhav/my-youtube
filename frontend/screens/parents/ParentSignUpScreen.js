@@ -1,10 +1,11 @@
 import React, { useState } from "react";
-import { View, Text, TextInput, Button, TouchableOpacity } from "react-native";
+import { View, Text, TextInput, Button, TouchableOpacity,Alert } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { Auth } from "../../services";
 import { CheckBox } from "react-native-elements";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const ParentSignUpScreen = ({setIsLogInScreen}) => {
+const ParentSignUpScreen = ({onLoginSuccess, setIsLogInScreen}) => {
   const navigation = useNavigation();
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
@@ -45,6 +46,7 @@ const ParentSignUpScreen = ({setIsLogInScreen}) => {
     navigation.navigate("Login");
   }
   const registerParents = async () => {
+    console.log("got it")
     setLoading(true);
     if (validateForm()) {
       const data = {
@@ -56,11 +58,45 @@ const ParentSignUpScreen = ({setIsLogInScreen}) => {
         otp: Number(otp),
       };
 
+      console.log(data,"dataaaa")
+
       try {
         const result = await Auth.register(data);
-        if (result?.status === 200) {
-          navigation.navigate("HomeScreen");
+        console.log("aaya kya",result)
+
+        if (result && result.data) {
+          const userObjectId = result.data.userData._id;
+          const userUserName = result.data.userData.email;
+          const userParentFirstName = result.data.userData.firstName;
+          // const userParentLastName = result.data.userData.lastName;
+          const userRole = result.data.userData.role;
+  
+          await AsyncStorage.setItem("userParentFirstName", userParentFirstName);
+          // await AsyncStorage.setItem("userUserName", userUserName);
+          // await AsyncStorage.setItem("userParentLastName", userParentLastName);
+          await AsyncStorage.setItem("role", userRole);
+          await AsyncStorage.setItem("token", result.data.token);
+          console.log("result.status", result.status);
+          if (result.status === 200) {
+            onLoginSuccess();
+            Alert.alert(
+              "Register Successful",
+              "You have successfully register in admin."
+            );
+          } else {
+            console.log("result.status", result.status);
+  
+            Alert.alert("register Failed", "Invalid credentials. Please try again.");
+          }
+        } else {
+          console.log("result.status", result.status);
+          Alert.alert("register Failed", "Invalid credentials. Please try again.");
         }
+
+        // if (result?.status === 200) {
+
+          // navigation.navigate("Login");
+        // }
       } catch (err) {
         console.log(err, "error");
       }

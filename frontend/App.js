@@ -70,7 +70,7 @@ export default function App() {
         navigatorComponent
       ) : isLogInScreen ? 
         <LoginScreen onLoginSuccess={handleLoginSuccess} setIsLogInScreen={setIsLogInScreen}/>
-       : <ParentSignUpScreen setIsLogInScreen={setIsLogInScreen}/>
+       : <ParentSignUpScreen onLoginSuccess={handleLoginSuccess} setIsLogInScreen={setIsLogInScreen}/>
       }
     </NavigationContainer> 
   );

@@ -19,7 +19,7 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/Youtube.png",
+        "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
       "package": "com.aamirbohra.myyoutube"
@@ -31,6 +31,10 @@
       "eas": {
         "projectId": "d0024817-cc52-4328-b48f-a9b60f1c6d65"
       }
-    }
+    },
+    "plugins":[ [
+      "expo-build-properties",
+      { "android": { "usesCleartextTraffic": true }}]
+    ]
   }
 }
