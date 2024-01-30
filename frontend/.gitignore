@@ -33,3 +33,9 @@ yarn-error.*
 
 # typescript
 *.tsbuildinfo
+
+#app.json
+my-youtube\frontend\app.json
+
+# eas.json
+eas.json

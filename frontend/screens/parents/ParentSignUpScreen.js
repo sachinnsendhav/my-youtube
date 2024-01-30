@@ -1,11 +1,20 @@
 import React, { useState } from "react";
-import { View, Text, TextInput, Button, TouchableOpacity,Alert } from "react-native";
+import {
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  Alert,
+  StyleSheet,
+  Image,
+  ImageBackground,
+} from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { Auth } from "../../services";
 import { CheckBox } from "react-native-elements";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const ParentSignUpScreen = ({onLoginSuccess, setIsLogInScreen}) => {
+const ParentSignUpScreen = ({ onLoginSuccess, setIsLogInScreen }) => {
   const navigation = useNavigation();
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
@@ -41,12 +50,12 @@ const ParentSignUpScreen = ({onLoginSuccess, setIsLogInScreen}) => {
     return Object.keys(error).length === 0 && agreedToTerms;
   };
 
-  const handleLogin =  () => {
-      setIsLogInScreen(true)
+  const handleLogin = () => {
+    setIsLogInScreen(true);
     navigation.navigate("Login");
-  }
+  };
+
   const registerParents = async () => {
-    console.log("got it")
     setLoading(true);
     if (validateForm()) {
       const data = {
@@ -58,11 +67,8 @@ const ParentSignUpScreen = ({onLoginSuccess, setIsLogInScreen}) => {
         otp: Number(otp),
       };
 
-      console.log(data,"dataaaa")
-
       try {
         const result = await Auth.register(data);
-        console.log("aaya kya",result)
 
         if (result && result.data) {
           const userObjectId = result.data.userData._id;
@@ -70,33 +76,37 @@ const ParentSignUpScreen = ({onLoginSuccess, setIsLogInScreen}) => {
           const userParentFirstName = result.data.userData.firstName;
           const userParentLastName = result.data.userData.lastName;
           const userRole = result.data.userData.role;
-  
-          await AsyncStorage.setItem("userParentFirstName", userParentFirstName);
+
+          await AsyncStorage.setItem(
+            "userParentFirstName",
+            userParentFirstName
+          );
           await AsyncStorage.setItem("userUserName", userUserName);
-          await AsyncStorage.setItem("userParentLastName", userParentLastName);
+          await AsyncStorage.setItem(
+            "userParentLastName",
+            userParentLastName
+          );
           await AsyncStorage.setItem("role", userRole);
           await AsyncStorage.setItem("token", result.data.token);
-          console.log("result.status", result.status);
+
           if (result.status === 200) {
             onLoginSuccess();
             Alert.alert(
               "Register Successful",
-              "You have successfully register in admin."
+              "You have successfully registered as a parent."
             );
           } else {
-            console.log("result.status", result.status);
-  
-            Alert.alert("register Failed", "Invalid credentials. Please try again.");
+            Alert.alert(
+              "Register Failed",
+              "Invalid credentials. Please try again."
+            );
           }
         } else {
-          console.log("result.status", result.status);
-          Alert.alert("register Failed", "Invalid credentials. Please try again.");
+          Alert.alert(
+            "Register Failed",
+            "Invalid credentials. Please try again."
+          );
         }
-
-        // if (result?.status === 200) {
-
-          // navigation.navigate("Login");
-        // }
       } catch (err) {
         console.log(err, "error");
       }
@@ -123,180 +133,154 @@ const ParentSignUpScreen = ({onLoginSuccess, setIsLogInScreen}) => {
   };
 
   return (
-    <View style={{ flex: 1, justifyContent: "center", padding: 16 }}>
-      <Text
-        style={{
-          fontSize: 24,
-          fontWeight: "bold",
-          marginBottom: 16,
-          color: "#333",
-        }}
+    <View style={styles.container}>
+      <ImageBackground
+        source={{ uri: "https://www.colorhexa.com/9370db.png" }}
+        style={styles.backgroundImage}
       >
-        Parents - Sign Up
-      </Text>
-
-      <View
-        style={{
-          flexDirection: "row",
-          justifyContent: "space-between",
-          alignItems: "center",
-          marginBottom: 16,
-        }}
-      >
-        <TextInput
+        <Text
           style={{
-            flex: 1,
-            marginRight: 8,
-            padding: 10,
-            borderBottomWidth: 1,
-            borderColor: "#ccc",
-          }}
-          placeholder="First Name"
-          value={firstName}
-          onChangeText={(text) => setFirstName(text)}
-        />
-        <TextInput
-          style={{
-            flex: 1,
-            marginLeft: 8,
-            padding: 10,
-            borderBottomWidth: 1,
-            borderColor: "#ccc",
-          }}
-          placeholder="Last Name"
-          value={lastName}
-          onChangeText={(text) => setLastName(text)}
-        />
-      </View>
-
-      <View
-        style={{
-          flexDirection: "row",
-          justifyContent: "space-between",
-          alignItems: "center",
-          marginBottom: 16,
-        }}
-      >
-        <TextInput
-          style={{
-            flex: 1,
-            marginRight: 8,
-            padding: 10,
-            borderBottomWidth: 1,
-            borderColor: "#ccc",
-          }}
-          placeholder="Email"
-          value={email}
-          onChangeText={(text) => setEmail(text)}
-        />
-        <TextInput
-          style={{
-            flex: 1,
-            marginLeft: 8,
-            padding: 10,
-            borderBottomWidth: 1,
-            borderColor: "#ccc",
-          }}
-          placeholder="Password"
-          value={password}
-          onChangeText={(text) => setPassword(text)}
-        />
-      </View>
-
-      <View
-        style={{
-          flexDirection: "row",
-          justifyContent: "space-between",
-          alignItems: "center",
-          marginBottom: 16,
-        }}
-      >
-        <TextInput
-          style={{
-            flex: 1,
-            marginRight: 8,
-            padding: 10,
-            borderBottomWidth: 1,
-            borderColor: "#ccc",
-          }}
-          placeholder="Phone"
-          value={phone}
-          onChangeText={(text) => setPhone(text)}
-        />
-        <TextInput
-          style={{
-            flex: 1,
-            marginLeft: 8,
-            padding: 10,
-            borderBottomWidth: 1,
-            borderColor: "#ccc",
-          }}
-          placeholder="Otp"
-          value={otp}
-          onChangeText={(text) => setOtp(text)}
-        />
-
-        <TouchableOpacity
-          onPress={() => sendOtp()}
-          style={{
-            backgroundColor: "#ffc34a",
-            padding: 10,
-            borderRadius: 5,
-            marginVertical: 10,
+            fontSize: 24,
+            fontWeight: "bold",
+            marginBottom: 10,
+            color: "#333",
+            textAlign: "center",
+            marginTop: 50,
           }}
         >
-          <Text
-            style={{ color: "white", textAlign: "center", fontWeight: "bold" }}
+          Admin - Sign Up
+        </Text>
+
+        <View style={styles.formContainer}>
+          <TextInput
+            style={styles.input}
+            placeholder="First Name"
+            value={firstName}
+            onChangeText={(text) => setFirstName(text)}
+          />
+          <TextInput
+            style={styles.input}
+            placeholder="Last Name"
+            value={lastName}
+            onChangeText={(text) => setLastName(text)}
+          />
+          <TextInput
+            style={styles.input}
+            placeholder="Email"
+            value={email}
+            onChangeText={(text) => setEmail(text)}
+          />
+          <TextInput
+            style={styles.input}
+            placeholder="Password"
+            secureTextEntry={true}
+            value={password}
+            onChangeText={(text) => setPassword(text)}
+          />
+          <TextInput
+            style={styles.input}
+            placeholder="Phone"
+            value={phone}
+            onChangeText={(text) => setPhone(text)}
+          />
+          <TextInput
+            style={styles.input}
+            placeholder="OTP"
+            value={otp}
+            onChangeText={(text) => setOtp(text)}
+          />
+
+          <TouchableOpacity
+            onPress={() => sendOtp()}
+            style={styles.loginButton}
           >
-            Send OTP
+            <Text style={styles.loginButtonText}>Send OTP</Text>
+          </TouchableOpacity>
+
+          <View
+            style={{
+              flexDirection: "row",
+              alignItems: "center",
+              marginBottom: 10,
+              marginTop: 10,
+            }}
+          >
+            <CheckBox
+              checked={agreedToTerms}
+              onPress={() => setAgreedToTerms(!agreedToTerms)}
+              containerStyle={{ margin: 0, padding: 0 }}
+            />
+            <Text style={{ marginLeft: 8 }}>
+              I agree to the terms and condition
+            </Text>
+          </View>
+
+          <TouchableOpacity
+            onPress={() => registerParents()}
+            disabled={loading}
+            style={styles.loginButton}
+          >
+            <Text style={styles.loginButtonText}>Sign Up</Text>
+          </TouchableOpacity>
+
+          <Text style={{ color: "#555", textAlign: "center", marginTop: 10 }}>
+            Already have an account?{" "}
+            <Text
+              onPress={() => handleLogin()}
+              style={{ color: "blue", textDecorationLine: "underline" }}
+            >
+              Sign in
+            </Text>
           </Text>
-        </TouchableOpacity>
-      </View>
-
-      <View
-        style={{ flexDirection: "row", alignItems: "center", marginBottom: 16 }}
-      >
-        <CheckBox
-          checked={agreedToTerms}
-          onPress={() => setAgreedToTerms(!agreedToTerms)}
-          containerStyle={{ margin: 0, padding: 0 }}
-        />
-        <Text style={{ marginLeft: 8 }}>
-          I agree to the terms and condition
-        </Text>
-      </View>
-
-      <TouchableOpacity
-        onPress={() => registerParents()}
-        disabled={loading}
-        style={{
-          backgroundColor: loading ? "gray" : "#ffc34a",
-          padding: 10,
-          borderRadius: 5,
-          marginVertical: 10,
-        }}
-      >
-        <Text
-          style={{ color: "white", textAlign: "center", fontWeight: "bold" }}
-        >
-          Sign Up
-        </Text>
-      </TouchableOpacity>
-
-      <Text style={{ color: "#555", textAlign: "center", marginTop: 10 }}>
-        Already have an account?{" "}
-        <Text
-        //   onPress={() =>{ navigation.navigate("Login"),setIsLogInScreen(true)}} 
-        onPress={() => handleLogin()}
-
-        // Replace 'SignIn' with your sign-in screen name
-          style={{ color: "blue", textDecorationLine: "underline" }}
-        >
-          Sign in
-        </Text>
-      </Text>
+        </View>
+      </ImageBackground>
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: "#fff",
+  },
+  backgroundImage: {
+    flex: 1,
+    resizeMode: "cover",
+  },
+  formContainer: {
+    marginHorizontal: 20,
+    marginTop: 50,
+    padding: 20,
+    borderRadius: 10,
+    backgroundColor: "rgba(255, 255, 255, 0.3)",
+  },
+  input: {
+    height: 40,
+    paddingHorizontal: 10,
+    borderBottomColor: "#B0C4DE",
+    marginBottom: 20,
+    backgroundColor: "#fff",
+    borderRadius: 10,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+  },
+  loginButton: {
+    backgroundColor: "#7B68EE",
+    padding: 10,
+    borderRadius: 10,
+    alignItems: "center",
+    marginTop: 10,
+  },
+  loginButtonText: {
+    color: "#fff",
+    fontSize: 16,
+  },
+});
 
 export default ParentSignUpScreen;
