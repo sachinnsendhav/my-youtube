@@ -203,10 +203,10 @@ exports.updateUserDetail=async(req,res)=>{
 
 exports.addUsers = async(req,res) => {
     try{
-        const { firstName,lastName,userName,password } = req.body;
+        const { firstName,lastName,userName,password,gender } = req.body;
         const userId = req.user.paylod._id;
         const role = 'user';
-        const usertype = new UserType( { firstName,lastName,userName,password,userId,role } );
+        const usertype = new UserType( { firstName,lastName,userName,password,userId,role,gender } );
         await usertype.save();
         return res.status(200).send( { status:200,message:"User Added Successfully", data:{firstName,lastName,userName} } )
     }
@@ -336,5 +336,33 @@ exports.userTypeLogin = async(req,res) => {
     }
     catch(error){
         res.status(400).send({status:400,message:error.message,data:''});
+    }
+}
+
+exports.updateUserTypeDetails = async(req,res) => {
+    try{
+        const userTypeId = req.params.userTypeId;
+        const { firstName, lastName, password, gender, avatar } = req.body
+        // Create an object with the fields that need to be updated
+        const exist_user = await UserType.findById({_id:userTypeId});
+        console.log("exist",exist_user);
+        if(!exist_user){
+            return res.status(404).send({status:404, message:'User not found', data:""});
+        }
+        const updateFields = {
+            ...(firstName ? { firstName } : {}),  // Include firstName if it exists
+            ...(lastName ? { lastName } : {}),
+            ...(password ? { password } : {}),
+            ...(gender ? { gender } : {}),
+            ...(avatar ? { avatar } : {}),
+        };
+        const userTypeData = await UserType.findByIdAndUpdate({_id:userTypeId},{ $set: updateFields }, { new: true });
+        console.log("usertypedata",userTypeData);
+        console.log("userTypeIdIs", userTypeId);
+        res.status(200).send({status:200, message:"Data updated successfully", data:userTypeData})
+    }
+    catch(error){
+        console.log("error is",error);
+        return res.status(404).send({status:404,message:error,data:""})
     }
 }
