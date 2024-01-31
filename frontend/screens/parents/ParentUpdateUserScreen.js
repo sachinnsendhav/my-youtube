@@ -129,6 +129,13 @@ function ParentUpdateUserScreen({ route }) {
               editable={false}
             />
 
+            <Text style={{ fontSize: 16, marginTop: 10, marginBottom: 5, color: '#555' }}>Gender</Text>
+            <TextInput
+              value={userData?.gender}
+              style={{ height: 40, borderColor: 'gray', borderWidth: 1, paddingHorizontal: 10 }}
+              editable={false}
+            />
+
             <Text style={{ fontSize: 16, marginTop: 10, marginBottom: 5, color: '#555' }}>Password</Text>
             <TextInput
               value={userData?.password}

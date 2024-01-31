@@ -7,6 +7,7 @@ const ProfileScreen = () => {
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [userName, setUserName] = useState('');
+  const [gender, setGender] = useState('');
   const [userParentFirstName, setUserParentFirstName] = useState('');
   const [userParentLastName, setUserParentLastName] = useState('');
 
@@ -15,12 +16,14 @@ const ProfileScreen = () => {
       const asyncFirstName = await AsyncStorage.getItem('userFirstName');
       const asyncLastName = await AsyncStorage.getItem('userLastName');
       const asyncUserName = await AsyncStorage.getItem('userUserName');
+      const asyncGender = await AsyncStorage.getItem('userGender');
       const asyncUserParentFirstName = await AsyncStorage.getItem('userParentFirstName');
       const asyncUserParentLastName = await AsyncStorage.getItem('userParentLastName');
 
       setFirstName(asyncFirstName || '');
       setLastName(asyncLastName || '');
       setUserName(asyncUserName || '');
+      setGender(asyncGender || '');
       setUserParentFirstName(asyncUserParentFirstName || '');
       setUserParentLastName(asyncUserParentLastName || '');
     };
@@ -33,6 +36,7 @@ const ProfileScreen = () => {
           <Image source={{ uri: 'https://bootdey.com/img/Content/avatar/avatar3.png' }} style={styles.profileImage} />
           <Text style={styles.fullNameText}>{`${firstName} ${lastName}`}</Text>
           <Text style={styles.userNameText}>{userName}</Text>
+          <Text style={styles.userGenderText}>Gender- {gender}</Text>
           <Text style={styles.userParentFullNameText}>Parent- {`${userParentFirstName} ${userParentLastName}`}</Text>
         </View>
     </View>
@@ -63,6 +67,10 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   userNameText: {
+    color: 'white',
+    fontSize: 18,
+  },
+  userGenderText: {
     color: 'white',
     fontSize: 18,
   },

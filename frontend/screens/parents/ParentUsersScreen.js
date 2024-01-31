@@ -16,6 +16,7 @@ const UserCard = ({ data, onView, onUpdate, onDelete }) => {
     <View style={styles.card}>
       <Text style={styles.cardText}>{`Name: ${data.firstName} ${data.lastName}`}</Text>
       <Text style={styles.cardText}>{`UserName: ${data.userName}`}</Text>
+      <Text style={styles.cardText}>{`Gender: ${data.gender}`}</Text>
       <View style={styles.passwordContainer}>
         <TextInput
           style={styles.passwordInput}
