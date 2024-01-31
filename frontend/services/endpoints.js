@@ -1,5 +1,7 @@
 const url = 'http://173.214.174.234:3005'
-const BASE_URL = 'https://youtube-v31.p.rapidapi.com';
+// const BASE_URL = 'https://youtube-v31.p.rapidapi.com';
+const BASE_URL = 'https://youtube.googleapis.com/youtube/v3';
+const API_KEY = 'AIzaSyAcPNJtBXci-Wg7MHNEkLf_9fVZS1sj5ms'
 export const endpoints = {
   auth: {
     login: `${url}/api/user/login`, //admin,,,,parent
@@ -30,8 +32,8 @@ export const endpoints = {
     getVideosByPlaylist: `${url}/api/video/getData`
   },
   youtubeApi: {
-    search: `${BASE_URL}/search?part=snippet&q=`,
-    getVideoDetails: `${BASE_URL}/videos?part=snippet,statistics&id=`,
-    getRelatedVideos: `${BASE_URL}/search?part=snippet&relatedToVideoId=`,
+    search: `${BASE_URL}/search?key=${API_KEY}&part=snippet&q=`,
+    getVideoDetails: `${BASE_URL}/videos?key=${API_KEY}&part=snippet,statistics&id=`,
+    getRelatedVideos: `${BASE_URL}/search?key=${API_KEY}&part=snippet&relatedToVideoId=`,
   }
 }
