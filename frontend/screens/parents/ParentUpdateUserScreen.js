@@ -134,6 +134,7 @@ function ParentUpdateUserScreen({ route }) {
               value={userData?.password}
               style={{ height: 40, borderColor: 'gray', borderWidth: 1, paddingHorizontal: 10 }}
               editable={false}
+              secureTextEntry={true}
             />
           </View>
 

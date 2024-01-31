@@ -1,27 +1,46 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity, FlatList, Alert, StyleSheet } from 'react-native';
+import { View, Text, TouchableOpacity, FlatList, Alert, StyleSheet, TextInput } from 'react-native';
 import { Users } from '../../services';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation , useFocusEffect} from '@react-navigation/native';
+import Icon from 'react-native-vector-icons/FontAwesome';
 
-const UserCard = ({ data, onView, onUpdate, onDelete }) => (
-  <View style={styles.card}>
-    <Text style={styles.cardText}>{`Name: ${data.firstName} ${data.lastName}`}</Text>
-    <Text style={styles.cardText}>{`UserName: ${data.userName}`}</Text>
-    <Text style={styles.cardText}>{`Password: ${data.password}`}</Text>
-    <View style={styles.actionButtons}>
-      {/* <TouchableOpacity onPress={() => onView(data)}>
-        <Text style={styles.buttonText}>View</Text>
-      </TouchableOpacity> */}
-      <TouchableOpacity onPress={() => onUpdate(data)}>
-        <Text style={styles.buttonText}>Update</Text>
-      </TouchableOpacity>
-      {/* <TouchableOpacity onPress={() => onDelete(data)}>
-        <Text style={styles.buttonText}>Delete</Text>
-      </TouchableOpacity> */}
+const UserCard = ({ data, onView, onUpdate, onDelete }) => {
+  const [showPassword, setShowPassword] = useState(false);
+
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
+
+  return (
+    <View style={styles.card}>
+      <Text style={styles.cardText}>{`Name: ${data.firstName} ${data.lastName}`}</Text>
+      <Text style={styles.cardText}>{`UserName: ${data.userName}`}</Text>
+      <View style={styles.passwordContainer}>
+        <TextInput
+          style={styles.passwordInput}
+          value={showPassword ? data.password : '*'.repeat(data.password.length)}
+          secureTextEntry={!showPassword}
+          editable={false}
+        />
+        <TouchableOpacity onPress={togglePasswordVisibility}>
+          <Icon name={showPassword ? 'eye' : 'eye-slash'} size={20} color="#B2BEB5" />
+        </TouchableOpacity>
+      </View>
+      <View style={styles.actionButtons}>
+        {/* <TouchableOpacity onPress={() => onView(data)}>
+          <Text style={styles.buttonText}>View</Text>
+        </TouchableOpacity> */}
+        <TouchableOpacity onPress={() => onUpdate(data)}>
+          <Text style={styles.buttonText}>Update</Text>
+        </TouchableOpacity>
+        {/* <TouchableOpacity onPress={() => onDelete(data)}>
+          <Text style={styles.buttonText}>Delete</Text>
+        </TouchableOpacity> */}
+      </View>
     </View>
-  </View>
-);
+  );
+};
 
 const ParentUsersScreen = ({ navigation }) => {
   const [user, setUser] = useState([]);
@@ -122,6 +141,21 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 18,
     textAlign: 'center',
+  },
+  passwordContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: 8,
+  },
+  passwordInput: {
+    flex: 1,
+    fontSize: 16,
+    marginBottom: 8,
+  },
+  eyeButton: {
+    color: '#007BFF',
+    fontSize: 16,
+    marginLeft: 8,
   },
 });
 

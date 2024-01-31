@@ -1,45 +1,49 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text, View, TextInput, Button, Alert } from 'react-native';
+import { StyleSheet, Text, View, TextInput, Button, Alert, TouchableOpacity } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Users } from '../../services';
 import { useNavigation } from '@react-navigation/native';
-
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 const ParentCreateUserScreen = () => {
-
   const navigation = useNavigation();
 
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [userName, setUserName] = useState('');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(true);
   const [user, setUser] = useState('');
 
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
+
   const handleAddUser = async () => {
-    // Handle the logic to add the playlist with playlistName and description
-    console.log('first Name:', firstName);
-    console.log('last name:', lastName);
-    console.log('username name:', userName);
-    console.log('password name:', password);
+    // Handle the logic to add the user with firstName, lastName, userName, and password
+    console.log('First Name:', firstName);
+    console.log('Last Name:', lastName);
+    console.log('User Name:', userName);
+    console.log('Password:', password);
 
-    const token = await AsyncStorage.getItem('token')
-    console.log(token,'token')
+    const token = await AsyncStorage.getItem('token');
+    console.log(token, 'Token');
 
-    const data= {
-        firstName: firstName,
-        lastName: lastName,
-        userName: userName,
-        password: password
-      }
-    console.log(data,"dataa")
+    const data = {
+      firstName: firstName,
+      lastName: lastName,
+      userName: userName,
+      password: password,
+    };
 
     try {
-        const response = await Users.createUSer(token,data);
-        console.log(response,"response aaya kya ");
-        setUser(response.data);
-        console.log(user,"users me set hua kya ")
+      const response = await Users.createUSer(token, data);
+      console.log(response, 'Response');
 
-        const confirmUser = await new Promise((resolve) =>
+      setUser(response.data);
+      console.log(user, 'User set');
+
+      const confirmUser = await new Promise((resolve) =>
         Alert.alert(
           'Confirm User',
           'User added successfully',
@@ -50,17 +54,16 @@ const ParentCreateUserScreen = () => {
             },
           ],
           { cancelable: false }
-        ))
-  
-        if (confirmUser){
-          navigation.navigate("User");
-        }
+        )
+      );
 
-      } catch (error) {
-        console.error('Error creating  users data:', error);
-        // Alert.alert('Error', 'Failed to fetch playlist data');
+      if (confirmUser) {
+        navigation.navigate('User');
       }
-
+    } catch (error) {
+      console.error('Error creating user data:', error);
+      // Alert.alert('Error', 'Failed to fetch user data');
+    }
   };
 
   return (
@@ -84,12 +87,18 @@ const ParentCreateUserScreen = () => {
         value={userName}
         onChangeText={(text) => setUserName(text)}
       />
-      <TextInput
-        style={styles.input}
-        placeholder="Password"
-        value={password}
-        onChangeText={(text) => setPassword(text)}
-      />
+      <View style={styles.passwordContainer}>
+        <TextInput
+          style={styles.passwordInput}
+          placeholder="Password"
+          value={password}
+          onChangeText={(text) => setPassword(text)}
+          secureTextEntry={showPassword}
+        />
+        <TouchableOpacity onPress={togglePasswordVisibility} style={styles.eyeIconContainer}>
+          <Icon name={showPassword ? 'eye' : 'eye-slash'} size={20} color="grey" />
+        </TouchableOpacity>
+      </View>
       <Button title="Add User" onPress={handleAddUser} />
     </View>
   );
@@ -114,6 +123,24 @@ const styles = StyleSheet.create({
     marginBottom: 16,
     paddingHorizontal: 8,
     width: '100%',
+  },
+  passwordContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  passwordInput: {
+    flex: 1,
+    height: 40,
+    borderColor: 'gray',
+    borderWidth: 1,
+    marginBottom: 16,
+    paddingHorizontal: 8,
+  },
+  eyeIconContainer: {
+    marginLeft: -20, // Adjust the value as needed
+    position:"relative",
+    top:-8,
+    right:8,
   },
 });
 

@@ -19,17 +19,16 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/Youtube.png",
+        "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      },
-      "package": "com.aamirbohra.myyoutube"
+      }
     },
     "web": {
       "favicon": "./assets/favicon.png"
     },
     "extra": {
       "eas": {
-        "projectId": "d0024817-cc52-4328-b48f-a9b60f1c6d65"
+        "projectId": "2e8c9cbb-ef62-49a2-8d4f-50e69b51de4d"
       }
     }
   }
