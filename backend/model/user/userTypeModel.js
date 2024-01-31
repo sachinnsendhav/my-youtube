@@ -55,6 +55,15 @@ const usertypemodel = new mongoose.Schema({
         type : String,
         required : true,
         enum: ['user']
+    },
+    gender:{
+        type : String,
+        enum: ['male', 'female'],
+        required : true
+    },
+    avatar:{
+        type : String,
+        default : ""
     }
 });
 
