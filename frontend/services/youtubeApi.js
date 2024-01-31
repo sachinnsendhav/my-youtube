@@ -6,8 +6,9 @@ const options = {
         maxResults: 50,
     },
     headers: {
-        'X-RapidAPI-Key': '9f64104e16msh5b7288224bca0b2p11551cjsnb71033460e12',
-        'X-RapidAPI-Host': 'youtube-v31.p.rapidapi.com',
+        headers: {
+            "Accept": "application/json"
+        },
     },
 };
 const getVideosBySearch = (search) =>
