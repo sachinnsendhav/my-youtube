@@ -45,6 +45,7 @@ const LoginScreen = ({ onLoginSuccess,setIsLogInScreen }) => {
         const userLastName = response.data.userData.lastName;
         const userUserName = response.data.userData.userName;
         const userGender = response.data.userData.gender;
+        const userAvatar = response.data.userData.avatar;
         const userPlayListId = response.data.userData.playList;
         const userParentFirstName = response.data.userData.parentfirstName;
         const userParentLastName = response.data.userData.parentLastName;
@@ -55,6 +56,7 @@ const LoginScreen = ({ onLoginSuccess,setIsLogInScreen }) => {
         await AsyncStorage.setItem("userLastName", userLastName);
         await AsyncStorage.setItem("userUserName", userUserName);
         await AsyncStorage.setItem("userGender", userGender);
+        await AsyncStorage.setItem("userAvatar", userAvatar);
         await AsyncStorage.setItem("userParentFirstName", userParentFirstName);
         await AsyncStorage.setItem("userParentLastName", userParentLastName);
         await AsyncStorage.setItem("role", userRole);
