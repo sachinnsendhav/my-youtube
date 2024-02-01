@@ -8,6 +8,7 @@ const ProfileScreen = () => {
   const [lastName, setLastName] = useState('');
   const [userName, setUserName] = useState('');
   const [gender, setGender] = useState('');
+  const [userObjectId, setUserObjectId] = useState('');
   const [userParentFirstName, setUserParentFirstName] = useState('');
   const [userParentLastName, setUserParentLastName] = useState('');
 
@@ -17,6 +18,7 @@ const ProfileScreen = () => {
       const asyncLastName = await AsyncStorage.getItem('userLastName');
       const asyncUserName = await AsyncStorage.getItem('userUserName');
       const asyncGender = await AsyncStorage.getItem('userGender');
+      const asyncUserObjectId = await AsyncStorage.getItem('userObjectId');
       const asyncUserParentFirstName = await AsyncStorage.getItem('userParentFirstName');
       const asyncUserParentLastName = await AsyncStorage.getItem('userParentLastName');
 
@@ -24,6 +26,7 @@ const ProfileScreen = () => {
       setLastName(asyncLastName || '');
       setUserName(asyncUserName || '');
       setGender(asyncGender || '');
+      setUserObjectId(asyncUserObjectId || '');
       setUserParentFirstName(asyncUserParentFirstName || '');
       setUserParentLastName(asyncUserParentLastName || '');
     };
@@ -37,6 +40,7 @@ const ProfileScreen = () => {
           <Text style={styles.fullNameText}>{`${firstName} ${lastName}`}</Text>
           <Text style={styles.userNameText}>{userName}</Text>
           <Text style={styles.userGenderText}>Gender- {gender}</Text>
+          <Text style={styles.userGenderText}>Object id- {userObjectId}</Text>
           <Text style={styles.userParentFullNameText}>Parent- {`${userParentFirstName} ${userParentLastName}`}</Text>
         </View>
     </View>
