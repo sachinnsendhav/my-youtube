@@ -366,3 +366,18 @@ exports.updateUserTypeDetails = async(req,res) => {
         return res.status(404).send({status:404,message:error,data:""})
     }
 }
+
+exports.getUserType = async (req,res) => {
+    try{
+        const userTypeId = req.params.userTypeId;
+        const data = await UserType.findById( { _id:userTypeId } );
+        if (!data) {
+            return res.status(404).send({status:404,message:'User not found',data:""})
+        }
+        return res.status(200).send({status:200,message:'Success',data:data});
+    }
+    catch(error){
+        console.log("error is", error);
+        res.status(400).send({status:400,message:error,data:""})
+    }
+}
