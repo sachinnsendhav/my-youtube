@@ -65,7 +65,7 @@ const ProfileScreen = () => {
 
   const fetchDefaultAvatar = async () => {
     try {
-      const getUserApiUrl = `http://173.214.174.234/api/getUserType/${userObjectId}`;
+      const getUserApiUrl = `http://173.214.174.234:3005/api/getUserType/${userObjectId}`;
       const response = await fetch(getUserApiUrl);
   
       if (!response.ok) {
