@@ -4,7 +4,7 @@ import React, { useEffect } from 'react'
 import logo from '../../../public/MY-YOUTUBE-2.png'
 import { RiDashboard3Fill } from "react-icons/ri";
 import { FaDatabase } from "react-icons/fa";
-import { MdKeyboardArrowLeft } from "react-icons/md";
+import { MdKeyboardArrowLeft, MdSubscriptions } from "react-icons/md";
 import { MdKeyboardArrowDown } from "react-icons/md";
 import { FaUserFriends } from "react-icons/fa";
 import Link from 'next/link';
@@ -74,6 +74,22 @@ function Sidenav({ isDrowerOn, menu, setMenu }: Props) {
                     <Link href='/users/add'>
                         <p className='text-sm text-white py-1 cursor-pointer'>
                             Create User
+                        </p>
+                    </Link>
+                </div> : ""}
+                <div className='flex justify-between py-2 cursor-pointer' onClick={() => setMenu('plan')}>
+                    <div className='flex'>
+                        <MdSubscriptions className="text-white mt-1" />
+                        <p className='text-md text-white pl-3'>
+                            Subscription
+                        </p>
+                    </div>
+                    {menu === 'plan' ? <MdKeyboardArrowDown className="text-white mt-1" /> : <MdKeyboardArrowLeft className="text-white mt-1" />}
+                </div>
+                {menu === 'plan' ? <div className='pl-7'>
+                    <Link href='/subscription-plan'>
+                        <p className='text-sm text-white py-1 cursor-pointer'>
+                        Subscription plan
                         </p>
                     </Link>
                 </div> : ""}
