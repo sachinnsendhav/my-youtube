@@ -18,4 +18,5 @@ userrouter.post('/userType/login',usercontroller.userTypeLogin)
 userrouter.get('/customersList',auth,usercontroller.getcustomerList)
 userrouter.get('/customersDetails/:customerId',auth,usercontroller.getcustomersDetails)
 userrouter.put('/userType/updateDetails/:userTypeId',usercontroller.updateUserTypeDetails)
+userrouter.get('/getUserType/:userTypeId',usercontroller.getUserType)
 module.exports = userrouter;
