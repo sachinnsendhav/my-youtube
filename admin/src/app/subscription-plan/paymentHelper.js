@@ -16,7 +16,7 @@ async function paymentHelper(camount,currency){
             });
         };
 
-        let orderId = "HB" + Math.floor(Math.random() * Math.floor(Math.random * Date.now()));
+        let orderId = "MYT" + Math.floor(Math.random() * Math.floor(Math.random * Date.now()));
         const res = await loadScript("https://checkout.razorpay.com/v1/checkout.js");
 
         if(!res){
@@ -30,7 +30,7 @@ async function paymentHelper(camount,currency){
           receipt : orderId
         };
 
-        let result = await axios.post('http://localhost:9001/api/payment/createOrder',paymentRes);
+        let result = await axios.post('http://localhost:3005/api/payment/createOrder',paymentRes);
 
         if(!result.data.data){
           return "Some Error Occured!"
@@ -45,7 +45,7 @@ async function paymentHelper(camount,currency){
             description:'Test Transaction',
             handler: async function (response){
               const body = { paymentId: response.razorpay_payment_id, userData: user_data, amount: camount };
-              const result = await axios.post('http://localhost:9001/api/payment/placeOrder',body);
+              const result = await axios.post('http://localhost:3005/api/payment/placeOrder',body);
               console.log("result is", result);
             },
             prefill:{
