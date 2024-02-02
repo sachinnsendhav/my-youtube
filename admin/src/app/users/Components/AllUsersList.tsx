@@ -77,8 +77,11 @@ function AllUsersList() {
                           <th className="p-2 whitespace-nowrap">
                             <div className="font-semibold text-left text-lg">Username</div>
                           </th>
-                            <th className="p-2 whitespace-nowrap">
+                          <th className="p-2 whitespace-nowrap">
                             <div className="font-semibold text-left text-lg">Password</div>
+                          </th>
+                          <th className="p-2 whitespace-nowrap">
+                            <div className="font-semibold text-left text-lg">Gender</div>
                           </th>
                           <th className="p-2 whitespace-nowrap">
                             <div className="font-semibold text-center text-lg">Action</div>
@@ -103,10 +106,15 @@ function AllUsersList() {
                               <div className="text-left font-medium text-green-500">
                                 {item.userName}
                               </div>
-                            </td> 
-                              <td className="p-2 whitespace-nowrap">
+                            </td>
+                            <td className="p-2 whitespace-nowrap">
                               <div className="text-left font-medium text-green-500">
                                 {item.password}
+                              </div>
+                            </td>
+                            <td className="p-2 whitespace-nowrap">
+                              <div className="text-left font-medium text-green-500">
+                                {item?.gender ? item?.gender : ""}
                               </div>
                             </td>
                             <td className="text-xs flex justify-center items-center h-full pt-4">

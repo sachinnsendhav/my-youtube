@@ -12,6 +12,7 @@ function CreateUser() {
   const [lastName, setLastName] = useState('')
   const [userName, setUserName] = useState('')
   const [password, setPassword] = useState('')
+  const [gender, setGender] = useState('')
   const [errors, setErrors] = useState<any>({});
   const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
   const validateForm = () => {
@@ -28,6 +29,9 @@ function CreateUser() {
     if (password === "") {
       error.password = "Please enter paswword";
     }
+    if (gender === "") {
+      error.gender = "Please select Gender";
+    }
     setErrors(error);
     return Object.keys(error).length === 0;
   };
@@ -37,7 +41,8 @@ function CreateUser() {
         firstName: firstName,
         lastName: lastName,
         userName: userName,
-        password: password
+        password: password,
+        gender:gender
       }
       try {
         const result: any = await Users.createUSer(token, data)
@@ -92,6 +97,22 @@ function CreateUser() {
                 <input onChange={(e) => setPassword(e.target.value)} type='text' className='w-full text-black pl-3  h-10 border border-gray-300' />
                 {errors.password && (
                   <p className="text-red-500 text-sm">{errors.password}</p>
+                )}
+              </div>
+            </div>
+            <div className='grid grid-cols-2'>
+              <div className='py-2 col-span-1 mr-2'>
+                <p className='text-md py-1 text-gray-600'>Gender</p>
+                <div className='flex'>
+                  <input onChange={(e) => setGender(e.target.value)} value='male' type='radio' name='gender' className='h-4 w-4 mt-2 text-black pl-3 border border-gray-300' />
+                  <label className='text-md py-1 text-gray-600 pl-2'>Male</label>
+                </div>
+                <div className='flex'>
+                  <input onChange={(e) => setGender(e.target.value)} value='female' type='radio' name='gender' className='h-4 w-4 mt-2 text-black pl-3 border border-gray-300' />
+                  <label className='text-md py-1 text-gray-600 pl-2'>Female</label>
+                </div>
+                {errors.gender && (
+                  <p className="text-red-500 text-sm">{errors.gender}</p>
                 )}
               </div>
             </div>
