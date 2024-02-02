@@ -66,29 +66,23 @@ const ParentSignUpScreen = ({ onLoginSuccess, setIsLogInScreen }) => {
         phoneNumber: phone,
         otp: Number(otp),
       };
-
+  
       try {
         const result = await Auth.register(data);
-
+  
         if (result && result.data) {
           const userObjectId = result.data.userData._id;
           const userUserName = result.data.userData.email;
           const userParentFirstName = result.data.userData.firstName;
           const userParentLastName = result.data.userData.lastName;
           const userRole = result.data.userData.role;
-
-          await AsyncStorage.setItem(
-            "userParentFirstName",
-            userParentFirstName
-          );
+  
+          await AsyncStorage.setItem("userParentFirstName", userParentFirstName);
           await AsyncStorage.setItem("userUserName", userUserName);
-          await AsyncStorage.setItem(
-            "userParentLastName",
-            userParentLastName
-          );
+          await AsyncStorage.setItem("userParentLastName", userParentLastName);
           await AsyncStorage.setItem("role", userRole);
           await AsyncStorage.setItem("token", result.data.token);
-
+  
           if (result.status === 200) {
             onLoginSuccess();
             Alert.alert(
@@ -108,29 +102,61 @@ const ParentSignUpScreen = ({ onLoginSuccess, setIsLogInScreen }) => {
           );
         }
       } catch (err) {
-        console.log(err, "error");
+        if (err.response && err.response.status === 401) {
+          // Invalid OTP
+          Alert.alert(
+            "Invalid OTP",
+            "The entered OTP is incorrect. Please check and try again."
+          );
+        } else {
+          console.log(err, "error");
+          Alert.alert(
+            "Register Failed",
+            "An error occurred. Please try again later."
+          );
+        }
       }
     }
     setLoading(false);
   };
+  
 
   const sendOtp = async () => {
     setLoading(true);
+  
     if (email !== "") {
       const data = {
         email: email,
       };
+  
       try {
         const result = await Auth.generateOtp(data);
-        // Handle result if needed
+  
+        if (result && result.data && result.status === 200 || 201) {
+          Alert.alert(
+            "OTP Sent",
+            "An OTP has been sent to your email address. Please check and enter the OTP."
+          );
+        } else {
+          Alert.alert(
+            "OTP Failed",
+            "Failed to send OTP. Please try again."
+          );
+        }
       } catch (err) {
         console.log(err, "error");
+        Alert.alert(
+          "Error",
+          "An error occurred while sending OTP. Please try again later."
+        );
       }
     } else {
       alert("Please enter Email Address");
     }
+  
     setLoading(false);
   };
+  
 
   return (
     <View style={styles.container}>
@@ -217,7 +243,7 @@ const ParentSignUpScreen = ({ onLoginSuccess, setIsLogInScreen }) => {
 
           <TouchableOpacity
             onPress={() => registerParents()}
-            disabled={loading}
+            disabled={loading || otp === ""}
             style={styles.loginButton}
           >
             <Text style={styles.loginButtonText}>Sign Up</Text>

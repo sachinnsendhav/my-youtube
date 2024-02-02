@@ -35,6 +35,7 @@ const LogoutButton = ({ navigation, onLogout }) => {
             await AsyncStorage.removeItem("userPlayListId");
             await AsyncStorage.removeItem("token");
             await AsyncStorage.removeItem("role");
+            await AsyncStorage.removeItem("userGender");
             onLogout();
           },
         },

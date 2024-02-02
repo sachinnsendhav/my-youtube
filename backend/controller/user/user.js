@@ -208,7 +208,7 @@ exports.addUsers = async(req,res) => {
         const role = 'user';
         const usertype = new UserType( { firstName,lastName,userName,password,userId,role,gender } );
         await usertype.save();
-        return res.status(200).send( { status:200,message:"User Added Successfully", data:{firstName,lastName,userName} } )
+        return res.status(200).send( { status:200,message:"User Added Successfully", data:{firstName,lastName,userName,gender} } )
     }
     catch(error){
         console.log("useres are",error);
