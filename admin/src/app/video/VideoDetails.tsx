@@ -83,7 +83,20 @@ function VideoDetails({ id }: any) {
           <ReactPlayer
             url={`https://www.youtube.com/watch?v=${id}`}
             className="react-player"
-            controls
+            controls={true}
+          // pip={true}
+          // width="100%"
+          // height="100%"
+          // playing={true}
+          // onContextMenu={(e: any) => e.preventDefault()}
+          // config={{
+          //   youtube: {
+          //     playerVars: {
+          //       modestbranding: 1,
+          //       fs: 0,
+          //     },
+          //   },
+          // }}
           />
           <div className='p-2 my-2 border border-gray-600 w-full flex justify-between'>
             <div className='text-gray-600'>
@@ -91,7 +104,7 @@ function VideoDetails({ id }: any) {
               <p className='text-xs font-semibold'>{videoDetails?.snippet?.channelTitle}</p>
             </div>
             {playlist.length > 0 ?
-            <div className='flex'>
+              <div className='flex'>
                 <select
                   onChange={(e) => setPlaylistId(e.target.value)}
                   className='focus:outline-none mr-3 bg-white rounded-sm border border-gray-500 text-gray-600'>
@@ -101,10 +114,10 @@ function VideoDetails({ id }: any) {
                       <option key={index} value={item._id}>{item.name}</option>
                     )
                   })}
-                </select> 
-              <Button text='Add Video' functionName={addVideoToPlaylist} />
-            </div>
-            : <Link href='/playlist/add'><Button text='Create New Playlist' /></Link>}
+                </select>
+                <Button text='Add Video' functionName={addVideoToPlaylist} />
+              </div>
+              : <Link href='/playlist/add'><Button text='Create New Playlist' /></Link>}
           </div>
           <div className='grid grid-cols-12'>
             {

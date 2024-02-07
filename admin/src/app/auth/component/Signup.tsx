@@ -3,6 +3,7 @@ import React, { useState } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { Auth } from '@/services'
+import { FaEye, FaEyeSlash } from 'react-icons/fa'
 function Signup() {
     const [firstName, setFirstName] = useState('')
     const [lastName, setLastName] = useState('')
@@ -12,6 +13,8 @@ function Signup() {
     const [otp, setOtp] = useState('')
     const [errors, setErrors] = useState<any>({});
     const [loading, setLoading] = useState(false)
+    const [eyeOpen, setEyeOpen] = useState(false)
+
     const router = useRouter()
 
     const validateForm = () => {
@@ -107,7 +110,12 @@ function Signup() {
                     </div>
                     <div className='p-2 col-span-1'>
                         <p className='text-md py-1 text-gray-600 font-bold'>Password</p>
-                        <input onChange={(e) => setPassord(e.target.value)} type='text' className='w-full px-2 h-10 border border-gray-300' />
+                  <div className='flex text-black pl-3  h-10 border border-gray-300'>
+                        <input onChange={(e) => setPassord(e.target.value)} type={eyeOpen ? 'text' : 'password'} className='w-full focus:outline-none' />
+                        {eyeOpen ?
+                            <FaEye className="text-gray-500 text-xl mt-2 mx-2" onClick={() => setEyeOpen(false)} /> :
+                            <FaEyeSlash className="text-gray-500 text-xl mt-2 mx-2" onClick={() => setEyeOpen(true)} />}
+                    </div>
                         {errors.password && (
                             <p className="text-red-500 text-sm">{errors.password}</p>
                         )}

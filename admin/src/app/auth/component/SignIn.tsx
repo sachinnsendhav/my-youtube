@@ -3,12 +3,14 @@ import Link from 'next/link'
 import React, { useState } from 'react'
 import { useRouter } from 'next/navigation';
 import { Auth } from '@/services';
+import { FaEye, FaEyeSlash } from 'react-icons/fa';
 
 function SignIn() {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const [loading, setLoading] = useState(false)
     const [errors, setErrors] = useState<any>({});
+    const [eyeOpen, setEyeOpen] = useState(false)
     const router = useRouter()
 
     const validateForm = () => {
@@ -37,9 +39,9 @@ function SignIn() {
                     router.push('/')
                 }
             } catch (err: any) {
-                if(err?.response?.data?.status ==="401"){
-                alert("Incorrect email or password")
-                }else{
+                if (err?.response?.data?.status === "401") {
+                    alert("Incorrect email or password")
+                } else {
                     alert("somthing went wrong!")
                 }
                 console.log(err, 'error')
@@ -50,7 +52,7 @@ function SignIn() {
 
     return (
         <div className='h-screen py-5 flex items-center transition duration-500 ease-in-out bg-gradient-to-r from-[#e61e78] via-[#ffc34a] to-[#e61e78] shadow-xl justify-center'>
-        <div className='w-[30%] bg-white rounded p-5'>
+            <div className='w-[30%] bg-white rounded p-5'>
                 <p className='text-3xl font-bold text-gray-600'>Parents - Sign In</p>
                 <p className='text-md text-gray-500'>Log in to your account to continue.</p>
                 <div className='py-2 mt-5'>
@@ -62,7 +64,12 @@ function SignIn() {
                 </div>
                 <div className='py-2'>
                     <p className='text-md py-1 text-gray-600 font-bold'>Password</p>
-                    <input onChange={(e) => setPassword(e.target.value)} type='text' className='w-full text-black pl-3  h-10 border border-gray-300' />
+                    <div className='flex text-black pl-3  h-10 border border-gray-300'>
+                        <input onChange={(e) => setPassword(e.target.value)} type={eyeOpen ? 'text' : 'password'} className='w-full focus:outline-none' />
+                        {eyeOpen ?
+                            <FaEye className="text-gray-500 text-xl mt-2 mx-2" onClick={() => setEyeOpen(false)} /> :
+                            <FaEyeSlash className="text-gray-500 text-xl mt-2 mx-2" onClick={() => setEyeOpen(true)} />}
+                    </div>
                     {errors.password && (
                         <p className="text-red-500 text-sm">{errors.password}</p>
                     )}

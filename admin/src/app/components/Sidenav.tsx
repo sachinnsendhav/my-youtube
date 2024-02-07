@@ -1,7 +1,7 @@
 'use client'
 import Image from 'next/image'
 import React, { useEffect } from 'react'
-import logo from '../../../public/MY-YOUTUBE-2.png'
+import logo from '../../../public/mini-tube-logo.png'
 import { RiDashboard3Fill } from "react-icons/ri";
 import { FaDatabase } from "react-icons/fa";
 import { MdKeyboardArrowLeft, MdSubscriptions } from "react-icons/md";

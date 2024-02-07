@@ -44,7 +44,7 @@ async function paymentHelper(camount,currency){
             name:'MyYoutube',
             description:'Test Transaction',
             handler: async function (response){
-              const body = { paymentId: response.razorpay_payment_id, userData: user_data, amount: camount };
+              const body = { paymentId: response.razorpay_payment_id,  amount: camount };
               const result = await axios.post('http://localhost:3005/api/payment/placeOrder',body);
               console.log("result is", result);
             },
