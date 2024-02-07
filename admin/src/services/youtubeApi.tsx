@@ -30,7 +30,7 @@ const getVideoDetails = (id: string) =>
 const getRelatedVideos = (id: string) =>
     new Promise((resolve, reject) => {
         axios
-            .get(`${endpoints.youtubeApi.getRelatedVideos}${id}&type=video`, options)
+            .get(`${endpoints.youtubeApi.getRelatedVideos}${id}`, options)
             .then((response: any) => resolve(response.data))
             .catch((error: any) => reject(error)
             );

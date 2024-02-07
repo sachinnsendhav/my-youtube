@@ -1,4 +1,12 @@
-.react-player{
+.react-player {
     width: 100% !important;
     height: 500px !important;
+}
+
+.react-player .ytp-chrome-top {
+    display: none !important;
+}
+
+.ytp-title-channel {
+    display: none !important;
 }
