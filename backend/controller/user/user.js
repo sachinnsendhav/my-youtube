@@ -46,6 +46,7 @@ exports.signup = async(req,res) => {
         const payload = { firstName, lastName, email, phoneNumber,password, role };
         const user = new User(payload);
         const userData=await user.save();
+        console.log("userdata",userData)
         const token=issueJwt(userData)
         const user_data = {
             firstName: firstName,
@@ -184,7 +185,8 @@ exports.forgetPasswordSave=async(req,res)=>{
 
 exports.updateUserDetail=async(req,res)=>{
     try{
-        const { firstName, lastName, email, phoneNumber} = req.body;
+        const { firstName, lastName, email, phoneNumber } = req.body;
+
         let userExist = await User.findById(req.params.userId)
         if (!userExist) {
             return res.status(404).send( { status:404, message:"User not available", data:'' } );
@@ -194,7 +196,7 @@ exports.updateUserDetail=async(req,res)=>{
         userExist.email=email||userExist.email
         userExist.phoneNumber=phoneNumber|| userExist.phoneNumber
         await userExist.save()
-        res.json({status:201,message:"User Update Successfully",data:userExist})    
+        res.json({status:201,message:"User Update Successfully",data:userExist})
     }catch(error){
         console.error(error)
         return res.status(400).send( { status:400, message:error.message } );
