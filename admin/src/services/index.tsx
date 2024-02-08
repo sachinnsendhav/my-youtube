@@ -4,3 +4,4 @@ export * as YoutubeApi from './youtubeApi';
 export * as Playlist from './playlistService'
 export * as Customers from './customersService'
 export * as Video from './videoService'
+export * as Subscription from './subscriptionService';

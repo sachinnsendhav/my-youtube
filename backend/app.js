@@ -15,11 +15,13 @@ const userrouter = require('./routes/user/user');
 const videorouter = require('./routes/video/videoRoutes');
 const playlistrouter = require('./routes/playlist/playlist');
 const paymentrouter = require('./routes/payment/payment');
+const subscriptionplanrouter = require('./routes/subscriptionplan/subscriptionplan');
 
 app.use('/api',userrouter);
 app.use('/api',videorouter);
 app.use('/api',playlistrouter);
 app.use('/api', paymentrouter);
+app.use('/api',subscriptionplanrouter);
 
 app.listen(PORT, ()=>{
     console.log(`Listining on port ${PORT}`);

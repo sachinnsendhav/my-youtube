@@ -1,4 +1,5 @@
 const User = require('../../model/user/userModel');
+const SubscriptionPlan = require('../../model/subscriptionplan/subscriptionplan')
 const Razorpay = require("razorpay");
 const axios = require('axios');
 
@@ -26,22 +27,19 @@ exports.createOrder = async (req,res) => {
 exports.placeOrder = async (req,res) => {
     try{
         const user_id = req.user.paylod._id;
-        // console.log("userId is", user_id);
-        // const user_data = await User.findById({_id:user_id});
-        // console.log("user data is", user_data);
 
         const instance = new Razorpay({
             key_id: 'rzp_test_5FcvK0MsUDGkTa',
             key_secret: 'ABFPqRHaOMVGD7KHbsKqDu2M',
         });
 
-        const body_data = req.body;
-        console.log("payment body is", body_data);
-
         // const data = req.body.userData;
         // const amount_data = Number(req.body.amount).toFixed(0)*0.75;
-        const { paymentId } = req.body;
-        console.group("payment id is", paymentId);
+        const { paymentId, subscriptionId } = req.body;
+        console.group("payment id is", paymentId, subscriptionId);
+
+        const subscriptionData = await SubscriptionPlan.findById({_id:subscriptionId});
+
         const order = await instance.payments.fetch(paymentId);
 
         if(!order){
@@ -49,14 +47,11 @@ exports.placeOrder = async (req,res) => {
         }
 
         const subscriptiondate = new Date();
-        console.log("subscription date", subscriptiondate);
         const expirationdate = new Date();
         const month = expirationdate.getMonth()+1;
-        console.log("month is", month);
         const updated_expiration_date = new Date(expirationdate.setMonth(month));
-        console.log("expiration date",updated_expiration_date);
 
-        const user_data = await User.findByIdAndUpdate({_id:user_id},{subscription:subscriptiondate, expirationDate:updated_expiration_date});
+        const user_data = await User.findByIdAndUpdate({_id:user_id},{subscription:subscriptiondate, expirationDate:updated_expiration_date, subscriptionType:{ subscriptionId:subscriptionData._id, planType:subscriptionData.planType }});
         console.log("updated userData", user_data);
 
         return res.status(200).send( { data : order } );

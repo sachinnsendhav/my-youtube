@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-async function paymentHelper(camount,currency){
+async function paymentHelper(camount,currency,subscriptionId){
     try{
         const token = localStorage.getItem('token');
         console.log("token",token);
@@ -51,7 +51,7 @@ async function paymentHelper(camount,currency){
             name:'MyYoutube',
             description:'Test Transaction',
             handler: async function (response){
-              const body = { paymentId: response.razorpay_payment_id, amount: camount };
+              const body = { paymentId: response.razorpay_payment_id, amount: camount, subscriptionId: subscriptionId };
               const result = await axios.post('http://localhost:3005/api/payment/placeOrder',body,{
                 headers:{
                   'Authorization':token

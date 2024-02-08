@@ -37,5 +37,8 @@ export const endpoints = {
     search: `${BASE_URL}/search?key=${API_KEY}&part=snippet&q=`,
     getVideoDetails: `${BASE_URL}/videos?key=${API_KEY}&part=snippet,statistics&id=`,
     getRelatedVideos: `${BASE_URL}/search?key=${API_KEY}&part=snippet&relatedToVideoId=`,
+  },
+  subscription: {
+    getPlans : `${url}/api/subscription/getPlans`
   }
 }

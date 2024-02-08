@@ -63,6 +63,14 @@ const userSchema = new mongoose.Schema({
     },
     expirationDate:{
         type: Date,
+    },
+    subscriptionType:{
+        subscriptionId : {
+            type : mongoose.Schema.Types.ObjectId
+        },
+        planType : {
+            type : String
+        }
     }
 });
 
