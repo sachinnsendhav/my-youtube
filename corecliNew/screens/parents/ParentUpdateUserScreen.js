@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, TextInput, ScrollView, TouchableOpacity, Alert } from 'react-native';
+import { View, Text, TextInput, ScrollView, TouchableOpacity, Alert, Image } from 'react-native';
 import { Playlist, Users } from '../../services'; 
 import { useNavigation } from '@react-navigation/native';
 // import { FaPlus } from 'react-icons/fa'; 
@@ -59,7 +59,7 @@ function ParentUpdateUserScreen({ route }) {
       };
       const result = await Users.alotPlaylistToUser(token, data, id);
       getUserDetails(id);
-      Alert.alert('Playlist added');
+      Alert.alert('Playlist added','Playlist added to this user!');
     } catch (err) {
       console.error(err, 'error');
     }
@@ -90,7 +90,7 @@ function ParentUpdateUserScreen({ route }) {
        const token = await AsyncStorage.getItem('token');
         const result = await Users.removePlaylistFromUser(token, id, playlistId);
         getUserDetails(id);
-        Alert.alert('Playlist removed from this user!');
+        Alert.alert('Playlist Removed','Playlist removed from this user!');
       } catch (error) {
         console.error(error, 'error')
       }
@@ -152,7 +152,10 @@ function ParentUpdateUserScreen({ route }) {
               <View key={item._id} style={{ backgroundColor: '#0099ff', margin: 5, padding: 10, borderRadius: 8, flexDirection: 'row' }}>
                 <Text style={{ fontSize: 16, color: 'white', marginRight: 10 }}>{item?.name}</Text>
                 <TouchableOpacity onPress={() => removePlaylistFromUser(item._id)}>
-                <Icon name="remove" size={24} color="white" />
+                <Image
+        source= {require('../../assets/icons/remove.png')}
+        style={{ width: 20, height: 20, marginTop:2}}
+      />
                   {/* <Text style={{ fontSize: 16, color: 'white' }}>Remove</Text> */}
                 </TouchableOpacity>
               </View>
@@ -167,7 +170,10 @@ function ParentUpdateUserScreen({ route }) {
                 <Text style={{ fontSize: 16, color: 'white', marginRight: 10 }}>{item?.name}</Text>
                 {!item.exisit && (
                   <TouchableOpacity onPress={() => alotPlaylistToUser(item._id)}>
-                   <Icon name="add" size={24} color="white" />
+                  <Image
+        source= {require('../../assets/icons/add.png')}
+        style={{ width: 20, height: 20, marginTop:2}}
+      />
                     {/* <Text style={{ fontSize: 16, color: 'white' }}>Add</Text> */}
                   </TouchableOpacity>
                 )}

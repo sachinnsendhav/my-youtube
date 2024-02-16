@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text, View, TextInput, Button, Alert, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, View, TextInput, Button, Alert, TouchableOpacity, Image } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Users } from '../../services';
 import { useNavigation } from '@react-navigation/native';
@@ -139,9 +139,12 @@ const ParentCreateUserScreen = () => {
           secureTextEntry={showPassword}
           required // Make password required
         />
-        <TouchableOpacity onPress={togglePasswordVisibility} style={styles.eyeIconContainer}>
-          <Icon name={showPassword ? 'eye' : 'eye-slash'} size={20} color="grey" />
-        </TouchableOpacity>
+    <TouchableOpacity onPress={togglePasswordVisibility} style={styles.eyeIconContainer}>
+      <Image
+        source={showPassword ? require('../../assets/icons/eye.png') : require('../../assets/icons/eye-close.png')}
+        style={{ width: 20, height: 20}}
+      />
+    </TouchableOpacity>
       </View>
       <Button title="Add User" onPress={handleAddUser} />
     </View>

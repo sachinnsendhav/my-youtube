@@ -18,6 +18,7 @@ function HomeScreen() {
     try{
       const response=await YoutubeApi.getVideosBySearch(searchText==''?"cartoon":searchText)
       setVideos(response.items)
+      console.log(response)
     }catch(error){
       console.log("error",error)
     }

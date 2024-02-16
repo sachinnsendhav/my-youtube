@@ -260,7 +260,7 @@ const styles = StyleSheet.create({
     padding: 10,
   },
   input: {
-    height: 30,
+    height: 40,
     paddingHorizontal: 10,
     borderBottomColor: "#B0C4DE",
   },

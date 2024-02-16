@@ -1,4 +1,4 @@
-const url = 'http://192.168.1.2:3005'
+const url = 'http://192.168.153.204:3005'
 // const BASE_URL = 'https://youtube-v31.p.rapidapi.com';
 const BASE_URL = 'https://youtube.googleapis.com/youtube/v3';
 const API_KEY = 'AIzaSyAcPNJtBXci-Wg7MHNEkLf_9fVZS1sj5ms'

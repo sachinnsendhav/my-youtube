@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity, FlatList, Alert, StyleSheet, TextInput } from 'react-native';
+import { View, Text, TouchableOpacity, FlatList, Alert, StyleSheet, TextInput, Image } from 'react-native';
 import { Users } from '../../services';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation , useFocusEffect} from '@react-navigation/native';
@@ -25,7 +25,10 @@ const UserCard = ({ data, onView, onUpdate, onDelete }) => {
           editable={false}
         />
         <TouchableOpacity onPress={togglePasswordVisibility}>
-          <Icon name={showPassword ? 'eye' : 'eye-slash'} size={20} color="#B2BEB5" />
+        <Image
+        source={showPassword ? require('../../assets/icons/eye.png') : require('../../assets/icons/eye-close.png')}
+        style={{ width: 20, height: 20}}
+      />
         </TouchableOpacity>
       </View>
       <View style={styles.actionButtons}>

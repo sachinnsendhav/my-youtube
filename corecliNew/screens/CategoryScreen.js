@@ -13,7 +13,7 @@ const CategoryScreen = () => {
     const gettingUserId = await AsyncStorage.getItem("userObjectId");
 
     try {
-      const response = await fetch(`http://173.214.174.234:3005/api/playlist/getUserPlaylist/${gettingUserId}`);
+      const response = await fetch(`http://192.168.153.204:3005/api/playlist/getUserPlaylist/${gettingUserId}`);
       const data = await response.json();
       setPlaylistData(data.data);
     } catch (error) {
@@ -24,7 +24,7 @@ const CategoryScreen = () => {
   const fetchVideoData = async () => {
     if (selectedPlaylistItem) {
       try {
-        const response = await fetch(`http://173.214.174.234:3005/api/video/getData/${selectedPlaylistItem._id}`);
+        const response = await fetch(`http://192.168.153.204:3005/api/video/getData/${selectedPlaylistItem._id}`);
         const data = await response.json();
         setVideoData(data.data.video);
       } catch (error) {
