@@ -11,6 +11,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import RazorpayCheckout from 'react-native-razorpay';
 import { Subscription } from '../../services'; // Assuming this is the file where you exported your Subscription service
 import axios from 'axios';
+import { config } from '../../config';
 
 const ParentProfileScreen = ({ navigation }) => {
   const [userParentFirstName, setUserParentFirstName] = useState('');
@@ -45,7 +46,7 @@ const ParentProfileScreen = ({ navigation }) => {
     const fetchSubscriptionDetails = async (token) => {
       try {
         const result = await axios.get(
-          'http://192.168.153.204:3005/api/subscription/getUserPlan',
+          `${config.cli.url}/api/subscription/getUserPlan`,
           {
             headers: {
               Authorization: token,
@@ -108,7 +109,7 @@ const handleSubscriptionPurchase = async (amount, subscriptionId, planName) => {
       receipt: orderId
     };
 
-    const result = await axios.post('http://192.168.153.204:3005/api/payment/createOrder', paymentRes, {
+    const result = await axios.post(`${config.cli.url}/api/payment/createOrder`, paymentRes, {
       headers: {
         'Authorization': token
       }
@@ -153,7 +154,7 @@ const handleSubscriptionPurchase = async (amount, subscriptionId, planName) => {
         console.log(result,"place order result");
                     // Update subscription details after purchase
                     const getUserPlanResponse = await axios.get(
-                      'http://192.168.153.204:3005/api/subscription/getUserPlan',
+                      `${config.cli.url}/api/subscription/getUserPlan`,
                       {
                         headers: {
                           Authorization: token,

@@ -1,209 +1,196 @@
 import React, { useEffect, useState } from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  Image,
-  TouchableOpacity,
-  Alert,
-} from 'react-native';
+import { View, Text, StyleSheet, Image, Button, Modal, FlatList, TouchableOpacity, Alert } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import RazorpayCheckout from 'react-native-razorpay';
-import { Subscription } from '../services'; // Assuming this is the file where you exported your Subscription service
-import axios from 'axios';
+import { config } from '../config';
 
-const ParentProfileScreen = () => {
+const avatarOptions = {
+  male: [
+    { name: 'male-avatar-01', uri: require('../assets/avatars/male-avatar-01.jpg') },
+    { name: 'male-avatar-02', uri: require('../assets/avatars/male-avatar-02.jpg') },
+    { name: 'male-avatar-03', uri: require('../assets/avatars/male-avatar-03.jpg') },
+    { name: 'male-avatar-04', uri: require('../assets/avatars/male-avatar-04.jpg') },
+    { name: 'male-avatar-05', uri: require('../assets/avatars/male-avatar-05.jpg') },
+    { name: 'male-avatar-06', uri: require('../assets/avatars/male-avatar-06.jpg') },
+    { name: 'male-avatar-07', uri: require('../assets/avatars/male-avatar-07.jpg') },
+    { name: 'male-avatar-08', uri: require('../assets/avatars/male-avatar-08.jpg') },
+    { name: 'male-avatar-09', uri: require('../assets/avatars/male-avatar-09.jpg') },
+  ],
+  female: [
+    { name: 'female-avatar-01', uri: require('../assets/avatars/female-avatar-01.jpg') },
+    { name: 'female-avatar-02', uri: require('../assets/avatars/female-avatar-02.jpg') },
+    { name: 'female-avatar-03', uri: require('../assets/avatars/female-avatar-03.jpg') },
+    { name: 'female-avatar-04', uri: require('../assets/avatars/female-avatar-04.jpg') },
+    { name: 'female-avatar-05', uri: require('../assets/avatars/female-avatar-05.jpg') },
+    { name: 'female-avatar-06', uri: require('../assets/avatars/female-avatar-06.jpg') },
+    { name: 'female-avatar-07', uri: require('../assets/avatars/female-avatar-07.jpg') },
+    { name: 'female-avatar-08', uri: require('../assets/avatars/female-avatar-08.jpg') },
+    { name: 'female-avatar-09', uri: require('../assets/avatars/female-avatar-09.jpg') },
+  ],
+};
+
+const ProfileScreen = () => {
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
+  const [userName, setUserName] = useState('');
+  const [gender, setGender] = useState('');
+  const [userObjectId, setUserObjectId] = useState('');
   const [userParentFirstName, setUserParentFirstName] = useState('');
   const [userParentLastName, setUserParentLastName] = useState('');
-  const [subscriptionPlans, setSubscriptionPlans] = useState([]);
-  const [parentPhoneNumber, setParentPhoneNumber] = useState('');
-  const [parentEmail, setParentEmail] = useState('');
-  const [subscriptionDetails, setSubscriptionDetails] = useState(null);
+  const [selectedAvatar, setSelectedAvatar] = useState(null);
+  const [selectedAvatarInModal, setSelectedAvatarInModal] = useState(null);
+  const [isModalVisible, setModalVisible] = useState(false);
+  const [isAvatarUpdated, setAvatarUpdated] = useState(false);
 
-useEffect(() => {
-  const fetchData = async () => {
-    const asyncUserParentFirstName = await AsyncStorage.getItem(
-      'userParentFirstName',
-    );
-    const asyncUserParentLastName = await AsyncStorage.getItem(
-      'userParentLastName',
-    );
-    setUserParentFirstName(asyncUserParentFirstName || '');
-    setUserParentLastName(asyncUserParentLastName || '');
+  useEffect(() => {
+    const fetchData = async () => {
+      const asyncFirstName = await AsyncStorage.getItem('userFirstName');
+      const asyncLastName = await AsyncStorage.getItem('userLastName');
+      const asyncUserName = await AsyncStorage.getItem('userUserName');
+      const asyncGender = await AsyncStorage.getItem('userGender');
+      const asyncUserObjectId = await AsyncStorage.getItem('userObjectId');
+      const asyncUserParentFirstName = await AsyncStorage.getItem('userParentFirstName');
+      const asyncUserParentLastName = await AsyncStorage.getItem('userParentLastName');
 
-    const token = await AsyncStorage.getItem('token');
-    console.log('Token:', token);
+      setFirstName(asyncFirstName || '');
+      setLastName(asyncLastName || '');
+      setUserName(asyncUserName || '');
+      setGender(asyncGender || '');
+      setUserObjectId(asyncUserObjectId || '');
+      setUserParentFirstName(asyncUserParentFirstName || '');
+      setUserParentLastName(asyncUserParentLastName || '');
+    };
 
-    const subscriptionPlansResponse = await Subscription.getSubscriptionPlans(
-      token,
-    );
-    const plans = subscriptionPlansResponse.data || [];
-    setSubscriptionPlans(plans);
+    fetchData();
+  }, []);
 
-    console.log('Fetching user plan data...');
-    const getUserPlanResponse = await axios.get(
-      'http://192.168.153.204:3005/api/subscription/getUserPlan',
-      {
-        headers: {
-          Authorization: token,
-        },
-      },
-    );
-    const userData = getUserPlanResponse.data.data || 'hello';
-    setSubscriptionDetails(userData);
-    console.log('User plan data:', userData);
-  };
-  fetchData();
-}, []);
-
-  // This function generates a random orderId
-  const generateOrderId = () => {
-    return 'MYT' + Math.floor(Math.random() * Math.floor(Math.random() * Date.now()));
-  };
-
-  const handleSubscriptionPurchase = async (amount, subscriptionId, planName) => {
+  const fetchDefaultAvatar = async () => {
     try {
-      const token = await AsyncStorage.getItem('token');
-      let parentEmail = '';
-      let parentPhoneNumber = '';
-
-      const asyncUserParentPhoneNumber = await AsyncStorage.getItem('userParentPhoneNumber');
-      const asyncUserParentEmail = await AsyncStorage.getItem('userParentEmail');
-
-      if (asyncUserParentPhoneNumber) {
-        parentPhoneNumber = asyncUserParentPhoneNumber;
+      const getUserApiUrl = `${config.cli.url}/api/getUserType/${userObjectId}`;
+      const response = await fetch(getUserApiUrl);
+  
+      if (!response.ok) {
+        console.error(`Error fetching default avatar. Status: ${response.status}`);
+        return;
       }
-
-      if (asyncUserParentEmail) {
-        parentEmail = asyncUserParentEmail;
-      }
-
-      console.log(parentPhoneNumber, 'parentPhoneNumber');
-      console.log(parentEmail, 'parentEmail');
-
-      const orderId = generateOrderId();
-
-      const paymentRes = {
-        order_id: orderId,
-        amount: amount,
-        currency: 'INR',
-        receipt: orderId,
-      };
-
-      const result = await axios.post(
-        'http://192.168.153.204:3005/api/payment/createOrder',
-        paymentRes,
-        {
-          headers: {
-            Authorization: token,
-          },
-        },
-      );
-
-      if (!result.data.data) {
-        Alert.alert('Error', 'Some Error Occurred!');
-      } else {
-        const options = {
-          description: `Payment Process of ${planName.toUpperCase()} Subscription`,
-          image: 'https://www.flaticon.com/free-icon/play_13710370',
-          currency: 'INR',
-          key: 'rzp_test_5FcvK0MsUDGkTa',
-          amount: amount * 100,
-          name: 'Mini Tube',
-          prefill: {
-            email: parentEmail,
-            contact: parentPhoneNumber,
-            name: `${userParentFirstName} ${userParentLastName}`,
-          },
-          theme: { color: '#1d9cf0' },
-          order_id: result.data.data.id,
-          // Add the following line to handle the payment response
-          payment_success_url: 'your-success-url',
-        };
-
-        RazorpayCheckout.open(options)
-          .then(async (data) => {
-            // Log the data object to see its structure
-            console.log('Razorpay data:', data);
-
-            // Show a simple alert to test if the code inside the then block is executed
-            Alert.alert('Payment Success', 'Your payment was successful.');
-
-            // Continue with your logic
-            const body = {
-              paymentId: data.razorpay_payment_id,
-              amount: amount,
-              subscriptionId: subscriptionId,
-            };
-            const result = await Subscription.placeOrder(body, token);
-            console.log(result, 'place order result');
-
-            // Update subscription details after purchase
-            const getUserPlanResponse = await axios.get(
-              'http://192.168.153.204:3005/api/subscription/getUserPlan',
-              {
-                headers: {
-                  Authorization: token,
-                },
-              },
+  
+      const result = await response.json();
+  
+      if (result.status === 200 && result.data) {
+        const avatarFieldName = 'avatar';
+  
+        if (result.data.hasOwnProperty(avatarFieldName)) {
+          const defaultAvatarName = result.data[avatarFieldName];
+  
+          if (defaultAvatarName !== '') {
+            // Set the selected avatar if the default avatar name is not empty
+            setSelectedAvatar(
+              avatarOptions[gender].find((avatar) => avatar.name === defaultAvatarName) || null
             );
-            const userData = getUserPlanResponse.data.data || {};
-            setSubscriptionDetails(userData);
-          })
-          .catch((error) => {
-            console.log('Payment failed:', error);
-            Alert.alert('Payment Failed', 'Please try again later.');
-          });
+          } else {
+            // Set a default avatar if the avatar field is empty
+            setSelectedAvatar(null); // You can replace this with a default avatar of your choice
+          }
+        } else {
+          console.error(`Invalid response format: Avatar field '${avatarFieldName}' not found`);
+        }
+      } else {
+        console.error('Invalid response format:', result);
       }
     } catch (error) {
-      console.log('Error:', error);
-      Alert.alert('Error', 'An error occurred. Please try again later.');
+      console.error('Error fetching default avatar:', error);
     }
   };
+
+  useEffect(() => {
+    // Fetch default avatar when the component mounts
+    fetchDefaultAvatar();
+  }, [userObjectId, gender]);
+
+  useEffect(() => {
+    // Set initial main avatar image based on the GET API response
+    if (selectedAvatar === null && gender !== '' && userObjectId !== '') {
+      fetchDefaultAvatar();
+    }
+  }, [selectedAvatar, gender, userObjectId]);
+
+  const handleUpdateAvatar = async () => {
+    if (selectedAvatarInModal) {
+      const apiUrl = `${config.cli.url}/api/userType/updateDetails/${userObjectId}`;
+      const updateData = {
+        avatar: selectedAvatarInModal.name,
+      };
+
+      try {
+        const response = await fetch(apiUrl, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(updateData),
+        });
+
+        if (response.ok) {
+          setAvatarUpdated(true);
+          Alert.alert('Success', 'Avatar updated successfully');
+          setSelectedAvatar(selectedAvatarInModal);
+        } else {
+          setAvatarUpdated(false);
+          Alert.alert('Error', 'Failed to update avatar. Please try again.');
+        }
+      } catch (error) {
+        console.error('Error updating avatar:', error);
+      }
+
+      setModalVisible(false);
+    } else {
+      // console.warn('Please select an avatar.');
+      Alert.alert('Alert', 'Please select an avatar.');
+    }
+  };
+
+  const renderAvatarItem = ({ item }) => (
+    <TouchableOpacity
+      onPress={() => {
+        setSelectedAvatarInModal(item); // Update the selected avatar in the modal
+      }}
+    >
+      <View style={[styles.avatarItem, selectedAvatarInModal?.name === item.name && styles.selectedAvatar]}>
+        <Image source={item.uri} style={styles.avatarImage} />
+      </View>
+    </TouchableOpacity>
+  );
 
   return (
     <View style={styles.container}>
       <View style={styles.card}>
-        <Image
-          source={require('../assets/my-yt.png')}
-          style={styles.profileImage}
-        />
-        <Text
-          style={
-            styles.fullNameText
-          }>{`${userParentFirstName} ${userParentLastName}`}</Text>
-        {subscriptionDetails && (
-          <View style={styles.subscriptionDetails}>
-            <Text>Subscription Type: {subscriptionDetails.subscriptionType}</Text>
-            <Text>Subscription Date: {subscriptionDetails.subscriptionDate}</Text>
-            <Text>Expiration Date: {subscriptionDetails.expirationDate}</Text>
-          </View>
-        )}
-      </View>
-      <View style={{ marginTop: 60 }}>
-        <Text style={styles.title}>Subscription Plans</Text>
-        <View style={styles.plansContainer}>
-          {subscriptionPlans.map((plan) => (
-            <TouchableOpacity
-              key={plan._id}
-              style={styles.planCard}
-              onPress={() =>
-                handleSubscriptionPurchase(
-                  plan.subscriptionPrice,
-                  plan._id,
-                  plan.planType,
-                )
-              }>
-              <Text style={styles.planType}>{plan.planType.toUpperCase()}</Text>
-              <Text style={styles.planDescription}>{plan.description}</Text>
-              <Text style={styles.planAmount}>
-                {plan.subscriptionPrice} &#8377;
-              </Text>
-              <View style={styles.buyButton}>
-                <Text style={styles.buyButtonText}>Buy Now</Text>
+        <TouchableOpacity onPress={() => setModalVisible(true)}>
+          <Image source={selectedAvatar ? selectedAvatar.uri : require('../assets/my-yt.png')} style={styles.profileImage} />
+        </TouchableOpacity>
+        <Modal visible={isModalVisible} animationType="slide" transparent={true}>
+          <View style={styles.modalBackground}>
+            <View style={styles.modalContainer}>
+              <FlatList
+                data={avatarOptions[gender]}
+                renderItem={renderAvatarItem}
+                keyExtractor={(item) => item.name}
+                numColumns={3}
+              />
+              <View style={styles.buttonContainer}>
+                <Button title="Update Avatar" onPress={handleUpdateAvatar} />
               </View>
-            </TouchableOpacity>
-          ))}
+              <View style={styles.buttonContainer}>
+                <Button title="Close" onPress={() => setModalVisible(false)} />
+              </View>
+            </View>
+          </View>
+        </Modal>
+        <Text style={styles.fullNameText}>{`${firstName} ${lastName}`}</Text>
+        <Text style={styles.userNameText}>{userName}</Text>
+        <Text style={styles.userGenderText}>Gender- {gender}</Text>
+        <Text style={styles.userParentFullNameText}>{`Parent- ${userParentFirstName} ${userParentLastName}`}</Text>
+
+        <View style={styles.buttonContainer}>
+          <Button title="Choose New Avatar" onPress={() => setModalVisible(true)} />
         </View>
       </View>
     </View>
@@ -214,13 +201,12 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#f5f5f5',
-    padding: 20,
   },
   card: {
-    backgroundColor: '#54b6f7',
+    backgroundColor: '#3498db',
     borderRadius: 15,
     padding: 20,
-    marginBottom: 20,
+    margin: 20,
     alignItems: 'center',
   },
   profileImage: {
@@ -229,64 +215,56 @@ const styles = StyleSheet.create({
     borderRadius: 65,
     marginBottom: 20,
   },
+  avatarItem: {
+    width: 80,
+    height: 80,
+    borderRadius: 40,
+    margin: 5,
+    borderWidth: 2,
+    borderColor: 'transparent',
+    overflow: 'hidden',
+  },
+  avatarImage: {
+    width: '100%',
+    height: '100%',
+  },
+  selectedAvatar: {
+    borderColor: 'yellow', // Change border color for selected avatar
+  },
+  modalBackground: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)', // Semi-transparent background
+  },
+  modalContainer: {
+    width: '90%',
+    backgroundColor: '#3498db',
+    borderRadius: 15,
+    padding: 20,
+    alignItems: 'center',
+  },
+  userNameText: {
+    color: 'white',
+    fontSize: 18,
+  },
+  userGenderText: {
+    color: 'white',
+    fontSize: 18,
+  },
   fullNameText: {
     color: 'white',
     fontSize: 24,
     fontWeight: 'bold',
     marginBottom: 10,
   },
-  title: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    marginBottom: 10,
-  },
-  plansContainer: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent: 'space-between',
-  },
-  planCard: {
-    backgroundColor: '#fff',
-    borderRadius: 10,
-    padding: 15,
-    marginBottom: 15,
-    width: '48%',
-    height: 250,
-    justifyContent: 'space-between',
-    alignItems: 'center', // Align items in the center vertically
-    borderWidth: 1,
-  },
-  planType: {
+  userParentFullNameText: {
+    color: 'white',
     fontSize: 18,
-    fontWeight: 'bold',
-    marginBottom: 5,
   },
-  planDescription: {
-    fontSize: 14,
-    marginBottom: 5,
-    color: '#333',
-    textAlign: 'center', // Center align text
-  },
-  planAmount: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    color: '#007bff',
-    textAlign: 'center', // Center align text
-  },
-  buyButton: {
-    backgroundColor: '#007bff',
-    borderRadius: 5,
-    padding: 10,
-    alignItems: 'center',
-  },
-  buyButtonText: {
-    color: '#fff',
-    fontSize: 16,
-    fontWeight: 'bold',
-  },
-  subscriptionDetails: {
-    marginTop: 20,
+  buttonContainer: {
+    marginTop: 10, // Adjusted margin
   },
 });
 
-export default ParentProfileScreen;
+export default ProfileScreen;
