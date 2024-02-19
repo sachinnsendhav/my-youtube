@@ -186,13 +186,16 @@ const handleSubscriptionPurchase = async (amount, subscriptionId, planName) => {
         style={styles.profileImage}
       />
       <Text style={styles.fullNameText}>{`${userParentFirstName} ${userParentLastName}`}</Text>
-      {subscriptionDetails && (
-        <View style={styles.subscriptionDetailsContainer}>
-          <Text style={styles.subscriptionDetailsText}>Current Plan: {subscriptionDetails.subscriptionType}</Text>
-          <Text style={styles.subscriptionDetailsText}>Subscription Date: {new Date(subscriptionDetails.subscriptionDate).toDateString()}</Text>
-          <Text style={styles.subscriptionDetailsText}>Expiration Date: {new Date(subscriptionDetails.expirationDate).toDateString()}</Text>
-        </View>
-      )}
+{subscriptionDetails && subscriptionDetails.subscriptionType ? (
+  <View style={styles.subscriptionDetailsContainer}>
+    <Text style={styles.subscriptionDetailsText}>Current Plan: {subscriptionDetails.subscriptionType.toUpperCase()}</Text>
+    <Text style={styles.subscriptionDetailsText}>Subscription Date: {new Date(subscriptionDetails.subscriptionDate).toDateString()}</Text>
+    <Text style={styles.subscriptionDetailsText}>Expiration Date: {new Date(subscriptionDetails.expirationDate).toDateString()}</Text>
+  </View>
+) : (
+  <Text style={styles.subscriptionDetailsText}>No Active Plan</Text>
+)}
+
     </View>
       <View style={{marginTop: 1}}>
         <Text style={styles.title}>Subscription Plans</Text>
