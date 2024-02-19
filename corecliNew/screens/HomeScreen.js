@@ -27,7 +27,7 @@ const HomeScreen = () => {
       if (Array.isArray(parsedPlayList)) {
         const videoPromises = parsedPlayList.map(async (playlistItem) => {
           try {
-            const response = await fetch(`http://173.214.174.234:3005/api/video/getData/${playlistItem._id}`);
+            const response = await fetch(`http://192.168.153.204:3005/api/video/getData/${playlistItem._id}`);
             const data = await response.json();
 
             if (data.status === 200 && Array.isArray(data.data.video) && data.data.video.length > 0) {

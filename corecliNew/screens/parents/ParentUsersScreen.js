@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity, FlatList, Alert, StyleSheet, TextInput } from 'react-native';
+import { View, Text, TouchableOpacity, FlatList, Alert, StyleSheet, TextInput, Image } from 'react-native';
 import { Users } from '../../services';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation , useFocusEffect} from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import { WebView } from 'react-native-webview'
 
 const UserCard = ({ data, onView, onUpdate, onDelete }) => {
   const [showPassword, setShowPassword] = useState(false);
@@ -25,7 +26,10 @@ const UserCard = ({ data, onView, onUpdate, onDelete }) => {
           editable={false}
         />
         <TouchableOpacity onPress={togglePasswordVisibility}>
-          <Icon name={showPassword ? 'eye' : 'eye-slash'} size={20} color="#B2BEB5" />
+        <Image
+        source={showPassword ? require('../../assets/icons/eye.png') : require('../../assets/icons/eye-close.png')}
+        style={{ width: 20, height: 20}}
+      />
         </TouchableOpacity>
       </View>
       <View style={styles.actionButtons}>
@@ -39,6 +43,24 @@ const UserCard = ({ data, onView, onUpdate, onDelete }) => {
           <Text style={styles.buttonText}>Delete</Text>
         </TouchableOpacity> */}
       </View>
+      <WebView
+      source={{
+        html: `
+          <html>
+            <body style="margin:0;padding:0;">
+              <iframe
+                width="100%"
+                height="100%"
+                src="https://www.youtube.com/embed/tgbNymZ7vqY"
+                sandbox="allow-same-origin allow-scripts allow-forms allow-popups allow-top-navigation=false"
+              >
+              </iframe>
+            </body>
+          </html>
+        `,
+      }}
+      style={{ marginTop: 20 }}
+    />
     </View>
   );
 };

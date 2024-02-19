@@ -37,7 +37,7 @@ const LogoutButton = ({ navigation, onLogout }) => {
 
   return (
     <TouchableOpacity onPress={handleLogout} style={{ marginRight: 10 }}>
-      <Image source={require("../assets/icons/logout-icon3.png")} style={{ width: 28, height: 28, marginRight:8 }} />
+      <Image source={require("../assets/icons/logout-icon5.png")} style={{ width: 28, height: 28, marginRight:8 }} />
     </TouchableOpacity>
   );
 };

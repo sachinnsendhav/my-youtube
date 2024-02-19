@@ -65,7 +65,7 @@ const ProfileScreen = () => {
 
   const fetchDefaultAvatar = async () => {
     try {
-      const getUserApiUrl = `http://173.214.174.234:3005/api/getUserType/${userObjectId}`;
+      const getUserApiUrl = `http://192.168.153.204:3005/api/getUserType/${userObjectId}`;
       const response = await fetch(getUserApiUrl);
   
       if (!response.ok) {
@@ -115,7 +115,7 @@ const ProfileScreen = () => {
 
   const handleUpdateAvatar = async () => {
     if (selectedAvatarInModal) {
-      const apiUrl = `http://173.214.174.234:3005/api/userType/updateDetails/${userObjectId}`;
+      const apiUrl = `http://192.168.153.204:3005/api/userType/updateDetails/${userObjectId}`;
       const updateData = {
         avatar: selectedAvatarInModal.name,
       };

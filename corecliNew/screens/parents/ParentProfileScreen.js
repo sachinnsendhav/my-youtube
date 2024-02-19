@@ -1,94 +1,174 @@
-import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, Image, TouchableOpacity, Alert } from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {
+  View,
+  Text,
+  StyleSheet,
+  Image,
+  TouchableOpacity,
+  Alert,
+} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import RazorpayCheckout from 'react-native-razorpay';
-import { Subscription } from '../../services'; // Assuming this is the file where you exported your Subscription service
+import {Subscription} from '../../services'; // Assuming this is the file where you exported your Subscription service
+import axios from 'axios'
 
 const ParentProfileScreen = () => {
   const [userParentFirstName, setUserParentFirstName] = useState('');
   const [userParentLastName, setUserParentLastName] = useState('');
   const [subscriptionPlans, setSubscriptionPlans] = useState([]);
+  const [parentPhoneNumber, setParentPhoneNumber] = useState('');
+  const [parentEmail, setParentEmail] = useState('');
 
   useEffect(() => {
     const fetchData = async () => {
-      const asyncUserParentFirstName = await AsyncStorage.getItem('userParentFirstName');
-      const asyncUserParentLastName = await AsyncStorage.getItem('userParentLastName');
+      const asyncUserParentFirstName = await AsyncStorage.getItem(
+        'userParentFirstName',
+      );
+      const asyncUserParentLastName = await AsyncStorage.getItem(
+        'userParentLastName',
+      );
+
 
       setUserParentFirstName(asyncUserParentFirstName || '');
       setUserParentLastName(asyncUserParentLastName || '');
 
       const token = await AsyncStorage.getItem('token');
-      const subscriptionPlansResponse = await Subscription.getSubscriptionPlans(token);
+      const subscriptionPlansResponse = await Subscription.getSubscriptionPlans(
+        token,
+      );
       const plans = subscriptionPlansResponse.data || [];
       setSubscriptionPlans(plans);
     };
     fetchData();
   }, []);
 
-  const handleSubscriptionPurchase = async (amount, subscriptionId) => {
-    try {
-      const token = await AsyncStorage.getItem('token');
-  
+
+// This function generates a random orderId
+const generateOrderId = () => {
+  return "MYT" + Math.floor(Math.random() * Math.floor(Math.random() * Date.now()));
+};
+
+
+const handleSubscriptionPurchase = async (amount, subscriptionId, planName) => {
+  try {
+    const token = await AsyncStorage.getItem('token');
+    let parentEmail = '';
+    let parentPhoneNumber = '';
+
+    const asyncUserParentPhoneNumber = await AsyncStorage.getItem('userParentPhoneNumber');
+    const asyncUserParentEmail = await AsyncStorage.getItem('userParentEmail');
+
+    if (asyncUserParentPhoneNumber) {
+      parentPhoneNumber = asyncUserParentPhoneNumber;
+    }
+
+    if (asyncUserParentEmail) {
+      parentEmail = asyncUserParentEmail;
+    }
+
+    console.log(parentPhoneNumber, 'parentPhoneNumber');
+    console.log(parentEmail, 'parentEmail');
+
+    const orderId = generateOrderId();
+
+    const paymentRes = {
+      order_id: orderId,
+      amount: amount,
+      currency: 'INR',
+      receipt: orderId
+    };
+
+    const result = await axios.post('http://192.168.153.204:3005/api/payment/createOrder', paymentRes, {
+      headers: {
+        'Authorization': token
+      }
+    });
+
+    if (!result.data.data) {
+      Alert.alert('Error', 'Some Error Occurred!');
+    } else {
       const options = {
-        description: 'Subscription Plan Purchase',
-        image: 'https://your-image-url.png',
+        description: `Payment Process of ${planName.toUpperCase()} Subscription`,
+        image: 'https://www.flaticon.com/free-icon/play_13710370',
         currency: 'INR',
         key: 'rzp_test_5FcvK0MsUDGkTa',
         amount: amount * 100,
-        name: 'MyYoutube',
+        name: 'Mini Tube',
         prefill: {
-          email: 'test123@gmail.com',
-          contact: '8989786464',
+          email: parentEmail,
+          contact: parentPhoneNumber,
           name: `${userParentFirstName} ${userParentLastName}`,
         },
-        theme: { color: '#800000' },
+        theme: { color: '#1d9cf0' },
+        order_id: result.data.data.id,
+        // Add the following line to handle the payment response
+        payment_success_url: 'your-success-url',
       };
-  
-      RazorpayCheckout.open(options).then(async (data) => {
+
+      RazorpayCheckout.open(options)
+      .then(async (data) => {
+        // Log the data object to see its structure
+        console.log('Razorpay data:', data);
+    
+        // Show a simple alert to test if the code inside the then block is executed
+        Alert.alert('Payment Success', 'Your payment was successful.');
+    
+        // Continue with your logic
         const body = {
           paymentId: data.razorpay_payment_id,
           amount: amount,
           subscriptionId: subscriptionId,
         };
         const result = await Subscription.placeOrder(body, token);
-        console.log(result);
-  
-        // Show success alert
-        Alert.alert('Payment Success', 'Your payment was successful.');
-  
-      }).catch((error) => {
-        console.log(error);
+        console.log(result,"place order result");
+      })
+      .catch((error) => {
+        console.log('Payment failed:', error);
         Alert.alert('Payment Failed', 'Please try again later.');
       });
-    } catch (error) {
-      console.log(error);
-      Alert.alert('Error', 'An error occurred. Please try again later.');
+    
     }
-  };
-  
+  } catch (error) {
+    console.log('Error:', error);
+    Alert.alert('Error', 'An error occurred. Please try again later.');
+  }
+};
+
+
 
   return (
     <View style={styles.container}>
       <View style={styles.card}>
-        <Image source={require('../../assets/my-yt.png')} style={styles.profileImage} />
-        <Text style={styles.fullNameText}>{`${userParentFirstName} ${userParentLastName}`}</Text>
+        <Image
+          source={require('../../assets/my-yt.png')}
+          style={styles.profileImage}
+        />
+        <Text
+          style={
+            styles.fullNameText
+          }>{`${userParentFirstName} ${userParentLastName}`}</Text>
       </View>
-      <Text style={styles.title}>Subscription Plans</Text>
-      <View style={styles.plansContainer}>
-        {subscriptionPlans.map((plan) => (
-          <TouchableOpacity
-            key={plan._id}
-            style={styles.planCard}
-            onPress={() => handleSubscriptionPurchase(plan.subscriptionPrice, plan._id)}
-          >
-            <Text style={styles.planType}>{plan.planType}</Text>
-            <Text style={styles.planDescription}>{plan.description}</Text>
-            <Text style={styles.planAmount}>{plan.subscriptionPrice} &#8377;</Text>
-            <View style={styles.buyButton}>
-              <Text style={styles.buyButtonText}>Buy Now</Text>
-            </View>
-          </TouchableOpacity>
-        ))}
+      <View style={{marginTop: 60}}>
+        <Text style={styles.title}>Subscription Plans</Text>
+        <View style={styles.plansContainer}>
+          {subscriptionPlans.map(plan => (
+            <TouchableOpacity
+              key={plan._id}
+              style={styles.planCard}
+              onPress={() =>
+                handleSubscriptionPurchase(plan.subscriptionPrice, plan._id, plan.planType)
+              }>
+              <Text style={styles.planType}>{plan.planType.toUpperCase()}</Text>
+              <Text style={styles.planDescription}>{plan.description}</Text>
+              <Text style={styles.planAmount}>
+                {plan.subscriptionPrice} &#8377;
+              </Text>
+              <View style={styles.buyButton}>
+                <Text style={styles.buyButtonText}>Buy Now</Text>
+              </View>
+            </TouchableOpacity>
+          ))}
+        </View>
       </View>
     </View>
   );
@@ -137,8 +217,8 @@ const styles = StyleSheet.create({
     width: '48%',
     height: 250,
     justifyContent: 'space-between',
-    borderWidth: 1,
-    borderColor: '#ddd',
+    alignItems: 'center', // Align items in the center vertically
+    borderWidth: 1
   },
   planType: {
     fontSize: 18,
@@ -149,11 +229,13 @@ const styles = StyleSheet.create({
     fontSize: 14,
     marginBottom: 5,
     color: '#333',
+    textAlign: 'center', // Center align text
   },
   planAmount: {
-    fontSize: 16,
+    fontSize: 20,
     fontWeight: 'bold',
     color: '#007bff',
+    textAlign: 'center', // Center align text
   },
   buyButton: {
     backgroundColor: '#007bff',
@@ -169,6 +251,3 @@ const styles = StyleSheet.create({
 });
 
 export default ParentProfileScreen;
-
-
-
