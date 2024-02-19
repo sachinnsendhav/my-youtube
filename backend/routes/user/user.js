@@ -10,8 +10,8 @@ userrouter.patch('/user/updatePassword',auth,usercontroller.updatePassword)
 userrouter.post('/forgetPasswordMail',usercontroller.forgetPassword)
 userrouter.post('/forgetPasswordSave',usercontroller.forgetPasswordSave)
 userrouter.put('/updateUser/:userId',usercontroller.updateUserDetail)
-userrouter.post('/user/addUser', auth, usercontroller.addUsers)
-userrouter.delete('/user/deleteUser/:id', auth, usercontroller.deleteUser);
+userrouter.post('/user/addUser', auth, subscription, usercontroller.addUsers)
+userrouter.delete('/user/deleteUser/:id', auth, subscription, usercontroller.deleteUser);
 userrouter.get('/usersByAdminId',auth,subscription,usercontroller.getAllUserByparentId)
 userrouter.get('/userTypeDetail/:userTypeId',auth,usercontroller.userTypeDetailuserTypeId)
 userrouter.post('/generateOtp',usercontroller.verify)
