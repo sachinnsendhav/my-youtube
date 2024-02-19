@@ -101,11 +101,16 @@ const LoginScreen = ({ onLoginSuccess,setIsLogInScreen }) => {
         const userUserName = response.data.userData.email;
         const userParentFirstName = response.data.userData.firstName;
         const userParentLastName = response.data.userData.lastName;
+        const userParentPhoneNumber = response.data.userData.phoneNumber;
+        const userParentEmail = response.data.userData.email;
         const userRole = response.data.userData.role;
+
 
         await AsyncStorage.setItem("userParentFirstName", userParentFirstName);
         await AsyncStorage.setItem("userUserName", userUserName);
         await AsyncStorage.setItem("userParentLastName", userParentLastName);
+        await AsyncStorage.setItem("userParentPhoneNumber", userParentPhoneNumber.toString());
+        await AsyncStorage.setItem("userParentEmail", userParentEmail);
         await AsyncStorage.setItem("role", userRole);
         await AsyncStorage.setItem("token", response.data.token);
         console.log("response.status", response.status);

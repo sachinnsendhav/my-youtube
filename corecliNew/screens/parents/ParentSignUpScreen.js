@@ -13,6 +13,8 @@ import { useNavigation } from "@react-navigation/native";
 import { Auth } from "../../services";
 import { CheckBox } from "react-native-elements";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import tickImage from "../../assets/icons/tick.png";
+import untickImage from "../../assets/icons/untick.png";
 
 const ParentSignUpScreen = ({ onLoginSuccess, setIsLogInScreen }) => {
   const navigation = useNavigation();
@@ -75,11 +77,15 @@ const ParentSignUpScreen = ({ onLoginSuccess, setIsLogInScreen }) => {
           const userUserName = result.data.userData.email;
           const userParentFirstName = result.data.userData.firstName;
           const userParentLastName = result.data.userData.lastName;
+          const userParentPhoneNumber = result.data.userData.phoneNumber;
+          const userParentEmail = result.data.userData.email;
           const userRole = result.data.userData.role;
   
           await AsyncStorage.setItem("userParentFirstName", userParentFirstName);
           await AsyncStorage.setItem("userUserName", userUserName);
           await AsyncStorage.setItem("userParentLastName", userParentLastName);
+          await AsyncStorage.setItem("userParentPhoneNumber", userParentPhoneNumber.toString());
+          await AsyncStorage.setItem("userParentEmail", userParentEmail);
           await AsyncStorage.setItem("role", userRole);
           await AsyncStorage.setItem("token", result.data.token);
   
@@ -223,23 +229,12 @@ const ParentSignUpScreen = ({ onLoginSuccess, setIsLogInScreen }) => {
             <Text style={styles.loginButtonText}>Send OTP</Text>
           </TouchableOpacity>
 
-          <View
-            style={{
-              flexDirection: "row",
-              alignItems: "center",
-              marginBottom: 10,
-              marginTop: 10,
-            }}
-          >
-            <CheckBox
-              checked={agreedToTerms}
-              onPress={() => setAgreedToTerms(!agreedToTerms)}
-              containerStyle={{ margin: 0, padding: 0 }}
-            />
-            <Text style={{ marginLeft: 8 }}>
-              I agree to the terms and condition
-            </Text>
-          </View>
+          <View style={{ flexDirection: "row", alignItems: "center", marginBottom: 10, marginTop: 10 }}>
+  <TouchableOpacity onPress={() => setAgreedToTerms(!agreedToTerms)} style={{ flexDirection: "row", alignItems: "center" }}>
+    <Image source={agreedToTerms ? tickImage : untickImage} style={{ width: 24, height: 24, marginRight: 8 }} />
+    <Text>I agree to the terms and condition</Text>
+  </TouchableOpacity>
+</View>
 
           <TouchableOpacity
             onPress={() => registerParents()}
