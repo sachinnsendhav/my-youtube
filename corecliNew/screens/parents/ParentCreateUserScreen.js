@@ -3,7 +3,7 @@ import { StyleSheet, Text, View, TextInput, Button, Alert, TouchableOpacity } fr
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Users } from '../../services';
 import { useNavigation } from '@react-navigation/native';
-import Icon from 'react-native-vector-icons/FontAwesome';
+// import Icon from 'react-native-vector-icons/FontAwesome';
 import { RadioButton } from 'react-native-paper';
 
 const ParentCreateUserScreen = () => {
@@ -140,7 +140,10 @@ const ParentCreateUserScreen = () => {
           required // Make password required
         />
         <TouchableOpacity onPress={togglePasswordVisibility} style={styles.eyeIconContainer}>
-          <Icon name={showPassword ? 'eye' : 'eye-slash'} size={20} color="grey" />
+          let iconSource;
+          {/* <Icon name={showPassword ? 'eye' : 'eye-slash'} size={20} color="grey" /> */}
+          iconSource = focused ? require("../assets/icons/profile-icon.png") : require("../assets/icons/profile-icon.png");
+
         </TouchableOpacity>
       </View>
       <Button title="Add User" onPress={handleAddUser} />
