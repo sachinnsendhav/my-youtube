@@ -78,7 +78,10 @@ const ParentCreateUserScreen = () => {
     
       if (error.response.status === 400) {
         Alert.alert('Error while creating', error.response.data.message);
-      } else {
+      }  else if (error.response.status === 406) {
+        Alert.alert('Error while creating', error.response.data.message);
+      }
+      else {
         Alert.alert('Error', 'Failed to add user');
       }
     }
