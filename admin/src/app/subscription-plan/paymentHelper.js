@@ -44,7 +44,7 @@ async function paymentHelper(camount,currency,subscriptionId){
         }
         else{
           let options = {
-            key:'rzp_test_5FcvK0MsUDGkTa',
+            key:process.env.RAZORPAY_KEY_ID,
             currency:result.data.data.currency,
             amount:result.data.data.amount,
             order_id:result.data.data.id,

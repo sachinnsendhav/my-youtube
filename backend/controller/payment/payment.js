@@ -6,8 +6,8 @@ const axios = require('axios');
 exports.createOrder = async (req,res) => {
     try{
         const instance = new Razorpay({
-            key_id: 'rzp_test_E4X7MZfV7Gmaxo',
-            key_secret: 'PUMBXIybnUdPBkycWUITGivF',
+            key_id: process.env.RAZORPAY_KEY_ID,
+            key_secret: process.env.RAZORPAY_SECRET_KEY,
         });
 
         const { amount, currency, reciept } = req.body;
@@ -29,8 +29,8 @@ exports.placeOrder = async (req,res) => {
         const user_id = req.user.paylod._id;
 
         const instance = new Razorpay({
-            key_id: 'rzp_test_E4X7MZfV7Gmaxo',
-            key_secret: 'PUMBXIybnUdPBkycWUITGivF',
+            key_id: process.env.RAZORPAY_KEY_ID,
+            key_secret: process.env.RAZORPAY_SECRET_KEY,
         });
 
         // const data = req.body.userData;
@@ -67,7 +67,7 @@ exports.payments = async (req,res) => {
         let config = {
         maxBodyLength: Infinity,
         headers: {
-            'Authorization': 'Basic cnpwX3Rlc3RfRTRYN01aZlY3R21heG86UFVNQlhJeWJuVWRQQmt5Y1dVSVRHaXZG',
+            'Authorization': `Basic ${process.env.RAZORPAY_TOKEN}`,
             'Access-Control-Allow-Origin': '*'
         }
         };
