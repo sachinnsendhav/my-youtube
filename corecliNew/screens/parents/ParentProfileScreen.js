@@ -122,10 +122,11 @@ const handleSubscriptionPurchase = async (amount, subscriptionId, planName) => {
         description: `Payment Process of ${planName.toUpperCase()} Subscription`,
         image: 'https://www.flaticon.com/free-icon/play_13710370',
         currency: 'INR',
-        key: 'rzp_test_E4X7MZfV7Gmaxo',
+        key: 'rzp_live_cyn3ljb7sMpJoR',
         amount: amount * 100,
         name: 'Mini Tube',
         prefill: {
+          contact:" ",
           email: parentEmail,
           name: `${userParentFirstName} ${userParentLastName}`,
         },

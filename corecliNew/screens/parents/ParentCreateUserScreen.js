@@ -76,8 +76,8 @@ const ParentCreateUserScreen = () => {
     } catch (error) {
       console.error('Error creating user data:', error);
     
-      if (error.response.status === 403) {
-        Alert.alert('Error', error.response.data.message);
+      if (error.response.status === 400) {
+        Alert.alert('Error while creating', error.response.data.message);
       } else {
         Alert.alert('Error', 'Failed to add user');
       }

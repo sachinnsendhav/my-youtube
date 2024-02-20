@@ -52,8 +52,13 @@ const ParentPlaylistScreen = () => {
       setPlaylist(response.data);
       console.log(playlist,"playlist me set hua kya ")
     } catch (error) {
-      console.error('Error fetching playlist data:', error);
-      Alert.alert('Error', 'Failed to fetch playlist data');
+      
+      if (error.response.status === 400){
+        Alert.alert('Errorssss', error.response.data.message);
+      } else{
+        console.error('Error fetching playlist data:', error);
+        Alert.alert('Error', 'Failed to fetch playlist data');
+      }
     }
   };
 
