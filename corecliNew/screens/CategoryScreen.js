@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { View, Text, FlatList, StyleSheet, TouchableOpacity, Linking, RefreshControl } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import YoutubePlayer from 'react-native-youtube-iframe';
+import { config } from '../config';
 
 const CategoryScreen = () => {
   const [playlistData, setPlaylistData] = useState([]);
@@ -13,7 +14,7 @@ const CategoryScreen = () => {
     const gettingUserId = await AsyncStorage.getItem("userObjectId");
 
     try {
-      const response = await fetch(`http://192.168.153.204:3005/api/playlist/getUserPlaylist/${gettingUserId}`);
+      const response = await fetch(`${config.cli.url}/api/playlist/getUserPlaylist/${gettingUserId}`);
       const data = await response.json();
       setPlaylistData(data.data);
     } catch (error) {
@@ -24,7 +25,7 @@ const CategoryScreen = () => {
   const fetchVideoData = async () => {
     if (selectedPlaylistItem) {
       try {
-        const response = await fetch(`http://192.168.153.204:3005/api/video/getData/${selectedPlaylistItem._id}`);
+        const response = await fetch(`${config.cli.url}/api/video/getData/${selectedPlaylistItem._id}`);
         const data = await response.json();
         setVideoData(data.data.video);
       } catch (error) {

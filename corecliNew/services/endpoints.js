@@ -1,7 +1,11 @@
-const url = 'http://192.168.153.204:3005'
+import { config } from '../config';
+
+
+const url = config.cli.url;
 // const BASE_URL = 'https://youtube-v31.p.rapidapi.com';
-const BASE_URL = 'https://youtube.googleapis.com/youtube/v3';
-const API_KEY = 'AIzaSyAcPNJtBXci-Wg7MHNEkLf_9fVZS1sj5ms'
+const BASE_URL = config.cli.base_url;
+const API_KEY = config.cli.api_key;
+
 export const endpoints = {
   auth: {
     login: `${url}/api/user/login`, //admin,,,,parent

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, Image, Button, Modal, FlatList, TouchableOpacity, Alert } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
+import { config } from '../config';
 
 const avatarOptions = {
   male: [
@@ -65,7 +65,7 @@ const ProfileScreen = () => {
 
   const fetchDefaultAvatar = async () => {
     try {
-      const getUserApiUrl = `http://192.168.153.204:3005/api/getUserType/${userObjectId}`;
+      const getUserApiUrl = `${config.cli.url}/api/getUserType/${userObjectId}`;
       const response = await fetch(getUserApiUrl);
   
       if (!response.ok) {
@@ -115,7 +115,7 @@ const ProfileScreen = () => {
 
   const handleUpdateAvatar = async () => {
     if (selectedAvatarInModal) {
-      const apiUrl = `http://192.168.153.204:3005/api/userType/updateDetails/${userObjectId}`;
+      const apiUrl = `${config.cli.url}/api/userType/updateDetails/${userObjectId}`;
       const updateData = {
         avatar: selectedAvatarInModal.name,
       };

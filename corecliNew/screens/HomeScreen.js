@@ -3,6 +3,7 @@ import { View, StyleSheet, ScrollView, TouchableWithoutFeedback, Dimensions, Ref
 import { Card, Title } from 'react-native-paper';
 import YoutubePlayer from 'react-native-youtube-iframe';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { config } from '../config';
 
 const HomeScreen = () => {
   const [youtubeVideoId, setYoutubeVideoId] = useState(null);
@@ -27,7 +28,7 @@ const HomeScreen = () => {
       if (Array.isArray(parsedPlayList)) {
         const videoPromises = parsedPlayList.map(async (playlistItem) => {
           try {
-            const response = await fetch(`http://192.168.153.204:3005/api/video/getData/${playlistItem._id}`);
+            const response = await fetch(`${config.cli.url}/api/video/getData/${playlistItem._id}`);
             const data = await response.json();
 
             if (data.status === 200 && Array.isArray(data.data.video) && data.data.video.length > 0) {
