@@ -127,7 +127,6 @@ const handleSubscriptionPurchase = async (amount, subscriptionId, planName) => {
         name: 'Mini Tube',
         prefill: {
           email: parentEmail,
-          contact: parentPhoneNumber,
           name: `${userParentFirstName} ${userParentLastName}`,
         },
         theme: { color: '#1d9cf0' },

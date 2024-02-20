@@ -4,7 +4,6 @@ import { Users } from '../../services';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation , useFocusEffect} from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import { WebView } from 'react-native-webview'
 
 const UserCard = ({ data, onView, onUpdate, onDelete }) => {
   const [showPassword, setShowPassword] = useState(false);
@@ -43,24 +42,6 @@ const UserCard = ({ data, onView, onUpdate, onDelete }) => {
           <Text style={styles.buttonText}>Delete</Text>
         </TouchableOpacity> */}
       </View>
-      <WebView
-      source={{
-        html: `
-          <html>
-            <body style="margin:0;padding:0;">
-              <iframe
-                width="100%"
-                height="100%"
-                src="https://www.youtube.com/embed/tgbNymZ7vqY"
-                sandbox="allow-same-origin allow-scripts allow-forms allow-popups allow-top-navigation=false"
-              >
-              </iframe>
-            </body>
-          </html>
-        `,
-      }}
-      style={{ marginTop: 20 }}
-    />
     </View>
   );
 };
@@ -85,8 +66,12 @@ const ParentUsersScreen = ({ navigation }) => {
       const response = await Users.getAllUSerByParents(token);
       setUser(response.data);
     } catch (error) {
-      console.error('Error fetching user data:', error);
-      Alert.alert('Error', 'Failed to fetch user data');
+      if (error.response.status === 400){
+        Alert.alert('Error', error.response.data.message);
+      } else{
+        console.error('Error fetching user data:', error);
+        Alert.alert('Error', 'Failed to fetch user data');
+      }
     }
   };
 
