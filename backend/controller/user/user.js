@@ -216,9 +216,9 @@ exports.addUsers = async(req,res) => {
 
         try{
             const userCount = await subscriptionplanhelper(req.user.paylod._id);
-
+            const check_data = await User.findById({_id:req.user.paylod._id});
             // Check the user's subscription plan to determine the maximum number of users they can create
-            if (userCount.userTypeLength >= 2 && userCount.planType === 'individual' || userCount.userTypeLength >= 2 && !req.user.paylod.subscription) {
+            if (userCount.userTypeLength >= 2 && userCount.planType === 'individual' || userCount.userTypeLength >= 2 && !check_data.subscription) {
                 return res.status(403).send({ status: 403, message: "You have reached the maximum number of users allowed for your plan." });
             } else if (userCount.userTypeLength >= 5 && userCount.planType === 'family') {
                 return res.status(403).send({ status: 403, message: "You have reached the maximum number of users allowed for your plan." });
