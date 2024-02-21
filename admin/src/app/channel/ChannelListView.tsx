@@ -57,9 +57,7 @@ function ChannelListView() {
                                                         <th className="p-2 whitespace-nowrap">
                                                             <div className="font-semibold text-left text-lg">Name</div>
                                                         </th>
-                                                        {/* <th className="p-2 whitespace-nowrap">
-                                                            <div className="font-semibold text-left text-lg">Video</div>
-                                                        </th> */}
+                                                        
                                                         <th className="p-2 whitespace-nowrap">
                                                             <div className="font-semibold text-center text-lg">Action</div>
                                                         </th>
@@ -84,56 +82,17 @@ function ChannelListView() {
                                                                     {item.channelName}
                                                                 </div>
                                                             </td>
-                                                            {/* <td className="p-2 whitespace-nowrap">
-                                                                <div className="text-left font-medium text-green-500">
-                                                                    {item.videoCount}
-                                                                </div>
-                                                            </td> */}
+                                                        
                                                             <td className="text-xs flex justify-center items-center h-full pt-4">
-                                                                {/* <Link href={`/playlist/view/${item?._id}`}>
-                                <FaEye className="text-lg cursor-pointer text-gray-600 mr-5" />
-                              </Link> */}
-                                                                {/* <Link href={`/playlist/update/${item?._id}`}>
-                                                                    <FaEdit className="text-lg cursor-pointer text-gray-600" />
-                                                                </Link> */}
+                                                               
                                                                 <MdDelete className="text-lg cursor-pointer text-gray-600 ml-5"
-                                                                //   onClick={() => DeletePlaylist(item?._id)} 
                                                                 />
                                                             </td>
                                                         </tr>
                                                     ))}
                                                 </tbody>
                                             </table>
-                                            {/* <div className="flex justify-center mt-4">
-                      <button
-                        className={`px-3 py-1 mx-1 ${currentPage === 1 && 'bg-gray-300 cursor-not-allowed'
-                          }`}
-                        onClick={() => handlePageChange(currentPage - 1)}
-                        disabled={currentPage === 1}
-                      >
-                        Previous
-                      </button>
-                      <div className="flex space-x-2">
-                        {Array.from({ length: pageCount }).map((_, index) => (
-                          <button
-                            key={index}
-                            className={`px-3 py-1 ${currentPage === index + 1 && 'bg-blue-500 text-white'
-                              }`}
-                            onClick={() => handlePageChange(index + 1)}
-                          >
-                            {index + 1}
-                          </button>
-                        ))}
-                      </div>
-                      <button
-                        className={`px-3 py-1 mx-1 ${currentPage === pageCount && 'bg-gray-300 cursor-not-allowed'
-                          }`}
-                        onClick={() => handlePageChange(currentPage + 1)}
-                        disabled={currentPage === pageCount}
-                      >
-                        Next
-                      </button>
-                    </div> */}
+                              
                                         </div>
                                     }
                                 </div>
