@@ -1,6 +1,6 @@
 'use client'
 import { Header, Sidenav, Title } from '@/app/components'
-import { Playlist, Users } from '@/services';
+import { Channel, Playlist, Users } from '@/services';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react'
@@ -14,11 +14,13 @@ function UpdateUser({ id }: any) {
   const [playlist, setPlaylist] = useState<any>([])
   const [playlistIds, setPlaylistIds] = useState([])
   const [userData, setUserData] = useState<any>()
+  const [channelList, setChannelList] = useState<any>([])
   const [loading, setLoading] = useState(false)
   const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
   useEffect(() => {
     getPlaylist()
     getUserDetails(id)
+    getChannelList()
   }, [id])
 
   useEffect(() => {
@@ -87,6 +89,36 @@ function UpdateUser({ id }: any) {
       }
     }
   }
+  const getChannelList = async () => {
+    setLoading(true)
+    try {
+      const result: any = await Channel.getChannelList(token)
+      console.log(result)
+      setChannelList(result?.data)
+    } catch (err: any) {
+      if (err.response.data.message === 'Unauthorized') {
+        router.push('/auth/signin');
+      }
+      console.error(err, 'error')
+    }
+    setLoading(false)
+  }
+  const alotChannelToUser = async (channelName: string, channelId: string) => {
+    try {
+      const data = {
+        channelName: channelName,
+        channelId: channelId
+      }
+      const result: any = await Channel.alotChannelToUser(token, id, data)
+      getUserDetails(id)
+      alert('Channel added')
+    } catch (err: any) {
+      if (err.response.data.message === 'Unauthorized') {
+        router.push('/auth/signin');
+      }
+      console.error(err, 'error')
+    }
+  }
   return (
     <div className="flex bg-gray-200">
       <Sidenav isDrowerOn={isDrowerOn} menu={menu} setMenu={setMenu} />
@@ -119,38 +151,65 @@ function UpdateUser({ id }: any) {
                   <input readOnly value={userData?.password} type='text' className='w-full text-black pl-3  h-10 border border-gray-300' />
                 </div>
               </div>
-              <p className='text-md py-1 text-gray-600'>Playlsits</p>
-              <div className='flex py-2'>
-                {playlistIds.map((item: any) => {
-                  return (
-                    <div className='bg-pink-600 mx-2 text-white flex rounded'>
-                      <Link href={`/playlist/view/${item._id}`}>
-                        <p className='text-md px-2 py-1'>{item?.name}</p></Link>
-                      <div className='px-2 bg-pink-700 rounded-r cursor-pointer' onClick={() => removePlaylistFromUser(item._id)} >
-                        <MdDelete className='mt-2 text-sm mx-1 ' />
-                      </div>
-                    </div>
-                  )
-                })}
-              </div>
-            </div>
-            <p className='py-2 px-5 bg-zinc-200 text-gray-600 font-semibold'>Assign playlist</p>
-            <div className='flex py-3'>
-              {playlist?.map((item: any) => {
-                return (
-                  <div className='bg-pink-600 mx-2 text-white flex rounded'>
-                    <Link href={`/playlist/view/${item._id}`}>
-                      <p className='px-2 py-1'>{item.name}</p>
-                    </Link>
-                    {item.exisit ? '' :
-                      <div className='px-2 bg-pink-700 rounded-r cursor-pointer' onClick={() => alotPlaylistToUser(item._id)}>
-                        <FaPlus className='mt-2 text-sm mx-1 ' />
 
+            </div>
+            <div className='grid grid-cols-12'>
+              <div className='col-span-6'>
+                <p className='text-md py-1 text-gray-600'>Playlist</p>
+                <div className='flex py-2'>
+                  {playlistIds.map((item: any) => {
+                    return (
+                      <div className='bg-pink-600 mx-2 text-white flex rounded'>
+                        <Link href={`/playlist/view/${item._id}`}>
+                          <p className='text-md px-2 py-1'>{item?.name}</p></Link>
+                        <div className='px-2 bg-pink-700 rounded-r cursor-pointer' onClick={() => removePlaylistFromUser(item._id)} >
+                          <MdDelete className='mt-2 text-sm mx-1 ' />
+                        </div>
                       </div>
-                    }
-                  </div>
-                )
-              })}
+                    )
+                  })}
+                </div>
+                <p className='py-2 px-5 bg-zinc-200 text-gray-600 font-semibold'>Assign playlist</p>
+                <div className='flex py-3'>
+                  {playlist?.map((item: any) => {
+                    return (
+                      <div className='bg-pink-600 mx-2 text-white flex rounded'>
+                        <Link href={`/playlist/view/${item._id}`}>
+                          <p className='px-2 py-1'>{item.name}</p>
+                        </Link>
+                        {item.exisit ? '' :
+                          <div className='px-2 bg-pink-700 rounded-r cursor-pointer' onClick={() => alotPlaylistToUser(item._id)}>
+                            <FaPlus className='mt-2 text-sm mx-1 ' />
+
+                          </div>
+                        }
+                      </div>
+                    )
+                  })}
+                </div>
+              </div>
+              <div className='col-span-6'>
+                <p className='text-md py-1 text-gray-600'>Channel List</p>
+                <div className='flex py-2'>
+                  {channelList?.map((item: any) => {
+                    return (
+                      <div className='bg-pink-600 mx-2 text-white flex rounded'>
+                        {/* <Link href={`/playlist/view/${item._id}`}> */}
+                        <p className='px-2 py-1'>{item.channelName}</p>
+                        {/* </Link> */}
+                        {/* {item.exisit ? '' : */}
+                        <div className='px-2 bg-pink-700 rounded-r cursor-pointer'
+                        onClick={() => alotChannelToUser(item.channelName, item.channelId)}
+                        >
+                          <FaPlus className='mt-2 text-sm mx-1 ' />
+
+                        </div>
+                        {/* } */}
+                      </div>
+                    )
+                  })}
+                </div>
+              </div>
             </div>
           </div>
         </div>

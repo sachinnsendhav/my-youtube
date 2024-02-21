@@ -1,6 +1,6 @@
 "use client"
 import { useEffect, useState } from 'react'
-import { Header, Title } from './index'
+import { Button, Header, Title } from './index'
 import Sidenav from './Sidenav'
 import { FaSearch } from 'react-icons/fa'
 import { YoutubeApi } from '@/services'
@@ -40,18 +40,28 @@ function Dashboard() {
                 <div className='grid grid-cols-12 bg-white mx-5 mb-5 px-3 rounded shadow-xl'>
                     {videos?.map((item: any) => {
                         return (
-                            item?.id?.videoId &&
-                            <div className='col-span-3 text-black p-1'>
-                                <Link href={`video/${item?.id?.videoId}`}>
-                                    <div className='border border-gray-200'>
-                                        <img src={item?.snippet?.thumbnails?.medium?.url} className='w-full h-28 object-cover' />
-                                        <div className='py-1 px-2'>
-                                            <p className='line-clamp-2 text-xs text-gray-500'>{item?.snippet?.title}</p>
-                                            <p className='line-clamp-1 text-sm text-gray-700'>{item?.snippet?.channelTitle}</p>
+                            item?.id?.videoId ?
+                                <div className='col-span-3 text-black p-1'>
+                                    <Link href={`video/${item?.id?.videoId}`}>
+                                        <div className='border border-gray-200'>
+                                            <img src={item?.snippet?.thumbnails?.medium?.url} className='w-full h-28 object-cover' />
+                                            <div className='py-1 px-2'>
+                                                <p className='line-clamp-2 text-xs text-gray-500'>{item?.snippet?.title}</p>
+                                                <p className='line-clamp-1 text-sm text-gray-700'>{item?.snippet?.channelTitle}</p>
+                                            </div>
                                         </div>
-                                    </div>
-                                </Link>
-                            </div>
+                                    </Link>
+                                </div> :
+                                <div className='col-span-3 text-black p-1 '>
+                                    <Link href={`channel/${item?.id?.channelId}`}>
+                                        <div className='flex justify-center border border-gray-200'>
+                                            <div className=''>
+                                                <img src={item?.snippet?.thumbnails?.default?.url} className='rounded-full h-20' />
+                                                <p className='line-clamp-3 py-2 text-sm text-gray-700'>{item?.snippet?.channelTitle}</p>
+                                            </div>
+                                        </div>
+                                    </Link>
+                                </div>
                         )
                     })}
                 </div>

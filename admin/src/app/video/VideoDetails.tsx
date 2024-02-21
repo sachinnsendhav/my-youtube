@@ -1,11 +1,24 @@
 'use client'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { Button, Header, Sidenav } from '../components'
 import { Playlist, Video, YoutubeApi } from '@/services';
 import ReactPlayer from 'react-player';
 import './video.css'
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import YouTube from 'react-youtube';
+// import videojs from 'video.js';
+// import 'video.js/dist/video-js.css'; // Import video.js styles
+// import '@videojs/http-streaming';
+// import { clpp } from "@castlabs/prestoplay";
+// import "@castlabs/prestoplay/cl.mse";
+// import "@castlabs/prestoplay/cl.dash";
+
+// declare global {
+//   interface Window {
+//     YT: any; // Declare YT object
+//   }
+// }
 
 function VideoDetails({ id }: any) {
   const router = useRouter()
@@ -74,16 +87,171 @@ function VideoDetails({ id }: any) {
       }
     }
   }
+
+  // const videoRef: any = useRef(null);
+
+  // useEffect(() => {
+  //   // Initialize video.js player
+  //   const player = videojs(videoRef?.current, {
+  //     fluid: true, // Make the player responsive
+  //     html5: {
+  //       hls: {
+  //         withCredentials: false // Allow playing YouTube videos without credentials
+  //       }
+  //     },
+  //     sources: [{
+  //       src: 'https://www.youtube.com/watch?v=CUDEVgDeCfI', // YouTube video URL
+  //       type: 'video/youtube'
+  //     }]
+  //   });
+
+  //   return () => {
+  //     // Clean up the player on unmount
+  //     if (player) {
+  //       player.dispose();
+  //     }
+  //   };
+  // }, []);
+
+  // const videoRef:any = useRef(null);
+
+  // useEffect(() => {
+  //   const player:any = new clpp.Player(videoRef.current);
+  //   player.use(clpp.dash.DashComponent);
+
+  //   player.load({
+  //     source: "https://content.players.castlabs.com/demos/clear-segmented/manifest.mpd"
+  //   });
+
+  //   // Clean up function to remove the player when the component unmounts
+  //   return () => {
+  //     player.dispose();
+  //   };
+  // }, []);
+
+
+
+  // const playerRef = useRef(null);
+
+  // useEffect(() => {
+  //   if (window.YT && window.YT.Player) {
+  //     const player = new window.YT.Player(playerRef.current, {
+  //       videoId: 'tgbNymZ7vqY', // YouTube video ID
+  //       width: 420,
+  //       height: 315,
+  //       playerVars: {
+  //         // Additional player options
+  //       },
+  //     });
+  //     return () => player.destroy(); // Cleanup on unmount
+  //   }
+  // }, []);
+
+
+  // const iframeRef = useRef(null);
+
+  // useEffect(() => {
+  //   const iframe: any = iframeRef.current;
+  //   console.log("sbigningd")
+
+  //   if (iframe) {
+  //     console.log("sdifram")
+
+  //     const onLoad = () => {
+  //       console.log("sdonload")
+
+  //       // Access the iframe's contentWindow and document
+  //       const iframeWindow = iframe.contentWindow;
+  //       const iframeDocument = iframeWindow.document;
+
+  //       // Modify the CSS of elements within the iframe
+  //       const iframeBody = iframeDocument.body;
+  //       console.log("sd")
+  //       if (iframeBody) {
+  //         iframeBody.style.backgroundColor = 'lightblue';
+  //         iframeBody.style.color = 'white';
+  //       }
+  //     };
+
+  //     // Add event listener for iframe load
+  //     iframe.addEventListener('load', onLoad);
+
+  //     // Remove event listener on cleanup
+  //     return () => {
+  //       iframe.removeEventListener('load', onLoad);
+  //     };
+  //   }
+  // }, []);
+
+  const playerRef: any = useRef(null);
+
+  useEffect(() => {
+    // Hide YouTube title and controls
+    const player = playerRef.current?.internalPlayer;
+    if (player) {
+      player.getIframe().then((iframe: any) => {
+        if (iframe) {
+          // Hide YouTube title
+          iframe.setAttribute('title', '');
+          // Hide YouTube controls
+          iframe.setAttribute('controls', '0');
+        }
+      });
+    }
+  }, []);
   return (
     <div className="flex bg-gray-200">
       <Sidenav isDrowerOn={isDrowerOn} menu={menu} setMenu={setMenu} />
       <div className='w-full h-screen overflow-y-scroll'>
         <Header setIsDrowerOn={setIsDrowerOn} isDrowerOn={isDrowerOn} />
         <div className='px-5 py-3'>
-          <ReactPlayer
-            url={`https://www.youtube.com/watch?v=${id}`}
+          {/* <iframe  /> */}
+          {/* <video ref={videoRef} id="video" controls></video> */}
+          {/* <iframe
+            ref={iframeRef}
+            width="420"
+            height="315"
+            src="https://www.youtube.com/embed/tgbNymZ7vqY"
+            title="YouTube video player"
+          /> */}
+          {/* <div ref={playerRef}></div> */}
+          {/* <video width="320" height="240" controls>
+            <source src="https://www.youtube.com/embed/tgbNymZ7vqY" type="" />
+            <source src="movie.ogg" type="video/ogg" />
+            Your browser does not support the video tag.
+          </video> */}
+          {/* <YouTube
+            videoId='tgbNymZ7vqY'
+            opts={{
+              playerVars: {
+                origin: window.location.origin, // Set origin to match the website's origin
+                // Add additional player parameters here
+              },
+            }}
+            ref={playerRef}
+          /> */}
+
+          <iframe className="react-player"
+            src={`https://www.youtube.com/embed/${id}`}
+            sandbox="allow-same-origin allow-scripts allow-forms allow-popups allow-top-navigation=false">
+          </iframe>
+
+          {/* <ReactPlayer
+            url={`https://www.youtube.com/embed/${id}`}
             className="react-player"
-            controls={true}
+            // controls={true}
+            controls={false} // Enable custom controls
+            config={{
+              youtube: {
+                playerVars: {
+                  modestbranding: 0, // Hide YouTube logo
+                  rel: 0, // Prevent display of related videos at the end
+                  controls: 0, // Hide player controls
+                  showinfo: 0 // Hide video title and uploader information
+                }
+              }
+            }}
+            
           // pip={true}
           // width="100%"
           // height="100%"
@@ -97,7 +265,7 @@ function VideoDetails({ id }: any) {
           //     },
           //   },
           // }}
-          />
+          /> */}
           <div className='p-2 my-2 border border-gray-600 w-full flex justify-between'>
             <div className='text-gray-600'>
               <p className='text-sm font-semibold'>{videoDetails?.snippet?.title}</p>
@@ -140,6 +308,10 @@ function VideoDetails({ id }: any) {
             }
           </div>
         </div>
+
+        {/* <div data-vjs-player>
+          <video ref={videoRef} className="video-js vjs-big-play-centered" controls></video>
+        </div> */}
       </div>
     </div>
   )
