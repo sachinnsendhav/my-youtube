@@ -3,7 +3,7 @@ import { StyleSheet, Text, View, TextInput, Button, Alert, TouchableOpacity, Ima
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Users } from '../../services';
 import { useNavigation } from '@react-navigation/native';
-import Icon from 'react-native-vector-icons/FontAwesome';
+// import Icon from 'react-native-vector-icons/FontAwesome';
 import { RadioButton } from 'react-native-paper';
 
 const ParentCreateUserScreen = () => {

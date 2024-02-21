@@ -43,5 +43,11 @@ export const endpoints = {
   subscription: {
     getPlans : `${url}/api/subscription/getPlans`,
     placeOrder: `${url}/api/payment/placeOrder`
+  },
+  channel:{
+    addChannel: `${url}/api/channel/addChannel`,
+    getChannelList: `${url}/api/channel/getChannels`,
+    getChannelByUserId: `${url}/api/channel/getChannels`,
+    alotChannelToUser: `${url}/api/channel/allotChannel`,
   }
 }
