@@ -55,10 +55,11 @@ function HomeScreen() {
         <TouchableOpacity
           key={item.id.channelId}
           style={{ flexBasis: '50%', padding: 5 }}
-          // onPress={() =>{console.log("Channel ID:", item.id.channelId); navigation.navigate("Channel", { channelId: item.id.channelId })}}
           onPress={() => {
             console.log("Channel ID:", item.id.channelId);
             navigation.navigate("Channel", { channelId: item.id.channelId });
+            console.log("aaaa ID:", item.id.channelId);
+
           }}
         >
           <View style={{ borderWidth: 1, borderColor: '#ddd', borderRadius: 8 }}>

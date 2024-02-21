@@ -1,25 +1,27 @@
 import React, { useEffect, useState } from 'react';
 import { View, ScrollView, Text, TouchableOpacity, Image, Alert } from 'react-native';
 import { Button } from 'react-native'; // Assuming you have defined these components
-import { YoutubeApi, Channel } from '../services'; // Assuming you have defined these services
+import { YoutubeApi, Channel } from '../../services'; // Assuming you have defined these services
 import { useNavigation } from '@react-navigation/native';
 
-function ChannelVideos({ channelId,id }) {
+function ChannelVideos({ route,id }) {
+    console.log(route.params.channelId,"route")
   const navigation = useNavigation();
   const [videos, setVideos] = useState([]);
 
   useEffect(() => {
-    console.log("id dekhi kya",channelId)
-    if (id !== undefined) {
-      getVideosByChannelId(id);
+    console.log("id dekhi kya",route.params.channelId)
+    const YoutubeId = route.params.channelId;
+    if (YoutubeId !== undefined) {
+      getVideosByChannelId(YoutubeId);
     }
-  }, [id]);
+  });
 
-  const getVideosByChannelId = async (id) => {
-    console.log(id,"id mili kya")
-    if (id) {
+  const getVideosByChannelId = async (YoutubeId) => {
+    console.log(YoutubeId,"id mili kya")
+    if (YoutubeId) {
       try {
-        const result = await YoutubeApi.getVideosByChannelId(id);
+        const result = await YoutubeApi.getVideosByChannelId(YoutubeId);
         setVideos(result.items);
         console.log("resrserf", result);
       } catch (err) {
@@ -31,7 +33,7 @@ function ChannelVideos({ channelId,id }) {
   const addChannel = async () => {
     const data = {
       channelName: "name--23jj23-1",
-      channelId: "idfjjfdsfkdjjssd"
+      channelId: "idfjjfdsfkdjjsssssd"
     };
 
     try {
