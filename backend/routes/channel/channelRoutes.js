@@ -7,4 +7,6 @@ channelrouter.post('/channel/addChannel',auth, subscription, channelController.a
 channelrouter.get('/channel/getChannels',auth,channelController.getChannel);
 channelrouter.get('/channel/getChannels/:userTypeId',auth,channelController.getuserTypeChannel);
 channelrouter.post('/channel/allotChannel/:userTypeId',auth,channelController.allotChannel)
+channelrouter.patch('/channel/removeallotedChannel/:userTypeId/:channelId',auth,channelController.removeAllotedChannel)
+channelrouter.delete('/channel/deleteChannel/:channelId',auth,channelController.deleteChannel)
 module.exports = channelrouter;
