@@ -109,13 +109,7 @@ function ParentVideoDetailScreen({ route }) {
 </View>
         {playlist.length > 0 ? (
 <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', padding: 10 }}>
-            {/* <ModalDropdown
-            options={playlist.map(item => item.name)}
-            defaultValue={playlistId ? playlist.find(item => item._id === playlistId)?.name : 'Please Select Playlist'}
-            onSelect={(index, value) => setPlaylistId(playlist[index]._id)}
-            style={{ width: '70%',backgroundColor: 'white', borderRadius: 5, borderWidth: 1, borderColor: '#999', padding: 5 }}
-            textStyle={{ fontSize: 24 }}
-          /> */}
+            
 <Dropdown
           style={[styles.dropdown, isFocus && { borderColor: 'blue' }]}
           placeholderStyle={styles.placeholderStyle}
@@ -147,34 +141,6 @@ function ParentVideoDetailScreen({ route }) {
 </TouchableOpacity>
         )}
 </View>
-      {/* <ScrollView>
-<View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
-          {relatedVideos.map((item) => (
-            item.id.videoId && (
-<TouchableOpacity
-                key={item.id.videoId}
-                onPress={() => navigation.navigate('VideoDetails', { id: item.id.videoId })}
-                style={{ width: '25%', padding: 5 }}
->
-<View style={{ borderWidth: 1, borderColor: '#ddd' }}>
-<Image
-                    source={{ uri: item.snippet.thumbnails.medium.url }}
-                    style={{ width: '100%', height: 100, resizeMode: 'cover' }}
-                  />
-<View style={{ padding: 5 }}>
-<Text numberOfLines={2} style={{ fontSize: 12, color: '#555' }}>
-                      {item.snippet.title}
-</Text>
-<Text numberOfLines={1} style={{ fontSize: 14, fontWeight: 'bold', color: '#333' }}>
-                      {item.snippet.channelTitle}
-</Text>
-</View>
-</View>
-</TouchableOpacity>
-            )
-          ))}
-</View>
-</ScrollView> */}
 </View>
   );
 }

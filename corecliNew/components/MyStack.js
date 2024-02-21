@@ -12,6 +12,7 @@ import ParentUpdateUserScreen from "../screens/parents/ParentUpdateUserScreen"
 import ParentCreateUserScreen from "../screens/parents/ParentCreateUserScreen"
 import ParentCreatePlaylistScreen from "../screens/parents/ParentCreatePlaylistScreen"
 import ParentSignUpScreen from "../screens/parents/ParentSignUpScreen";
+import ParentChannelScreen from '../screens/parents/ParentChannelScreen';
  
 const Stack = createNativeStackNavigator();
  
@@ -32,6 +33,7 @@ const MyStack = ({ onLogout }) => {
       <Stack.Screen name="Update" component={ParentUpdateScreen} />
       <Stack.Screen name="Login" component={LoginScreen} />
       <Stack.Screen name="Sign UP" component={ParentSignUpScreen}/>
+      <Stack.Screen name="Channel" component={ParentChannelScreen}/>
     </Stack.Navigator>
   );
 };
