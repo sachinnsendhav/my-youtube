@@ -244,7 +244,7 @@ exports.addUsers = async(req,res) => {
     catch(error){
         console.log("useres are",error);
         if(error.code &&error.code===11000 ){
-            return res.status(406).json({ message:"Username is already exist" })
+            return res.status(406).json({ message:"UserName is already exist" })
         }
         return res.status(400).send( { status:400, message:error.message } );
     }
