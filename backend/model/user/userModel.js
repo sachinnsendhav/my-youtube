@@ -52,6 +52,25 @@ const userSchema = new mongoose.Schema({
     token:{
         type:String,
         default:''
+    },
+    createdAt:{
+        type : Date,
+        default : Date.now,
+        required : true
+    },
+    subscription:{
+        type : Date,
+    },
+    expirationDate:{
+        type: Date,
+    },
+    subscriptionType:{
+        subscriptionId : {
+            type : mongoose.Schema.Types.ObjectId
+        },
+        planType : {
+            type : String
+        }
     }
 });
 

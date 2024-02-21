@@ -1,12 +1,13 @@
-// const User = require('../../model/userModel');
+const User = require('../../model/user/userModel');
+const SubscriptionPlan = require('../../model/subscriptionplan/subscriptionplan')
 const Razorpay = require("razorpay");
 const axios = require('axios');
 
 exports.createOrder = async (req,res) => {
     try{
         const instance = new Razorpay({
-            key_id: 'rzp_test_5FcvK0MsUDGkTa',
-            key_secret: 'ABFPqRHaOMVGD7KHbsKqDu2M',
+            key_id: process.env.RAZORPAY_KEY_ID,
+            key_secret: process.env.RAZORPAY_SECRET_KEY,
         });
 
         const { amount, currency, reciept } = req.body;
@@ -25,26 +26,33 @@ exports.createOrder = async (req,res) => {
 
 exports.placeOrder = async (req,res) => {
     try{
-        console.log("on place order")
+        const user_id = req.user.paylod._id;
+
         const instance = new Razorpay({
-            key_id: 'rzp_test_5FcvK0MsUDGkTa',
-            key_secret: 'ABFPqRHaOMVGD7KHbsKqDu2M',
+            key_id: process.env.RAZORPAY_KEY_ID,
+            key_secret: process.env.RAZORPAY_SECRET_KEY,
         });
 
         // const data = req.body.userData;
         // const amount_data = Number(req.body.amount).toFixed(0)*0.75;
-        const { paymentId } = req.body;
-        console.group("payment id is", paymentId);
+        const { paymentId, subscriptionId } = req.body;
+        console.group("payment id is", paymentId, subscriptionId);
+
+        const subscriptionData = await SubscriptionPlan.findById({_id:subscriptionId});
+
         const order = await instance.payments.fetch(paymentId);
 
         if(!order){
             return res.status(500).send("Internal Server Error");
         }
 
-        // const user = await User.findById({_id:data.userId});
-        // user.coins = Number(user.coins + amount_data).toFixed(0);
-        // await user.save();
-        // console.log("usersssssssss",user);
+        const subscriptiondate = new Date();
+        const expirationdate = new Date();
+        const month = expirationdate.getMonth()+1;
+        const updated_expiration_date = new Date(expirationdate.setMonth(month));
+
+        const user_data = await User.findByIdAndUpdate({_id:user_id},{subscription:subscriptiondate, expirationDate:updated_expiration_date, subscriptionType:{ subscriptionId:subscriptionData._id, planType:subscriptionData.planType }});
+        console.log("updated userData", user_data);
 
         return res.status(200).send( { data : order } );
     }
@@ -59,7 +67,7 @@ exports.payments = async (req,res) => {
         let config = {
         maxBodyLength: Infinity,
         headers: {
-            'Authorization': 'Basic cnpwX3Rlc3RfNUZjdkswTXNVREdrVGE6QUJGUHFSSGFPTVZHRDdLSGJzS3FEdTJN',
+            'Authorization': `Basic ${process.env.RAZORPAY_TOKEN}`,
             'Access-Control-Allow-Origin': '*'
         }
         };

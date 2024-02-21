@@ -1,7 +1,10 @@
 import axios from 'axios';
 
-async function paymentHelper(camount,currency){
+async function paymentHelper(camount,currency,subscriptionId){
     try{
+        const token = localStorage.getItem('token');
+        console.log("token",token);
+
         const loadScript = (src) => {
             return new Promise((resolve) => {
               const script = document.createElement("script");
@@ -30,22 +33,30 @@ async function paymentHelper(camount,currency){
           receipt : orderId
         };
 
-        let result = await axios.post('http://localhost:3005/api/payment/createOrder',paymentRes);
+        let result = await axios.post('http://localhost:3005/api/payment/createOrder',paymentRes,{
+          headers:{
+            'Authorization':token
+          }
+        });
 
         if(!result.data.data){
           return "Some Error Occured!"
         }
         else{
           let options = {
-            key:'rzp_test_5FcvK0MsUDGkTa',
+            key:process.env.RAZORPAY_KEY_ID,
             currency:result.data.data.currency,
             amount:result.data.data.amount,
             order_id:result.data.data.id,
             name:'MyYoutube',
             description:'Test Transaction',
             handler: async function (response){
-              const body = { paymentId: response.razorpay_payment_id,  amount: camount };
-              const result = await axios.post('http://localhost:3005/api/payment/placeOrder',body);
+              const body = { paymentId: response.razorpay_payment_id, amount: camount, subscriptionId: subscriptionId };
+              const result = await axios.post('http://localhost:3005/api/payment/placeOrder',body,{
+                headers:{
+                  'Authorization':token
+                }
+              });
               console.log("result is", result);
             },
             prefill:{

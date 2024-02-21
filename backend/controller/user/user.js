@@ -8,7 +8,6 @@ const otpGenerator=require('otp-generator')
 const nodemailer = require('nodemailer');
 const sendMail=require('../../middleware/sendmail')
 const express = require('express');
-const mongoose = require('mongoose')
 const app = express();
 const hbs = require("hbs");
 const path = require("path");
@@ -19,6 +18,8 @@ const source = fs.readFileSync(path.join(template_path, 'otp.hbs'), 'utf8');
 const template = hbs.compile(source);
 app.set('view engine', 'hbs')
 app.set('views', template_path)  //for templates files (hbs)
+const subscriptionplanhelper = require('../../helper/subscriptionplan/subscriptionplan');
+const mongoose = require('mongoose');
 
 function issueJwt(paylod){
     const token=jwt.sign({paylod},`my-youtube`,{expiresIn:'15d'})
@@ -46,6 +47,7 @@ exports.signup = async(req,res) => {
         const payload = { firstName, lastName, email, phoneNumber,password, role };
         const user = new User(payload);
         const userData=await user.save();
+        console.log("userdata",userData)
         const token=issueJwt(userData)
         const user_data = {
             firstName: firstName,
@@ -184,7 +186,8 @@ exports.forgetPasswordSave=async(req,res)=>{
 
 exports.updateUserDetail=async(req,res)=>{
     try{
-        const { firstName, lastName, email, phoneNumber} = req.body;
+        const { firstName, lastName, email, phoneNumber } = req.body;
+
         let userExist = await User.findById(req.params.userId)
         if (!userExist) {
             return res.status(404).send( { status:404, message:"User not available", data:'' } );
@@ -194,7 +197,7 @@ exports.updateUserDetail=async(req,res)=>{
         userExist.email=email||userExist.email
         userExist.phoneNumber=phoneNumber|| userExist.phoneNumber
         await userExist.save()
-        res.json({status:201,message:"User Update Successfully",data:userExist})    
+        res.json({status:201,message:"User Update Successfully",data:userExist})
     }catch(error){
         console.error(error)
         return res.status(400).send( { status:400, message:error.message } );
@@ -206,9 +209,37 @@ exports.addUsers = async(req,res) => {
         const { firstName,lastName,userName,password,gender } = req.body;
         const userId = req.user.paylod._id;
         const role = 'user';
-        const usertype = new UserType( { firstName,lastName,userName,password,userId,role,gender } );
-        await usertype.save();
-        return res.status(200).send( { status:200,message:"User Added Successfully", data:{firstName,lastName,userName,gender} } )
+
+        // Start a session to perform the transaction
+        const session = await mongoose.startSession();
+        session.startTransaction();
+
+        try{
+            const userCount = await subscriptionplanhelper(req.user.paylod._id);
+            const check_data = await User.findById({_id:req.user.paylod._id});
+            // Check the user's subscription plan to determine the maximum number of users they can create
+            if (userCount.userTypeLength >= 2 && userCount.planType === 'individual' || userCount.userTypeLength >= 2 && !check_data.subscription) {
+                return res.status(403).send({ status: 403, message: "You have reached the maximum number of users allowed for your plan." });
+            } else if (userCount.userTypeLength >= 5 && userCount.planType === 'family') {
+                return res.status(403).send({ status: 403, message: "You have reached the maximum number of users allowed for your plan." });
+            }
+
+            // Create a new user within the transaction
+            const usertype = new UserType( { firstName,lastName,userName,password,userId,role,gender } );
+            await usertype.save();
+
+            // Commit the transaction
+            await session.commitTransaction();
+            session.endSession({ session });
+
+            return res.status(200).send( { status:200,message:"User Added Successfully", data:{firstName,lastName,userName,gender} } )
+        }
+        catch(error){
+            // If an error occurs, abort the transaction
+            await session.abortTransaction();
+            session.endSession();
+            throw error;
+        }
     }
     catch(error){
         console.log("useres are",error);

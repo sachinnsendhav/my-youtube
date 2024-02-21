@@ -5,3 +5,4 @@ export * as Playlist from './playlistService'
 export * as Channel from './channelService'
 export * as Customers from './customersService'
 export * as Video from './videoService'
+export * as Subscription from './subscriptionService';
