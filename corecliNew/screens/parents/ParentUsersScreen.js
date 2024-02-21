@@ -3,8 +3,8 @@ import { View, Text, TouchableOpacity, FlatList, Alert, StyleSheet, TextInput, I
 import { Users } from '../../services';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation , useFocusEffect} from '@react-navigation/native';
-import Icon from 'react-native-vector-icons/FontAwesome';
-import { WebView } from 'react-native-webview'
+import AntIcon from "react-native-vector-icons/AntDesign";
+import FontAwesome from "react-native-vector-icons/FontAwesome";
 
 const UserCard = ({ data, onView, onUpdate, onDelete }) => {
   const [showPassword, setShowPassword] = useState(false);
@@ -26,44 +26,24 @@ const UserCard = ({ data, onView, onUpdate, onDelete }) => {
           editable={false}
         />
         <TouchableOpacity onPress={togglePasswordVisibility}>
-        <Image
-        source={showPassword ? require('../../assets/icons/eye.png') : require('../../assets/icons/eye-close.png')}
-        style={{ width: 20, height: 20}}
-      />
+          <Image
+            source={showPassword ? require('../../assets/icons/eye.png') : require('../../assets/icons/eye-close.png')}
+            style={{ width: 20, height: 20 }}
+          />
         </TouchableOpacity>
       </View>
       <View style={styles.actionButtons}>
-        {/* <TouchableOpacity onPress={() => onView(data)}>
-          <Text style={styles.buttonText}>View</Text>
-        </TouchableOpacity> */}
         <TouchableOpacity onPress={() => onUpdate(data)}>
-          <Text style={styles.buttonText}>Update</Text>
+        <FontAwesome name="edit" color="black" size={24} />
         </TouchableOpacity>
-        {/* <TouchableOpacity onPress={() => onDelete(data)}>
-          <Text style={styles.buttonText}>Delete</Text>
-        </TouchableOpacity> */}
+        <TouchableOpacity onPress={() => onDelete(data)}>
+        <AntIcon name="delete" color="red" size={23} />
+        </TouchableOpacity>
       </View>
-      <WebView
-      source={{
-        html: `
-          <html>
-            <body style="margin:0;padding:0;">
-              <iframe
-                width="100%"
-                height="100%"
-                src="https://www.youtube.com/embed/tgbNymZ7vqY"
-                sandbox="allow-same-origin allow-scripts allow-forms allow-popups allow-top-navigation=false"
-              >
-              </iframe>
-            </body>
-          </html>
-        `,
-      }}
-      style={{ marginTop: 20 }}
-    />
     </View>
   );
 };
+
 
 const ParentUsersScreen = ({ navigation }) => {
   const [user, setUser] = useState([]);
@@ -85,8 +65,12 @@ const ParentUsersScreen = ({ navigation }) => {
       const response = await Users.getAllUSerByParents(token);
       setUser(response.data);
     } catch (error) {
-      console.error('Error fetching user data:', error);
-      Alert.alert('Error', 'Failed to fetch user data');
+      if (error.response.status === 400){
+        Alert.alert('Error', error.response.data.message);
+      } else{
+        console.error('Error fetching user data:', error);
+        Alert.alert('Error', 'Failed to fetch user data');
+      }
     }
   };
 
@@ -99,7 +83,33 @@ const ParentUsersScreen = ({ navigation }) => {
   };
 
   const handleDelete = (item) => {
-    console.log('Delete:', item);
+    Alert.alert(
+      'Confirm Delete',
+      'Are you sure you want to delete this user?',
+      [
+        {
+          text: 'Cancel',
+          style: 'cancel',
+        },
+        {
+          text: 'Delete',
+          onPress: async () => {
+            const token = await AsyncStorage.getItem('token');
+            try {
+              await Users.deleteUser(token, item._id);
+              const newArray = user.filter((user) => user._id !== item._id);
+              setUser(newArray);
+              Alert.alert('User Deleted',"User deleted from your List Successfuly!");
+            } catch (error) {
+              console.error('Error deleting user:', error);
+              Alert.alert('Error', 'Failed to delete user');
+            }
+          },
+          style: 'destructive',
+        },
+      ],
+      { cancelable: true }
+    );
   };
 
   const handleCreate = () => {

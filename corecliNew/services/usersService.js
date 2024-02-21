@@ -66,10 +66,24 @@ const removePlaylistFromUser = (token, userId, playlistId) =>
             .catch((error) => reject(error)
             );
     });
+    const deleteUser = (token, userId) =>
+    new Promise((resolve, reject) => {
+      axios
+        .delete(`${endpoints.users.deleteUser}/${userId}`, {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: token,
+          },
+        })
+        .then((response) => resolve(response.data))
+        .catch((error) => reject(error));
+    });
+  
 export {
     createUSer,
     getAllUSerByParents,
     getUserDetails,
     alotPlaylistToUser,
-    removePlaylistFromUser
+    removePlaylistFromUser,
+    deleteUser
 }

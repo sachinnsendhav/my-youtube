@@ -3,6 +3,7 @@ import { View, Text, TouchableOpacity, FlatList, Alert, StyleSheet } from 'react
 import { Playlist } from '../../services';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation,useFocusEffect } from '@react-navigation/native';
+import AntIcon from "react-native-vector-icons/AntDesign";
 
 const PlaylistCard = ({ data, onView, onUpdate, onDelete }) => (
   // <Text >Hii guys</Text>
@@ -19,7 +20,7 @@ const PlaylistCard = ({ data, onView, onUpdate, onDelete }) => (
         <Text style={styles.buttonText}>Update</Text>
       </TouchableOpacity> */}
       <TouchableOpacity onPress={() => onDelete(data)}>
-        <Text style={styles.buttonText}>Delete</Text>
+      <AntIcon name="delete" color="red" size={22} />
       </TouchableOpacity>
     </View>
   </View>
@@ -51,8 +52,13 @@ const ParentPlaylistScreen = () => {
       setPlaylist(response.data);
       console.log(playlist,"playlist me set hua kya ")
     } catch (error) {
-      console.error('Error fetching playlist data:', error);
-      Alert.alert('Error', 'Failed to fetch playlist data');
+      
+      if (error.response.status === 400){
+        Alert.alert('Errorssss', error.response.data.message);
+      } else{
+        console.error('Error fetching playlist data:', error);
+        Alert.alert('Error', 'Failed to fetch playlist data');
+      }
     }
   };
 
@@ -74,7 +80,7 @@ const ParentPlaylistScreen = () => {
     await Playlist.deletePlaylist(token,item._id)
     const newArray = playlist.filter((item) => item._id !== id);
         setPlaylist(newArray)
-        Alert.alert('Playlist deleted!')
+        Alert.alert('Playlist Deleted!',`${item.name} deleted from your List Successfully`)
     console.log('Delete:', item);
   };
 

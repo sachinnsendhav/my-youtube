@@ -51,8 +51,12 @@ const ParentCreatePlaylistScreen = () => {
       }
         
       } catch (error) {
-        console.error('Error creating  playlist data:', error);
-        // Alert.alert('Error', 'Failed to fetch playlist data');
+        if (error.response.status === 400){
+          Alert.alert('Error while creating', error.response.data.message);
+        } else{
+          console.error('Error creating  playlist data:', error);
+          // Alert.alert('Error', 'Failed to fetch playlist data');
+        }
       }
 
   };

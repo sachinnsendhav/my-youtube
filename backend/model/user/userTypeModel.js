@@ -51,6 +51,14 @@ const usertypemodel = new mongoose.Schema({
         type : Array,
         default : []
     },
+    channel:[{
+        channelName:{
+            type:"String"
+        },
+        channelId:{
+            type:"String"
+        }
+    }],
     role:{
         type : String,
         required : true,
