@@ -37,7 +37,7 @@ function HomeScreen() {
       <ScrollView contentContainerStyle={{ paddingHorizontal: 5, paddingVertical: 3 }}>
           <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
             {videos?.map((item,index) => (
-             item?.id?.videoId && (
+             item?.id?.videoId ? (
                 <TouchableOpacity
                   key={item.id.videoId}
                   style={{ flexBasis: '50%', padding: 5 }}
@@ -50,8 +50,21 @@ function HomeScreen() {
                       <Text numberOfLines={1} style={{ fontSize: 14, color: '#333', fontWeight: 'bold' }}>{item?.snippet?.channelTitle}</Text>
                     </View>
                   </View>
-                </TouchableOpacity>
-              )
+                </TouchableOpacity> )
+                :  <TouchableOpacity
+                key={item.id.videoId}
+                style={{ flexBasis: '50%', padding: 5 }}
+                onPress={()=>navigation.navigate("Add Video",{ videoId: item.id.videoId })}
+              >
+                <View style={{ borderWidth: 1, borderColor: '#ddd', borderRadius: 8 }}>
+                  <Image source={{ uri: item?.snippet?.thumbnails?.medium?.url }} style={{ width: '100%', height: 100, resizeMode: 'cover' }} />
+                  <View style={{ padding: 6 }}>
+                    <Text numberOfLines={2} style={{ fontSize: 12, color: '#888' }}>{item?.snippet?.title}</Text>
+                    <Text numberOfLines={1} style={{ fontSize: 14, color: '#333', fontWeight: 'bold' }}>{item?.snippet?.channelTitle}</Text>
+                  </View>
+                </View>
+              </TouchableOpacity> 
+              
             ))}
           </View>
         </ScrollView>

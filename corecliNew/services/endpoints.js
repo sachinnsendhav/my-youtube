@@ -43,5 +43,8 @@ export const endpoints = {
   subscription: {
     getPlans : `${url}/api/subscription/getPlans`,
     placeOrder: `${url}/api/payment/placeOrder`
+  },
+  channel: {
+    getVideosByChannelId: `${BASE_URL}/search?key=${API_KEY}&part=snippet&channelId=`,
   }
 }
