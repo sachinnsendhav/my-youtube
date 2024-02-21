@@ -55,6 +55,11 @@ function Sidenav({ isDrowerOn, menu, setMenu }: Props) {
                             Create playlist
                         </p>
                     </Link>
+                    <Link href='/channel/list'>
+                        <p className='text-sm text-white py-1 cursor-pointer'>
+                            View Channel
+                        </p>
+                    </Link>
                 </div> : ""}
                 <div className='flex justify-between py-2 cursor-pointer' onClick={() => setMenu('users')}>
                     <div className='flex'>

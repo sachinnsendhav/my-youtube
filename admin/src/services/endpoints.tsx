@@ -1,7 +1,9 @@
-const url = 'http://localhost:3005'
+// const url = 'http://localhost:3005'
+const url = 'http://173.214.174.234:3005'
 // const BASE_URL = 'https://youtube-v31.p.rapidapi.com';
 const BASE_URL = 'https://youtube.googleapis.com/youtube/v3';
-const API_KEY = 'AIzaSyAcPNJtBXci-Wg7MHNEkLf_9fVZS1sj5ms'
+// const API_KEY = 'AIzaSyCZFIivTC443XSFAd7gcB-z0kMSir-lAkk'
+const API_KEY = 'AIzaSyAIOZ0jyx9V47a7ay9MLATq72bzxkEtgyQ'
 export const endpoints = {
   auth: {
     login: `${url}/api/user/login`,
@@ -37,8 +39,12 @@ export const endpoints = {
     search: `${BASE_URL}/search?key=${API_KEY}&part=snippet&q=`,
     getVideoDetails: `${BASE_URL}/videos?key=${API_KEY}&part=snippet,statistics&id=`,
     getRelatedVideos: `${BASE_URL}/search?key=${API_KEY}&part=snippet&relatedToVideoId=`,
+    getVideosByChannelId: `${BASE_URL}/search?key=${API_KEY}&part=snippet&channelId=`,
   },
-  subscription: {
-    getPlans : `${url}/api/subscription/getPlans`
+  channel:{
+    addChannel: `${url}/api/channel/addChannel`,
+    getChannelList: `${url}/api/channel/getChannels`,
+    getChannelByUserId: `${url}/api/channel/getChannels`,
+    alotChannelToUser: `${url}/api/channel/allotChannel`,
   }
 }
