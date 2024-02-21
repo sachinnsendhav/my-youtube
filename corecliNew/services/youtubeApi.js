@@ -37,8 +37,19 @@ const getRelatedVideos = (id) =>
             .catch((error) => reject(error)
             );
     });
+
+    const getVideosByChannelId = (id) =>
+    new Promise((resolve, reject) => {
+        axios
+            .get(`${endpoints.youtubeApi.getVideosByChannelId}${id}`, options)
+            .then((response) => resolve(response.data))
+            .catch((error) => reject(error)
+            );
+    });
+
 export {
     getVideosBySearch,
     getVideoDetails,
-    getRelatedVideos
+    getRelatedVideos,
+    getVideosByChannelId
 }
