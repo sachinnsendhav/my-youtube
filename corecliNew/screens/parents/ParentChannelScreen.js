@@ -42,19 +42,22 @@ function ChannelVideos({ route, id }) {
 
     const addChannel = async () => {
         const channelYtId = route.params.channelId;
-console.log("object",ChannelUserId)
+console.log("object",channelYtId)
         console.log("videos[0]?.snippet?.channelTitle",videos[0]?.snippet?.channelTitle)
         const data = {
             channelName: videos[0]?.snippet?.channelTitle,
             channelId: channelYtId
+            // channelId: "afafafss"
+
         };
 
         try {
             const token = await AsyncStorage.getItem('token');
-            const result = await Channel.addChannel(token,data); // Assuming addChannel function doesn't need token in React Native
-            if (result?.status === 200) {
+            const result = await Channel.addChannel(token,data);
+            console.log("aa",result?.status) // Assuming addChannel function doesn't need token in React Native
+            if (result?.status === "200" || result?.status === 201) {
                 Alert.alert("Channel added!");
-                navigation.navigate('/channel/list');
+                navigation.navigate('ChannelList', channelYtId);
             }
         } catch (err) {
             console.error(err, 'error');
