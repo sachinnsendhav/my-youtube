@@ -1,6 +1,7 @@
 const channel=require("../../model/channel/channel")
 const userType=require("../../model/user/userTypeModel")
 const mongoose = require('mongoose')
+const errorHandlerMiddleware = require("../../middleware/errorvalidation")
 
 module.exports = {
     addChannel: async (req, res) => {
@@ -22,11 +23,12 @@ module.exports = {
           })
         }
         const addChannel=new channel({channelName,channelId,userId})
-        addChannel.save()
+        await addChannel.save()
         res.status(201).send({status:"200",statusText:"OK",data:addChannel})
       } catch (error) {
         console.log("err", error);
-        return res.status(400).send({ status: 400, message: error.message });
+        // return res.status(400).send({ status: 400, message: error.message });
+        errorHandlerMiddleware(error,req,res)
       }
     },
     getChannel: async (req, res, next) => {
@@ -66,7 +68,8 @@ module.exports = {
           data: userData,
         });
       }catch(error){
-        return res.status(400).send({ status: 400, message: error.message });
+        // return res.status(400).send({ status: 400, message: error.message });
+        errorHandlerMiddleware(error,req,res)
       }
     },
 
@@ -77,12 +80,14 @@ module.exports = {
         res.status(200).send({ status: 200, message: "Success", data: channels.channel });
       } catch (error) {
         console.log("err", error);
-        return res.status(400).send({ status: 400, message: error.message });
+        // return res.status(400).send({ status: 400, message: error.message });
+        errorHandlerMiddleware(error,req,res)
       }
     },
 
     removeAllotedChannel:async(req,res,next)=>{
-      const userTypeId=req.params.userTypeId
+      try{
+        const userTypeId=req.params.userTypeId
       const channelId=req.params.channelId
       const userTypeExist=await userType.findById({_id:userTypeId})
       if(!userTypeExist){
@@ -108,6 +113,9 @@ module.exports = {
         message: "Channel removed successfully",
         data:updatedData
       });
+      }catch(error){
+        errorHandlerMiddleware(error,req,res)
+      }
     },
     deleteChannel: async (req, res) => {
       try {
@@ -129,7 +137,8 @@ module.exports = {
     )
     res.status(204).send({ status:204,message:"Channel Delete Successfully", data:'' });
       } catch (error) {
-        res.status(400).send({ status: 400, message: error.message, data: "" });
+        // res.status(400).send({ status: 400, message: error.message, data: "" });
+        errorHandlerMiddleware(error,req,res)
       }
     }
   };
