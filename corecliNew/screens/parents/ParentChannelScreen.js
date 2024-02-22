@@ -54,51 +54,80 @@ console.log("object",channelYtId)
         try {
             const token = await AsyncStorage.getItem('token');
             const result = await Channel.addChannel(token,data);
-            console.log("aa",result?.status) // Assuming addChannel function doesn't need token in React Native
+            console.log("result addChannel......",result) // Assuming addChannel function doesn't need token in React Native
             if (result?.status === "200" || result?.status === 201) {
-                Alert.alert("Channel added!");
-                navigation.navigate('ChannelList', channelYtId);
+                Alert.alert("Channel added!",`${data.channelName} is added in your Channel List`);
+                navigation.navigate('Channel List', channelYtId);
             }
-        } catch (err) {
-            console.error(err, 'error');
-            // Handle errors as needed
+        } catch (error) {
+          console.log(error.response.data.mesage,"error,,,,,,,,,,")
+            if (error.response.status === 400){
+                Alert.alert('Error while adding');
+              } else{
+            Alert.alert("Error!")
+              }
         }
+            // Handle errors as needed
     };
 
     return (
-        <View style={{ flex: 1, backgroundColor: 'gray' }}>
-            <View style={{ padding: 10, }}>
-                <Text  title={videos?.length > 0 ? videos[0]?.snippet?.channelTitle : ''} />
-                <Button title='Add Channel' onPress={addChannel} />
-                <ScrollView contentContainerStyle={{ paddingHorizontal: 5, paddingVertical: 3 }}>
-                    <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
-                        {videos?.map((item) => (
-                            item?.id?.videoId && (
-                                <TouchableOpacity
-                                    key={item.id.videoId}
-                                    style={{ flexBasis: '50%', padding: 5 }}
-                                    onPress={() => navigation.navigate('Video', { videoId: item.id.videoId })}
-                                >
-                                    <View style={{ borderWidth: 1, borderColor: '#ddd', borderRadius: 8 }}>
-                                        <Image source={{ uri: item?.snippet?.thumbnails?.medium?.url }} style={{ width: '100%', height: 100, resizeMode: 'cover' }} />
-                                        <View style={{ padding: 6 }}>
-                                            <Text numberOfLines={2} style={{ fontSize: 12, color: '#888' }}>{item?.snippet?.title}</Text>
-                                            <Text numberOfLines={1} style={{ fontSize: 14, color: '#333', fontWeight: 'bold' }}>{item?.snippet?.channelTitle}</Text>
-                                        </View>
-                                    </View>
-                                </TouchableOpacity>
-                            )
-                        ))}
-                    </View>
-                    {videos.length >= limit && (
-                        <TouchableOpacity onPress={loadMoreVideos}>
-                            <Text style={{ textAlign: 'center', marginVertical: 10, color: 'blue' }}>Load More</Text>
-                        </TouchableOpacity>
-                    )}
-                </ScrollView>
-            </View>
-        </View>
-    );
+      <View style={{ flex: 1, backgroundColor: 'white' }}>
+          <View style={{ padding: 10 }}>
+              <Text style={{fontSize: 18, fontWeight: 'bold', marginBottom: 10}}>{videos[0]?.snippet?.channelTitle}</Text>
+              <Button title='Add Channel' onPress={addChannel} />
+          </View>
+          <ScrollView contentContainerStyle={{ paddingHorizontal: 5, paddingVertical: 3 }}>
+              <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
+                  {videos?.map((item) => (
+                      item?.id?.videoId && (
+                          <TouchableOpacity
+                              key={item.id.videoId}
+                              style={{
+                                  flexBasis: '48%',
+                                  marginBottom: 10,
+                                  marginRight: 5,
+                                  borderRadius: 8,
+                                  shadowColor: '#000',
+                                  shadowOffset: {
+                                      width: 0,
+                                      height: 2,
+                                  },
+                                  shadowOpacity: 0.25,
+                                  shadowRadius: 3.84,
+                                  elevation: 5,
+                                  backgroundColor: 'white',
+                                  overflow: 'hidden',
+                              }}
+                              onPress={() => navigation.navigate('Add Video', { videoId: item.id.videoId })}
+                          >
+                              <View>
+                                  <Image
+                                      source={{ uri: item?.snippet?.thumbnails?.medium?.url }}
+                                      style={{ width: '100%', height: 150, resizeMode: 'cover' }}
+                                  />
+                                  <View style={{ padding: 10 }}>
+                                      <Text numberOfLines={2} style={{ fontSize: 16, color: '#333', fontWeight: 'bold', marginBottom: 5 }}>
+                                          {item?.snippet?.title}
+                                      </Text>
+                                      <Text numberOfLines={1} style={{ fontSize: 14, color: '#888' }}>
+                                          {item?.snippet?.channelTitle}
+                                      </Text>
+                                  </View>
+                              </View>
+                          </TouchableOpacity>
+                      )
+                  ))}
+              </View>
+          </ScrollView>
+          {videos.length > limit && (
+              <TouchableOpacity onPress={loadMoreVideos} style={{ backgroundColor: 'white', padding: 10, alignItems: 'center' }}>
+                  <Text style={{ color: 'blue' }}>Load More</Text>
+              </TouchableOpacity>
+          )}
+      </View>
+  );
+  
+  
 }
 
 export default ChannelVideos;

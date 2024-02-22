@@ -50,5 +50,7 @@ export const endpoints = {
     getChannelList: `${url}/api/channel/getChannels`,
     getChannelByUserId: `${url}/api/channel/getChannels`,
     alotChannelToUser: `${url}/api/channel/allotChannel`,
+    removeAlotChannelToUser: `${url}/api/channel/removeallotedChannel`,
+    deleteChannel: `${url}/api/channel/deleteChannel`,
   }
 }

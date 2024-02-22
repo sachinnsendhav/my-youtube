@@ -11,7 +11,7 @@ const addChannel = (token, body) =>
                     'Authorization': token
                 },
             })
-            .then((response) => resolve(response.data))
+            .then((response) => resolve(response))
             .catch((error) => reject(error));
     });
 
@@ -28,13 +28,12 @@ const getChannelList = (token) =>
             .catch((error) => reject(error));
     });
 
-const getChannelByUserId = (token, id) =>
+const getChannelByUserId = (id) =>
     new Promise((resolve, reject) => {
         axios
             .get(`${endpoints.channel.getChannelByUserId}/${id}`, {
                 headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': token
+                    'Content-Type': 'application/json'
                 },
             })
             .then((response) => resolve(response.data))
@@ -54,12 +53,38 @@ const alotChannelToUser = (token, id, body) =>
             .catch((error) => reject(error));
     });
 
+    const removeAlotChannelToUser = (token, id, channelId) =>
+    new Promise((resolve, reject) => {
+        axios
+            .delete(`${endpoints.channel.removeAlotChannelToUser}/${id}/${channelId}`, {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': token
+                },
+            })
+            .then((response) => resolve(response.data))
+            .catch((error) => reject(error));
+    });
 
+const deleteChannel = (token, channelId) =>
+    new Promise((resolve, reject) => {
+        axios
+            .delete(`${endpoints.channel.deleteChannel}/${channelId}`, {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': token
+                },
+            })
+            .then((response) => resolve(response.data))
+            .catch((error) => reject(error));
+    });
 
 
 export {
     addChannel,
     getChannelList,
     getChannelByUserId,
-    alotChannelToUser
+    alotChannelToUser,
+    removeAlotChannelToUser,
+    deleteChannel
 }

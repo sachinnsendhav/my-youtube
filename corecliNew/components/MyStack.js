@@ -35,7 +35,8 @@ const MyStack = ({ onLogout }) => {
       <Stack.Screen name="Login" component={LoginScreen} />
       <Stack.Screen name="Sign UP" component={ParentSignUpScreen}/>
       <Stack.Screen name="Channel" component={ParentChannelScreen}/>
-      <Stack.Screen name="ChannelList" component={ParentChannelListScreen}/>
+      <Stack.Screen name="Channel List" component={ParentChannelListScreen}/>
+      <Stack.Screen name="Playlist" component={ParentPlaylistScreen}/>
     </Stack.Navigator>
   );
 };

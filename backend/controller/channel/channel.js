@@ -60,7 +60,7 @@ module.exports = {
               channelName:channelName,
               channelId:channelId
             })
-            userData.save()
+           await userData.save()
             res.status(201)
         .send({
           status: 201,
@@ -75,7 +75,7 @@ module.exports = {
 
     getuserTypeChannel: async (req, res, next) => {
       try {
-        const userTypeId = req.user.paylod._id;
+        const userTypeId = req.params.userTypeId;
         const channels = await userType.findById({ _id: userTypeId });
         res.status(200).send({ status: 200, message: "Success", data: channels.channel });
       } catch (error) {

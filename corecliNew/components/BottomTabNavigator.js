@@ -3,6 +3,7 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Alert, TouchableOpacity, Image } from "react-native"; // Import Image from react-native
 import HomeScreen from "../screens/HomeScreen";
 import CategoryScreen from "../screens/CategoryScreen";
+import ChannelListData from "../screens/ChannelListData";
 import ProfileScreen from "../screens/ProfileScreen";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Text } from "react-native-paper";
@@ -64,7 +65,8 @@ const BottomTabNavigator = ({ onLogout }) => {
           if (
             route.name === "Home" ||
             route.name === "Category" ||
-            route.name === "Profile"
+            route.name === "Profile" ||
+            route.name === "Channel"
           ) {
             return <LogoutButton navigation={navigation} onLogout={onLogout} />;
           }
@@ -79,6 +81,8 @@ const BottomTabNavigator = ({ onLogout }) => {
             iconSource = focused ? require("../assets/icons/category-icon.png") : require("../assets/icons/category-icon.png");
           } else if (route.name === "Profile") {
             iconSource = focused ? require("../assets/icons/profile-icon.png") : require("../assets/icons/profile-icon.png");
+          } else if (route.name === "Channel") {
+            iconSource = focused ? require("../assets/icons/profile-icon.png") : require("../assets/icons/profile-icon.png");
           }
           // You can add more icons based on your requirements
 
@@ -89,6 +93,7 @@ const BottomTabNavigator = ({ onLogout }) => {
       <Tab.Screen name="Home" component={HomeScreen} />
       <Tab.Screen name="Category" component={CategoryScreen} />
       <Tab.Screen name="Profile" component={ProfileScreen} />
+      <Tab.Screen name="Channel" component={ChannelListData} />
     </Tab.Navigator>
   );
 };
