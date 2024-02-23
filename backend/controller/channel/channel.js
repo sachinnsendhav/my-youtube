@@ -60,7 +60,7 @@ module.exports = {
               channelName:channelName,
               channelId:channelId
             })
-           await userData.save()
+            await userData.save()
             res.status(201)
         .send({
           status: 201,
