@@ -32,6 +32,23 @@ function ChannelListView() {
         }
         setLoading(false)
     }
+    const DeleteChannel = async (id: string) => {
+        const confirmDelete = window.confirm('Are you sure you want to delete this Channel?');
+        if (confirmDelete) {
+            try {
+                const response = await Channel.deleteChannel(token, id)
+                const newArray = channelList.filter((item: any) => item._id !== id);
+                setChannelList(newArray)
+                alert('Channel deleted!')
+            } catch (error: any) {
+                if (error.response.data.message === 'Unauthorized') {
+                    router.push('/auth/signin');
+                } else {
+                    alert(error.response.data.message);
+                }
+            }
+        }
+    }
     return (
         <div className="flex bg-gray-200">
             <Sidenav isDrowerOn={isDrowerOn} menu={menu} setMenu={setMenu} />
@@ -97,7 +114,7 @@ function ChannelListView() {
                                                                     <FaEdit className="text-lg cursor-pointer text-gray-600" />
                                                                 </Link> */}
                                                                 <MdDelete className="text-lg cursor-pointer text-gray-600 ml-5"
-                                                                //   onClick={() => DeletePlaylist(item?._id)} 
+                                                                    onClick={() => DeleteChannel(item?._id)}
                                                                 />
                                                             </td>
                                                         </tr>
