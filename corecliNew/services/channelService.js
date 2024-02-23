@@ -56,7 +56,7 @@ const alotChannelToUser = (token, id, body) =>
     const removeAlotChannelToUser = (token, id, channelId) =>
     new Promise((resolve, reject) => {
         axios
-            .delete(`${endpoints.channel.removeAlotChannelToUser}/${id}/${channelId}`, {
+            .patch(`${endpoints.channel.removeAlotChannelToUser}/${id}/${channelId}`, {}, {
                 headers: {
                     'Content-Type': 'application/json',
                     'Authorization': token
