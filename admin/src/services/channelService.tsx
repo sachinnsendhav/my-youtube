@@ -53,23 +53,38 @@ const alotChannelToUser = (token: any, id: string, body: any) =>
             .catch((error: any) => reject(error));
     });
 
+const removeChannelToUser = (token: any, userId: string, channelId: string) =>
+    new Promise((resolve, reject) => {
+        axios
+            .patch(`${endpoints.channel.removeChannelToUser}/${userId}/${channelId}`, {},{
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': token
+                },
+            })
+            .then((response: any) => resolve(response.data))
+            .catch((error: any) => reject(error));
+    });
 
-// const deletePlaylist = (token: any, id: any) =>
-//     new Promise((resolve, reject) => {
-//         axios
-//             .delete(`${endpoints.playlist.deletePlaylist}/${id}`, {
-//                 headers: {
-//                     'Content-Type': 'application/json',
-//                     'Authorization': token
-//                 },
-//             })
-//             .then((response: any) => resolve(response.data))
-//             .catch((error: any) => reject(error));
-//     });
+
+const deleteChannel = (token: any, id: any) =>
+    new Promise((resolve, reject) => {
+        axios
+            .delete(`${endpoints.channel.deleteChannel}/${id}`, {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': token
+                },
+            })
+            .then((response: any) => resolve(response.data))
+            .catch((error: any) => reject(error));
+    });
 
 export {
     addChannel,
     getChannelList,
     getChannelByUserId,
-    alotChannelToUser
+    alotChannelToUser,
+    deleteChannel,
+    removeChannelToUser
 }
