@@ -12,6 +12,7 @@ function UpdateUser({ id }: any) {
   const [isDrowerOn, setIsDrowerOn] = useState(false)
   const [menu, setMenu] = useState('');
   const [playlist, setPlaylist] = useState<any>([])
+  const [channel, setChannel] = useState<any>([])
   const [playlistIds, setPlaylistIds] = useState([])
   const [userData, setUserData] = useState<any>()
   const [channelList, setChannelList] = useState<any>([])
@@ -32,10 +33,19 @@ function UpdateUser({ id }: any) {
     );
   }, [playlistIds]);
 
+  useEffect(() => {
+    setChannelList((prevPlaylist: any) =>
+      prevPlaylist.map((secondItem: any) => {
+        const matchingFirstItem = channel.find((firstItem: any) => firstItem.channelId === secondItem.channelId);
+        return { ...secondItem, exisit: Boolean(matchingFirstItem) };
+      })
+    );
+  }, [channel]);
   const getUserDetails = async (id: string) => {
     try {
       const result: any = await Users.getUserDetails(token, id)
       setPlaylistIds(result?.data?.playList)
+      setChannel(result?.data?.channel)
       setUserData(result?.data)
     } catch (err: any) {
       if (err.response.data.message === 'Unauthorized') {
@@ -119,6 +129,19 @@ function UpdateUser({ id }: any) {
       console.error(err, 'error')
     }
   }
+
+  const removeChannelToUser = async (channelId: string) => {
+    try {
+      const result: any = await Channel.removeChannelToUser(token, id, channelId)
+      getUserDetails(id)
+      alert('Channel removed successfully')
+    } catch (err: any) {
+      if (err.response.data.message === 'Unauthorized') {
+        router.push('/auth/signin');
+      }
+      console.error(err, 'error')
+    }
+  }
   return (
     <div className="flex bg-gray-200">
       <Sidenav isDrowerOn={isDrowerOn} menu={menu} setMenu={setMenu} />
@@ -188,23 +211,37 @@ function UpdateUser({ id }: any) {
                   })}
                 </div>
               </div>
-              <div className='col-span-6'>
+              <div className='col-span-6 pl-2'>
                 <p className='text-md py-1 text-gray-600'>Channel List</p>
-                <div className='flex py-2'>
+                <div className='flex flex-wrap py-2'>
+                  {channel.map((item: any) => {
+                    return (
+                      <div className='bg-pink-600 mx-2 my-1 text-white flex rounded'>
+                        <Link href={`/playlist/view/${item._id}`}>
+                          <p className='text-md px-2 py-1'>{item?.channelName}</p></Link>
+                        <div className='px-2 bg-pink-700 rounded-r cursor-pointer' onClick={() => removeChannelToUser(item.channelId)} >
+                          <MdDelete className='mt-2 text-sm mx-1 ' />
+                        </div>
+                      </div>
+                    )
+                  })}
+                </div>
+                <p className='py-2 px-5 bg-zinc-200 text-gray-600 font-semibold'>Assign Channel</p>
+                <div className='flex flex-wrap py-2'>
                   {channelList?.map((item: any) => {
                     return (
-                      <div className='bg-pink-600 mx-2 text-white flex rounded'>
+                      <div className='bg-pink-600 mx-2 my-1 text-white flex rounded'>
                         {/* <Link href={`/playlist/view/${item._id}`}> */}
                         <p className='px-2 py-1'>{item.channelName}</p>
                         {/* </Link> */}
-                        {/* {item.exisit ? '' : */}
-                        <div className='px-2 bg-pink-700 rounded-r cursor-pointer'
-                        onClick={() => alotChannelToUser(item.channelName, item.channelId)}
-                        >
-                          <FaPlus className='mt-2 text-sm mx-1 ' />
+                        {item.exisit ? '' :
+                          <div className='px-2 bg-pink-700 rounded-r cursor-pointer'
+                            onClick={() => alotChannelToUser(item.channelName, item.channelId)}
+                          >
+                            <FaPlus className='mt-2 text-sm mx-1 ' />
 
-                        </div>
-                        {/* } */}
+                          </div>
+                        }
                       </div>
                     )
                   })}

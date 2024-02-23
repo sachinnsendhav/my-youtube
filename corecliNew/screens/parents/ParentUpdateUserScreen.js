@@ -1,15 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, TextInput, ScrollView, TouchableOpacity, Alert, Image } from 'react-native';
-import { Playlist, Users } from '../../services'; 
+import { Playlist, Users, Channel } from '../../services'; 
 import { useNavigation } from '@react-navigation/native';
 // import { FaPlus } from 'react-icons/fa'; 
 // import { MdDelete } from 'react-icons/md';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+
 function ParentUpdateUserScreen({ route }) {
   const navigation = useNavigation();
   const { id } = route.params;
   const [playlist, setPlaylist] = useState([]);
+  const [channel, setChannel ] = useState([]);
   const [playlistIds, setPlaylistIds] = useState([]);
   const [userData, setUserData] = useState({});
   const [loading, setLoading] = useState(false);
@@ -17,6 +19,7 @@ function ParentUpdateUserScreen({ route }) {
   useEffect(() => {
     getPlaylist();
     getUserDetails(id);
+    getChannel();
   }, [id]);
 
   useEffect(() => {
@@ -39,6 +42,18 @@ function ParentUpdateUserScreen({ route }) {
     }
   };
 
+  const getChannelByUserId = async (id) => {
+    try {
+      // const token = await AsyncStorage.getItem('token');
+      const result = await Channel.getChannelByUserId(id);
+      console.log("object kya he",result)
+      setChannel(result?.data?.Channel);
+      setUserData(result?.data);
+    } catch (err) {
+      console.error(err, 'error');
+    }
+  }
+
   const getPlaylist = async () => {
     setLoading(true);
     try {
@@ -50,6 +65,21 @@ function ParentUpdateUserScreen({ route }) {
     }
     setLoading(false);
   };
+
+  const getChannel = async () => {
+    console.log("hiii")
+    setLoading(true);
+    try {
+      const token = await AsyncStorage.getItem('token');
+      const result = await Channel.getChannelList(token);
+      console.log("object for getChannel",result)
+      setChannel(result?.data || []);
+    } catch (err) {
+      console.error(err, 'error');
+    }
+    setLoading(false);
+  }
+
 
   const alotPlaylistToUser = async (playlistid) => {
     try {
@@ -64,6 +94,47 @@ function ParentUpdateUserScreen({ route }) {
       console.error(err, 'error');
     }
   };
+
+  const alotChannelToUser = async (channel) => {
+    console.log("channelId he kya isme check karo",channel)
+    try {
+      const token = await AsyncStorage.getItem('token');
+      const data = {
+          channelId:channel.channelId,
+          channelName:channel.channelName
+      };
+      const result = await Channel.alotChannelToUser(token, id, data)
+      console.log("result",result)
+      Alert.alert('Channel added', 'Channel added to this user')
+      getChannelByUserId(id);
+       
+    } catch (err) {
+       console.error(err,'error');
+    }
+  }
+
+  const removeAlotChannelToUser = async (token, id, channelId) => {
+    const confirmDelete = await new Promise((resolve) => {
+      Alert.alert(
+        'Confirm Delete', 
+        'Are you sure you want to remove Channel from this user?',
+        [
+          {
+            text: 'Cancel',
+            onPress: () => resolve(false),
+            style: 'cancel',
+          },
+          {
+            text: 'OK',
+            onPress: () => resolve(true),
+          },
+        ],
+        { cancelable: false }
+      );
+    });
+  };
+  
+  
 
   const removePlaylistFromUser = async (playlistId) => {
     const confirmDelete = await new Promise((resolve) =>
@@ -96,6 +167,10 @@ function ParentUpdateUserScreen({ route }) {
       }
     }
   };
+
+
+
+  // console.log("channel",channel)
 
   return (
     <View style={{ flex: 1, backgroundColor: '#ccc' }}>
@@ -144,6 +219,30 @@ function ParentUpdateUserScreen({ route }) {
               secureTextEntry={true}
             />
           </View>
+          <TouchableOpacity onPress={() => getChannelByUserId()}/>   
+
+          <View style={{ backgroundColor: 'white', borderRadius: 8, padding: 10, marginBottom: 10 }}>
+            <Text style={{ fontSize: 16, marginBottom: 5, color: '#555' }}>Channel</Text>
+            <Text style={{ fontSize: 16, marginTop: 10, marginBottom: 5, color: '#555', fontWeight: 'bold' }}>Assign Channel</Text>
+            <TouchableOpacity onPress={() => removeAlotChannelToUser(item)}></TouchableOpacity>
+            <ScrollView horizontal>
+              {channel?.map((item) => (
+                <TouchableOpacity key={item._id} onPress={() => alotChannelToUser(item)}>
+                  <View style={{ backgroundColor: '#0099ff', margin: 5, padding: 10, borderRadius: 8, flexDirection: 'row' }}>
+                    <Text style={{ fontSize: 16, color: 'white', marginRight: 10 }}>{item?.channelName}</Text>
+                    {/* Add icon */}
+                    <Image
+                      source={require('../../assets/icons/add.png')}
+                      style={{ width: 20, height: 20, marginTop: 2 }}
+                    />
+                  </View>
+                </TouchableOpacity>
+              ))}
+            </ScrollView>
+          </View>
+
+          
+
 
           <Text style={{ fontSize: 16, marginBottom: 5, color: '#555' }}>Playlists</Text>
           <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
@@ -161,6 +260,8 @@ function ParentUpdateUserScreen({ route }) {
               </View>
             ))}
           </View>
+
+
 
           <Text style={{ fontSize: 16, marginTop: 10, marginBottom: 5, color: '#555', fontWeight: 'bold' }}>Assign Playlist</Text>
           <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>

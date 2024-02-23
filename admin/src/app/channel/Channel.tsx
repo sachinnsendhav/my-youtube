@@ -4,6 +4,7 @@ import { Button, Header, Sidenav, Title } from '../components'
 import { YoutubeApi, Channel } from '@/services';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import { Snippet } from 'next/font/google';
 
 function ChannelVideos({ id }: any) {
     const router = useRouter()
@@ -28,8 +29,8 @@ function ChannelVideos({ id }: any) {
     }
     const addChannel = async () => {
         const data: any = {
-            channelName: "name---1",
-            channelId: "idfjjfdsfk"
+            channelId: videos[0]?.snippet?.channelId,
+            channelName: videos[0]?.snippet?.channelTitle,
         }
         try {
             const result: any = await Channel.addChannel(token, data)
@@ -40,6 +41,8 @@ function ChannelVideos({ id }: any) {
         } catch (err: any) {
             if (err.response.data.message === 'Unauthorized') {
                 router.push('/auth/signin');
+            } else if (err.response?.status === 400) {
+                alert('channel already exist')
             }
             console.error(err, 'error')
         }
@@ -50,9 +53,10 @@ function ChannelVideos({ id }: any) {
             <div className='w-full h-screen overflow-y-scroll'>
                 <Header setIsDrowerOn={setIsDrowerOn} isDrowerOn={isDrowerOn} />
                 <div className='px-5 py-3'>
-
-                    <Title title={videos?.length > 0 ? videos[0]?.snippet?.channelTitle : ''} />
-                    <Button text='Add Channel' functionName={addChannel} />
+                    <div className='flex justify-between py-4 mx-5'>
+                        <Title title={videos?.length > 0 ? videos[0]?.snippet?.channelTitle : ''} />
+                        <Button text='Add Channel' functionName={addChannel} />
+                    </div>
                     <div className='grid grid-cols-12 bg-white mx-5 mb-5 px-3 rounded shadow-xl'>
                         {videos?.map((item: any) => {
                             return (
