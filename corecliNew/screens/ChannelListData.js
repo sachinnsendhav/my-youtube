@@ -76,7 +76,7 @@ const ChannelListData = () => {
                 </View>
             ) : (
                 <>
-                    <Text style={styles.title}>Channel List</Text>
+                    {/* <Text style={styles.title}>Channel List</Text> */}
                     {channels.map((channel, index) => (
                         <TouchableOpacity
                             key={index}

@@ -82,7 +82,7 @@ const BottomTabNavigator = ({ onLogout }) => {
           } else if (route.name === "Profile") {
             iconSource = focused ? require("../assets/icons/profile-icon.png") : require("../assets/icons/profile-icon.png");
           } else if (route.name === "Channel") {
-            iconSource = focused ? require("../assets/icons/profile-icon.png") : require("../assets/icons/profile-icon.png");
+            iconSource = focused ? require("../assets/icons/channel-icon.png") : require("../assets/icons/channel-icon.png");
           }
           // You can add more icons based on your requirements
 
@@ -92,8 +92,8 @@ const BottomTabNavigator = ({ onLogout }) => {
     >
       <Tab.Screen name="Home" component={HomeScreen} />
       <Tab.Screen name="Category" component={CategoryScreen} />
-      <Tab.Screen name="Profile" component={ProfileScreen} />
       <Tab.Screen name="Channel" component={ChannelListData} />
+      <Tab.Screen name="Profile" component={ProfileScreen} />
     </Tab.Navigator>
   );
 };
