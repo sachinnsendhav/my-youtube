@@ -59,7 +59,8 @@ exports.signup = async(req,res) => {
         return res.status(200).send( { status:200, message:"User registered successfully",data:{token:token,userData:user_data} } );
     }
     catch(error){
-        return res.status(400).send( { status:400, message:error.message } );
+        // return res.status(400).send( { status:400, message:error.message } );
+        errorHandlerMiddleware(error,req,res)
     }
 }
 
